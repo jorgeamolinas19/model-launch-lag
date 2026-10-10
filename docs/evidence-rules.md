@@ -8,10 +8,16 @@ is reported alongside every latency number; mixing a merge-commit date (exact) w
 release-note date (±release cadence) without saying so would be the quietest way to get
 this project wrong.
 
-> **Paths below must be verified against each repo before collection.** Framework
-> layouts move between versions and these are written from prior familiarity, not from
-> a live read. `scripts/verify_paths.py` (to write) should assert each glob matches at
-> least one existing file at HEAD and fail loudly otherwise.
+> **Verified against every repo at HEAD on 2026-10-10** by `scripts/verify_paths.py`:
+> 11 of 12 code paths resolved; the one failure (a TensorRT-LLM changelog) is corrected
+> below. Re-run that script before any collection run — a stale path yields zero
+> support events, which reads as "never supported" rather than as a broken collector,
+> and would be invisible in the output.
+
+**Release notes: use the GitHub Releases API, not a file.** All six repos publish
+releases with substantive notes (verified: 1.5k–82k characters each), so the API is the
+portable release-note source and no per-repo changelog path is needed. Release-note
+evidence is dated by `published_at`.
 
 ## The general rule
 
@@ -68,19 +74,35 @@ stored. If only (1) has landed, the model converts but does not run — record
 but the multi-part structure means the single-PR rule used elsewhere would understate
 llama.cpp's latency. Say so in the memo.**
 
-### `ollama` — `ollama/ollama` + library registry
-Support ships as a **library entry**, not as code, so the GitHub API alone cannot date it.
+### `ollama` — `ollama/ollama` + library
+Support ships as a **library entry**, not as code, so the GitHub API alone cannot date
+it. The first version of this rule assumed a registry manifest date; probing
+(`scripts/probe_ollama.py`) showed that source does not exist, so the rule is rewritten
+around what verifiably does.
 
-- **Primary:** first published manifest date for `library/<model>` from the registry API. **Fidelity: good** (publish date, not announcement date).
-- **Secondary:** merged PR where a new architecture needed Go-side or vendored-runner work. **Fidelity: exact.**
+- **Primary:** earliest `ollama/ollama` **GitHub release whose notes name the model**, dated by the release's `published_at`. Verified usable: 19 of the last 40 releases name at least one cohort model family. **Fidelity: good** — granularity is the release cadence (often same-day, occasionally a few days).
+- **Secondary:** presence of the model on `ollama.com/library/<model>` confirms support *exists* but carries only relative dates ("1 year ago"), so it can **confirm** support and never **date** it.
+- **Tertiary:** merged PR where a new architecture needed Go-side or vendored-runner work. **Fidelity: exact.**
+
+**Dead ends — do not re-attempt, all three were tested and fail:**
+
+| Source | Result |
+|---|---|
+| `registry.ollama.ai/v2/library/<m>/tags/list` | HTTP 404 for every model |
+| `ollama.com/api/tags?name=<m>` | HTTP 200 but returns **byte-identical payloads for different model names** — it ignores the query. Looks like success; is not. |
+| `ollama.com/api/show?name=<m>` | HTTP 405 |
+
+The OCI manifest endpoint (`/v2/library/<m>/manifests/latest`) does return a per-model
+digest, but it describes the *current* `latest` tag, so it cannot establish a first
+publish date and is unused.
 
 **Dependency to state explicitly:** Ollama vendors llama.cpp, so an Ollama date is
 usually gated by the llama.cpp date. Report Ollama latency *and* Ollama-minus-llama.cpp,
 and do not read the gap as Ollama being slow.
 
 ### `tensorrt-llm` — `NVIDIA/TensorRT-LLM`
-- **Primary:** merged PR under the model definitions directory or an `examples/<model>/` directory. **Fidelity: exact.**
-- **Fallback:** changelog or release-note entry naming the model. **Fidelity: coarse.**
+- **Primary:** merged PR under `tensorrt_llm/models/` or an `examples/<model>/` directory. **Fidelity: exact.**
+- **Fallback:** entry in `docs/source/release-notes.md`, or a GitHub Release whose notes name the model. **Fidelity: coarse.** (There is no `CHANGELOG.md`; the first version of this rule named one and was wrong.)
 
 Support sometimes ships only inside a container image with the changelog as the sole
 public artifact, and the repo's publishing cadence is not continuous upstream commits.
