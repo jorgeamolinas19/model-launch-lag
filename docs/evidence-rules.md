@@ -169,6 +169,24 @@ newest architecture is not available to most of the install base, and a date wit
 that qualifier would overstate real availability. This is a capability statement about
 hardware generations, not a judgment about any vendor's roadmap.
 
+## Three distinctions this dataset keeps separate
+
+Conflating these was an error in the first version of these rules. A pre-existing
+architecture declaration does **not** prove that every later checkpoint using it was
+immediately runnable: a new RoPE scaling scheme, a changed tokenizer, or an added config
+field can break a model whose architecture class is already registered.
+
+| Distinction | What the evidence proves | State |
+|---|---|---|
+| **Architecture support at release** | The framework recognized the architecture before the model became public. Compatibility with *this checkpoint* is **not** established. | `arch_compatible` |
+| **Model-specific support** | The framework could load *that particular model* — its config, tokenizer, and implementation requirements. | `supported` |
+| **Observed support date** | The earliest *verifiable* date of working support. May be later than an architecture declaration date, and is the only figure safe to quote as latency. | `event_date` + `fidelity` |
+
+The nine pairs resolved by the architecture-at-release test are therefore recorded as
+**`arch_compatible`, not `supported`**. They are reported separately, and the headline
+median is computed both with and without them — because if a framework's apparent speed
+comes from architectural reuse rather than integration work, the ranking should say so.
+
 ## States a (model, framework) pair can be in
 
 Every pair gets a row. Absence of support is data, not a missing value — this is what

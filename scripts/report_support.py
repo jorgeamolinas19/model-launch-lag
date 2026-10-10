@@ -132,6 +132,53 @@ def main():
     print("\n  p = partial support (some required parts landed, model not yet runnable)")
     print("  none = no qualifying artifact as of snapshot (right-censored, not missing)")
 
+    # Sensitivity: how much apparent speed is architectural reuse, not integration work?
+    print("\n\nSENSITIVITY BY EVIDENCE CLASS\n")
+    print("  A  model-specific support, exact fidelity   (strictest: proof this")
+    print("     checkpoint loaded, dated by implementation-path history)")
+    print("  B  + architecture-compatible at release     (arch declared pre-release;")
+    print("     compatibility with this checkpoint NOT validated)")
+    print("  C  + lower-fidelity dates                   (PR search / release notes)\n")
+    tiers = {
+        "A": lambda x: x["state"] == "supported" and x["fidelity"] == "exact",
+        "B": lambda x: (x["state"] == "supported" and x["fidelity"] == "exact")
+                       or x["state"] == "arch_compatible",
+        "C": lambda x: x["state"] in ("supported", "partial", "arch_compatible"),
+    }
+    cols = {}
+    for name, pred in tiers.items():
+        col = {}
+        for fw in FWS:
+            r = [x for x in rows if x["fw"] == fw]
+            sup = [x for x in r if pred(x) and x["d"] is not None]
+            cens = [x for x in r if x["state"] == "unsupported"]
+            km = km_median([(x["d"], 1) for x in sup] + [(9999, 0) for _ in cens], cens)
+            col[fw] = (km, len(sup))
+        cols[name] = col
+
+    print(f"{'framework':<14}{'A med':>8}{'A n':>5}{'B med':>8}{'B n':>5}{'C med':>8}{'C n':>5}")
+    print("-" * 53)
+    for fw in FWS:
+        line = f"{fw:<14}"
+        for name in "ABC":
+            km, n = cols[name][fw]
+            line += f"{(f'{km:+d}' if km is not None else 'n/a'):>8}{n:>5}"
+        print(line)
+
+    def rank(col):
+        ok = [(fw, v[0]) for fw, v in col.items() if v[0] is not None]
+        return [fw for fw, _ in sorted(ok, key=lambda t: t[1])]
+
+    print()
+    for name in "ABC":
+        print(f"  rank {name}: {' < '.join(rank(cols[name])) or 'insufficient data'}")
+    if rank(cols["A"]) != rank(cols["C"]):
+        print("\n  RANKING IS NOT STABLE across evidence classes. The ordering depends on")
+        print("  which evidence you accept, so no single ranking should be published as")
+        print("  the result - report the classes separately.")
+    else:
+        print("\n  Ranking is stable across evidence classes.")
+
     # Time trend: the confound the historical band exists to measure
     print("\n\nTIME TREND (the confound the historical band exists to measure)\n")
     for band in ("historical", "primary"):
