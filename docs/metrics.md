@@ -76,6 +76,35 @@ stored column and why a missing `source_url` blocks publication.
 No endpoint exposes it. For 22 models, hand-resolution against vendor announcements is
 the honest fix, and it is why `release_date_method` includes `hand_resolved`.
 
+### Weights-public vs announced: two dates, not one
+
+An unstated assumption in the first version of this rule was that "release" is a single
+event. It is not, and hand resolution surfaced a case where the two differ materially.
+
+| Field | Definition | Role |
+|---|---|---|
+| `release_date` | The day the **weights became publicly downloadable** | The denominator for `days_to_support` |
+| `announced_at` | The day the vendor **publicly announced** the model | Reported separately |
+
+**`release_date` is the weights date, and that is not a stylistic choice.** A serving
+framework cannot support a checkpoint that does not exist yet, so measuring latency from
+an announcement would charge frameworks for a wait they had no way to act on.
+
+Measured on this cohort: **Kimi-K3 was announced 2026-07-16 but its weights landed
+2026-07-27** — the announcement covered *hosted* availability, 11 days before anything
+was downloadable. Using the announcement date would have added 11 days of phantom lag
+to every framework's Kimi-K3 row.
+
+The gap is itself worth reporting — hosted-before-weights is a real launch pattern and
+bears on checklist item 2.1 — but it belongs in the writeup, not inside the latency
+metric.
+
+**Unreconciled, flagged before publication:** `google/gemma-4-31B-it` has a vendor
+release log entry of 2026-03-31 against an announcement of 2026-04-02, while the HF
+repo's first content commit is 2026-04-02. The repo date is used; the 03-31 entry may
+refer to another distribution channel and is recorded in `release_note` rather than
+silently dropped.
+
 ## 1. Days to support
 
 ```
