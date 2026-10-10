@@ -3,6 +3,7 @@ import gzip
 import json
 import re
 import ssl
+import subprocess
 import time
 import urllib.error
 import urllib.parse
@@ -17,6 +18,16 @@ _CTX = ssl.create_default_context(cafile=certifi.where())
 
 
 def _token():
+    """Prefer the gh CLI's keychain credential; fall back to .env, then anonymous.
+
+    Keychain first so no plaintext token is needed on disk at all.
+    """
+    try:
+        p = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, timeout=15)
+        if p.returncode == 0 and p.stdout.strip():
+            return p.stdout.strip()
+    except (FileNotFoundError, subprocess.SubprocessError):
+        pass
     env = ROOT / ".env"
     if env.is_file():
         m = re.search(r"^GITHUB_TOKEN=(\S+)", env.read_text(), re.M)
