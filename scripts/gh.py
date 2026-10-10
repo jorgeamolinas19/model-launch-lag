@@ -71,6 +71,31 @@ def get(path, tries=4):
             raise
 
 
+def graphql(query, **variables):
+    body = json.dumps({"query": query, "variables": variables}).encode()
+    h = _headers()
+    h["Content-Type"] = "application/json"
+    r = urllib.request.urlopen(urllib.request.Request(
+        "https://api.github.com/graphql", headers=h, data=body, method="POST"),
+        timeout=60, context=_CTX)
+    d = json.load(r)
+    if d.get("errors"):
+        raise RuntimeError(d["errors"][0].get("message", "graphql error"))
+    return d["data"]
+
+
+def raw_file(repo, path, ref="HEAD"):
+    """File contents as text, or None."""
+    try:
+        _, d = get(f"repos/{repo}/contents/{urllib.parse.quote(path)}?ref={ref}")
+    except urllib.error.HTTPError:
+        return None
+    import base64
+    if isinstance(d, list) or d.get("encoding") != "base64":
+        return None
+    return base64.b64decode(d["content"]).decode("utf-8", "replace")
+
+
 def exists(repo, path):
     """Does a path exist at the repo's default-branch HEAD? Returns 'file'|'dir'|None."""
     try:

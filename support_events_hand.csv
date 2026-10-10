@@ -1,0 +1,15 @@
+# Hand-resolution worklist for undetermined support pairs.
+# Fill event_date (YYYY-MM-DD) + source_url + confidence (high|medium|low).
+# Set state to: supported | partial | unsupported | not_applicable
+#   not_applicable = the framework structurally cannot serve this model class.
+#   unsupported    = genuinely absent (becomes a censored observation).
+# Leave a row blank to keep it excluded from all metrics.
+framework_id,hf_id,architecture,release_date,event_date,state,source_url,confidence,conflict,resolved_by,resolved_at
+vllm,deepseek-ai/DeepSeek-V3,DeepseekV3ForCausalLM,2024-12-25,,,,,,,
+sglang,allenai/Olmo-3-7B-Think,Olmo3ForCausalLM,2025-11-20,,,,,,,
+sglang,ibm-granite/granite-4.1-3b,GraniteForCausalLM,2026-04-06,,,,,,,
+sglang,google/diffusiongemma-26B-A4B-it,DiffusionGemmaForBlockDiffusion,2026-06-10,,,,,,,
+transformers,moonshotai/Kimi-K3,KimiK3ForConditionalGeneration,2026-07-27,,,,,,,
+transformers,RadixArk/Kimi-K3-DSpark,DSparkDraftModel,2026-07-27,,,,,,,
+vllm,moonshotai/Kimi-K3,KimiK3ForConditionalGeneration,2026-07-27,,,,,,,
+vllm,deepseek-ai/DeepSeek-V4.1-Flash,DeepseekV41ForCausalLM,2026-09-10,,,,,,,

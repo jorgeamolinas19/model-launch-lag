@@ -86,6 +86,15 @@ def main():
     if und:
         print(f"  {len(und)} pair(s) undetermined and excluded from every figure above; "
               f"see hand-resolution list")
+    inh = con.execute("""SELECT count(*) FROM support_events s JOIN models m USING(hf_id)
+        WHERE s.evidence_rule LIKE '%:inherited(%' AND m.support_kind='new_arch'""").fetchone()[0]
+    if inh:
+        print(f"\n  CAUTION: {inh} new_arch pair(s) are recorded at day 0 because the")
+        print("  architecture was ALREADY declared at the commit before release. For a new")
+        print("  architecture that means pre-release support, so the true value is <= 0 and")
+        print("  0 is a conservative FLOOR, not a measurement. Dating how far ahead would")
+        print("  need the arch-addition commit, which is still unresolved. This UNDERSTATES")
+        print("  early access rather than overstating it.")
 
     # transformers native latency is misleading where the model shipped its own code.
     rc = list(con.execute(f"""
