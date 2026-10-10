@@ -1,0 +1,39 @@
+# Data license — CC BY 4.0
+
+The datasets produced by this project are licensed under the Creative Commons
+Attribution 4.0 International License (CC BY 4.0):
+https://creativecommons.org/licenses/by/4.0/
+
+## What this covers
+
+- `labels/` — the hand-labeled issue set: issue URL, category, severity, one-line reason
+- the `support_events` table and its evidence links
+- `release_dates_hand.csv` — hand-resolved release dates and their sources
+- derived metric outputs and tables
+
+You may share and adapt these for any purpose, including commercially, with
+attribution.
+
+## What this does NOT cover
+
+**GitHub issue text.** This project stores a truncated excerpt locally to run a
+classifier over it, but publishes only the title, the URL, and our own labels. The
+issue bodies belong to the people who wrote them and are not redistributed.
+
+**Hugging Face model metadata and model content.** Each model repository carries its
+own license. This project reads public metadata and never redistributes weights.
+
+**Framework source code.** Evidence links point to pull requests and releases in each
+framework's repository, under that project's own license.
+
+## Attribution
+
+> Molina, J. (2026). model-launch-lag: open-model launch readiness across serving
+> frameworks. https://github.com/jorgeamolinas19/model-launch-lag
+
+## A note on the labels
+
+The labels are judgments made by a human and a language model against a versioned
+codebook (`docs/codebook-v2.md`), not ground truth. The published set includes the
+codebook version, the classifier model and prompt version, and a measured
+self-agreement ceiling, so that anyone reusing it can see how much to trust it.
