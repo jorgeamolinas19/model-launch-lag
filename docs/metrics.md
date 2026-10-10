@@ -43,6 +43,35 @@ publishing any latency figure for that model.** On the v2 cohort this flags 4 of
 (18%) — a rate high enough that skipping the hand resolution would visibly corrupt the
 headline.
 
+### Measured error of the API rule (v2 cohort)
+
+All four flagged models were hand-resolved against vendor announcements
+(`release_dates_hand.csv`). Error of the API-derived date versus the hand-resolved one:
+
+| Model | API-derived | Hand-resolved | Error |
+|---|---|---|---|
+| `allenai/Olmo-3-7B-Think` | 2025-10-31 | 2025-11-20 | **+20 d** |
+| `google/gemma-4-31B-it` | 2026-04-02 | 2026-04-02 | 0 d |
+| `moonshotai/Kimi-K3` | 2026-07-27 | 2026-07-16 | **−11 d** |
+| `Qwen/Qwen3.8-27B` | 2026-08-05 | 2026-08-14 | **+9 d** |
+
+**Median absolute error 11 days, max 20 days.** Days-to-support for a well-coordinated
+launch is frequently in the single digits, so an 11-day error in the *denominator date*
+is not a rounding problem — it can invert the sign of `days_to_support` and turn a
+day-0 launch into a two-week lag or vice versa. The flagging mechanism caught every
+such case, and the unflagged 18 models had agreeing candidates.
+
+Two asymmetries worth noting, because they rule out a simpler rule:
+
+- `Kimi-K3`'s first commit lands **11 days after** its announcement, so no "earliest
+  signal" heuristic would find it. The repo gained content after the model was public.
+- `Olmo-3`'s imported history predates its announcement by 20 days, in the opposite
+  direction.
+
+No single API-derived rule can be correct for both. **Hand resolution is a required
+step of this method, not a cleanup pass** — which is why `release_date_method` is a
+stored column and why a missing `source_url` blocks publication.
+
 **Still not obtainable from the API:** the date a repo flipped from private to public.
 No endpoint exposes it. For 22 models, hand-resolution against vendor announcements is
 the honest fix, and it is why `release_date_method` includes `hand_resolved`.

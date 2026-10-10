@@ -1,0 +1,9 @@
+# Hand-resolved release dates (docs/metrics.md §0). Authoritative over API-derived
+# candidates. The private->public flip date is not exposed by any Hub endpoint, so for
+# flagged models a vendor announcement is the only defensible source.
+# source_url is REQUIRED before publication: the methods page has to cite each one.
+hf_id,release_date,vendor,source_url,resolved_by,resolved_at
+allenai/Olmo-3-7B-Think,2025-11-20,Ai2,,jorge,2026-10-10
+google/gemma-4-31B-it,2026-04-02,Google DeepMind,,jorge,2026-10-10
+moonshotai/Kimi-K3,2026-07-16,Moonshot AI,,jorge,2026-10-10
+Qwen/Qwen3.8-27B,2026-08-14,Qwen,,jorge,2026-10-10
