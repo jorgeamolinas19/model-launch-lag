@@ -102,6 +102,10 @@ PER_MODEL_DIR = {
     "transformers": "src/transformers/models",
     "vllm": "vllm/model_executor/models",
     "sglang": "python/sglang/srt/models",
+    # TensorRT-LLM DOES have per-architecture files (modeling_qwen3.py, ...), 75 of
+    # them. Missing this is why trtllm had zero exact-fidelity observations and looked
+    # like the slowest framework by +52d - a measurement artifact, not a finding.
+    "trtllm": "tensorrt_llm/_torch/models",
 }
 _DIR_CACHE = {}
 _ARCH_SUFFIX = re.compile(
@@ -127,8 +131,9 @@ def list_model_dir(repo, path):
     if key not in _DIR_CACHE:
         try:
             _, d = gh.get(f"repos/{repo}/contents/{urllib.parse.quote(path)}")
-            _DIR_CACHE[key] = {_norm(e["name"].removesuffix(".py")): f"{path}/{e['name']}"
-                               for e in d}
+            _DIR_CACHE[key] = {
+                _norm(e["name"].removesuffix(".py").removeprefix("modeling_")):
+                    f"{path}/{e['name']}" for e in d}
         except urllib.error.HTTPError:
             _DIR_CACHE[key] = {}
     return _DIR_CACHE[key]
