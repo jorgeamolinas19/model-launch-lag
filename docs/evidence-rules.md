@@ -182,10 +182,34 @@ field can break a model whose architecture class is already registered.
 | **Model-specific support** | The framework could load *that particular model* — its config, tokenizer, and implementation requirements. | `supported` |
 | **Observed support date** | The earliest *verifiable* date of working support. May be later than an architecture declaration date, and is the only figure safe to quote as latency. | `event_date` + `fidelity` |
 
-The nine pairs resolved by the architecture-at-release test are therefore recorded as
-**`arch_compatible`, not `supported`**. They are reported separately, and the headline
-median is computed both with and without them — because if a framework's apparent speed
-comes from architectural reuse rather than integration work, the ranking should say so.
+Pairs resolved by the architecture-at-release test are therefore recorded as
+**`arch_compatible`, not `supported`**.
+
+**A negative offset is never converted to zero.** Zero asserts the checkpoint was
+runnable at launch, and that requires its own evidence. Where only a predecessor
+architecture is shown to exist, the model-specific support date stays `undetermined`.
+
+Consequence: `arch_compatible` pairs carry **no `days_to_support` value at all** — they
+count toward coverage and never toward a median. Enforcing this cleared day-0 latency
+claims from **27 of 130 pairs**, each of which had been asserting launch-day support on
+architecture evidence alone. Flooring negatives to zero was a systematic downward bias
+on measured latency, not a conservative simplification as first assumed.
+
+### Adjudicating negative offsets
+
+Negative offsets are resolved by **historical implementation evidence, not a numeric
+threshold** — three successive thresholds each moved the problem rather than solving it.
+The procedure, recorded per case in `negative_offsets_adjudicated.csv`:
+
+1. Find the implementation at the negative-offset commit.
+2. Identify which publicly released checkpoint it originally supported.
+3. Compare the new checkpoint's config and required operations against that implementation.
+4. Accept pre-release integration only where evidence ties the implementation to *this* model.
+
+> Methods statement: negative support offsets were manually adjudicated using historical
+> implementation evidence. Pre-existing architectures were distinguished from
+> model-specific integrations, and architecture presence alone was not treated as proof
+> of executable checkpoint compatibility.
 
 ## States a (model, framework) pair can be in
 

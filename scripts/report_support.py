@@ -136,14 +136,17 @@ def main():
     print("\n\nSENSITIVITY BY EVIDENCE CLASS\n")
     print("  A  model-specific support, exact fidelity   (strictest: proof this")
     print("     checkpoint loaded, dated by implementation-path history)")
-    print("  B  + architecture-compatible at release     (arch declared pre-release;")
-    print("     compatibility with this checkpoint NOT validated)")
-    print("  C  + lower-fidelity dates                   (PR search / release notes)\n")
+    print("  B  + exactly-dated partial support         (llama.cpp conversion half)")
+    print("  C  + lower-fidelity dates                  (PR search / release notes)")
+    print("  AC architecture-compatible, NO latency value: arch declared pre-release but")
+    print("     checkpoint compatibility unproven. Counts for coverage only.\n")
+    # arch_compatible pairs carry NO latency value by adjudication standard: a
+    # pre-existing architecture is not proof the checkpoint ran at launch. They appear
+    # as a separate coverage count (AC), never inside a median.
     tiers = {
         "A": lambda x: x["state"] == "supported" and x["fidelity"] == "exact",
-        "B": lambda x: (x["state"] == "supported" and x["fidelity"] == "exact")
-                       or x["state"] == "arch_compatible",
-        "C": lambda x: x["state"] in ("supported", "partial", "arch_compatible"),
+        "B": lambda x: x["state"] in ("supported", "partial") and x["fidelity"] == "exact",
+        "C": lambda x: x["state"] in ("supported", "partial"),
     }
     cols = {}
     for name, pred in tiers.items():
@@ -156,14 +159,17 @@ def main():
             col[fw] = (km, len(sup))
         cols[name] = col
 
-    print(f"{'framework':<14}{'A med':>8}{'A n':>5}{'B med':>8}{'B n':>5}{'C med':>8}{'C n':>5}")
-    print("-" * 53)
+    print(f"{'framework':<14}{'A med':>8}{'A n':>5}{'B med':>8}{'B n':>5}"
+          f"{'C med':>8}{'C n':>5}{'AC':>5}{'undet':>7}")
+    print("-" * 65)
     for fw in FWS:
         line = f"{fw:<14}"
         for name in "ABC":
             km, n = cols[name][fw]
             line += f"{(f'{km:+d}' if km is not None else 'n/a'):>8}{n:>5}"
-        print(line)
+        ac = sum(1 for x in rows if x["fw"] == fw and x["state"] == "arch_compatible")
+        ud = sum(1 for x in rows if x["fw"] == fw and x["state"] == "undetermined")
+        print(line + f"{ac:>5}{ud:>7}")
 
     def rank(col):
         ok = [(fw, v[0]) for fw, v in col.items() if v[0] is not None]

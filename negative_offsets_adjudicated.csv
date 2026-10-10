@@ -1,0 +1,29 @@
+# Manual adjudication of negative support offsets (docs/evidence-rules.md).
+#
+# STANDARD APPLIED: a negative offset is NOT converted to zero. Zero is a claim that
+# the checkpoint was runnable at launch, and that needs its own evidence. Where the
+# evidence shows only that a predecessor architecture existed, the model-specific
+# support date stays UNDETERMINED rather than being floored to 0.
+#
+# decision values:
+#   predecessor_architecture = arch predates this checkpoint; arch_compatible, no latency value
+#   model_specific_merge     = a merged, model-specific artifact dates real support
+#   reject_pending_merge     = negative offset rejected; no verified merge yet -> undetermined
+framework,hf_id,reported_offset_days,decision,corrected_event_date,verified,evidence_url,note
+trtllm,nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16,-232,predecessor_architecture,,api,https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/models/supported-models.md,"NemotronHForCausalLM is not exclusive to Nano 3; it also covers earlier Nemotron-H checkpoints. Architecture presence at that commit does not prove Nano 3 weights loaded."
+vllm,nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16,-182,predecessor_architecture,,api,https://github.com/vllm-project/vllm/blob/main/docs/models/supported_models.md,"Same architecture maps to Nemotron-H 8B/47B/56B. Predecessor reuse, not early access."
+sglang,deepseek-ai/DeepSeek-V3,-157,reject_pending_merge,,api,https://github.com/sgl-project/sglang/issues/2585,"Model-specific support request opened on DeepSeek-V3's release day (verified: created and closed 2024-12-26), which contradicts working integration 157 days earlier. No verified merge date yet."
+transformers,deepseek-ai/DeepSeek-V4.1-Flash,-131,reject_pending_merge,,api,https://github.com/huggingface/transformers/pull/48721,"VERIFIED via API: PR #48721 'Add DeepSeek-V4.1 (deepseek_v41) text model' was created 2026-09-11 and CLOSED 2026-09-16 WITHOUT MERGING (merged=false). There is no merged model-specific implementation, so the -131d path match was spurious."
+llamacpp,nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16,-97,model_specific_merge,2025-12-16,api,https://github.com/ggml-org/llama.cpp/pull/18058,"VERIFIED via API: PR #18058 'llama : add support for NVIDIA Nemotron 3 Nano' opened 2025-12-15, merged 2025-12-16T06:19:26Z. Replaces the architecture-name match. Offset depends on an unresolved release_date - see note below."
+#
+# OPEN QUESTION surfaced by the llama.cpp case:
+#   This review dates the offset +1d against a 2025-12-15 vendor announcement. The HF
+#   repo's createdAt and first content commit are both ~2025-12-04. Under this project's
+#   own definition (release_date = weights publicly downloadable; metrics.md §0) the
+#   offset is +12d, and +1d is the announcement-to-support figure.
+#   Which is right depends on whether the weights were PUBLIC on 2025-12-04 or uploaded
+#   privately and flipped public on announcement. This is a third failure mode the
+#   uncertainty rule does not catch: a non-gated repo whose content predates its
+#   announcement, so both API candidates agree and neither is the public date.
+#   Needs resolution: was nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16 downloadable before
+#   2025-12-15?
