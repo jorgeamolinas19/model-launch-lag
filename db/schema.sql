@@ -25,7 +25,11 @@ CREATE TABLE IF NOT EXISTS models (
   first_commit_at        TEXT,
   license                TEXT,
   support_kind           TEXT,               -- 'new_arch' | 'variant'   (docs/metrics.md §1)
-  in_cohort              INTEGER DEFAULT 1
+  in_cohort              INTEGER DEFAULT 1,
+  -- Hardware floor: ARITHMETIC ESTIMATES, never measurements (docs/metrics.md §6).
+  vram_floor_fp16_gb     REAL,
+  vram_floor_int4_gb     REAL,
+  min_gpu_class_fp16     TEXT                -- smallest common card clearing the fp16 floor
 );
 
 -- The name-matching problem: 'Qwen3', 'qwen-3', 'Qwen/Qwen3-8B', 'qwen3:8b' (Ollama tag).
@@ -117,4 +121,16 @@ CREATE TABLE IF NOT EXISTS runs (
   repo_commit      TEXT,
   raw_dir          TEXT,
   notes            TEXT
+);
+
+-- Hardware mentioned in issue reports. Mined by regex from body_excerpt, so it is a
+-- lower bound on what people ran: absence of a GPU name is not absence of a GPU.
+CREATE TABLE IF NOT EXISTS issue_hardware (
+  issue_id        INTEGER REFERENCES issues(id),
+  gpu_names       TEXT,        -- JSON array of normalized names: 'RTX 4090','A100-80GB','T4'
+  gpu_class       TEXT,        -- 'consumer' | 'workstation' | 'datacenter' | 'apple_silicon' | 'cpu_only'
+  vram_reported_gb REAL,       -- parsed from CUDA OOM text ("total capacity of 23.64 GiB")
+  quant_mentioned TEXT,        -- 'gguf_q4_k_m','awq','fp8',... normalized, else NULL
+  extract_method  TEXT NOT NULL, -- 'regex_traceback'|'regex_body'|'hand'
+  PRIMARY KEY (issue_id)
 );

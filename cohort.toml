@@ -108,6 +108,20 @@ support_kind = "new_arch"
 why = "vision tower + processor path; a variant that needs real work"
 verify = true
 
+[[models]]
+hf_id = "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+family = "llama4"
+support_kind = "new_arch"
+why = "MoE + interleaved-RoPE + native multimodal in one launch; widely-reported early support churn makes it the best-documented hard-launch case available"
+verify = true
+
+[[models]]
+hf_id = "nvidia/Llama-3_1-Nemotron-Nano-8B-v1"
+family = "nemotron"
+support_kind = "new_arch"
+why = "NAS-derived layer structure: a derivative that needs its own code path despite a Llama lineage, which separates arch-derivation work from fine-tune-only work"
+verify = true
+
 # ---------------------------------------------------------------------------
 # variant controls — expected day 0; the finding is any exception
 # ---------------------------------------------------------------------------
@@ -145,6 +159,13 @@ support_kind = "variant"
 why = "derivative arch (pruned/distilled) that often needs its own code path"
 verify = true
 
+[[models]]
+hf_id = "meta-llama/Llama-3.3-70B-Instruct"
+family = "llama3"
+support_kind = "variant"
+why = "mature arch, fine-tune-only release — the day-0 baseline every other case is measured against"
+verify = true
+
 # ---------------------------------------------------------------------------
 # Alias seeds for the name-matching problem. Extend as unmatched issues surface:
 # the collector should log its top unmatched candidate strings for exactly this.
@@ -152,12 +173,15 @@ verify = true
 [aliases]
 loose      = ["qwen3", "qwen-3", "qwen 3", "deepseek-v3", "deepseek v3", "dsv3",
               "deepseek-r1", "r1", "gemma3", "gemma-3", "gpt-oss", "gptoss",
-              "jamba", "olmo2", "olmo-2", "phi-4", "phi4", "nemotron", "qwen2.5-vl", "qwen2_5_vl"]
+              "jamba", "olmo2", "olmo-2", "phi-4", "phi4", "nemotron", "qwen2.5-vl", "qwen2_5_vl",
+              "llama4", "llama-4", "llama 4", "scout", "maverick", "llama3.3", "llama-3.3"]
 ollama_tag = ["qwen3:8b", "qwen3:32b", "qwen3:30b-a3b", "gemma3:27b", "gemma3:4b",
-              "deepseek-r1:32b", "gpt-oss:20b", "phi4", "olmo2:13b"]
+              "deepseek-r1:32b", "gpt-oss:20b", "phi4", "olmo2:13b",
+              "llama4:scout", "llama3.3:70b", "nemotron-nano"]
 arch_class = ["Qwen3ForCausalLM", "Qwen3MoeForCausalLM", "DeepseekV3ForCausalLM",
               "Gemma3ForConditionalGeneration", "GptOssForCausalLM",
               "JambaForCausalLM", "Olmo2ForCausalLM", "Phi3ForCausalLM",
-              "Qwen2_5_VLForConditionalGeneration"]
+              "Qwen2_5_VLForConditionalGeneration",
+              "Llama4ForConditionalGeneration", "DeciLMForCausalLM", "LlamaForCausalLM"]
 # arch_class strings in a traceback are the HIGHEST-confidence match signal available —
 # they appear verbatim in "architecture not supported" errors. Weight them above slugs.

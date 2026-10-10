@@ -135,7 +135,61 @@ Report both pooled and **per-framework** category mixes. Pooled rankings partly 
 re-describe each framework's user base (consumer-hardware hobbyists versus datacenter
 operators file different bugs), so the pooled table alone would mislead.
 
-## 5. Threats to validity — publish these, don't bury them
+## 6. Hardware profile and the capability gap
+
+Two different things, kept strictly separate because conflating an estimate with a
+measurement is how a hardware claim becomes indefensible.
+
+### 6a. Estimated floor (arithmetic, not measured)
+
+```
+vram_floor_fp16_gb = params_b * 2 * 1.20   # weights + ~20% runtime/activation overhead
+vram_floor_int4_gb = params_b * 0.55 * 1.25
+```
+
+KV cache is excluded and reported separately, since it scales with context and batch
+and would make a single number meaningless. **Label these as estimates everywhere.**
+They answer "roughly what class of card does this need", nothing more.
+
+### 6b. Observed hardware (mined from issue reports)
+
+What people *actually tried*, extracted by regex from issue bodies — GPU names, and
+reported VRAM from CUDA OOM text such as `GPU 0 has a total capacity of 23.64 GiB`.
+Normalized into `gpu_class`: consumer / workstation / datacenter / apple_silicon /
+cpu_only.
+
+**This is a lower bound.** Many reporters never name their hardware, so absence of a
+GPU name is not absence of a GPU. Report coverage (`% of issues with hardware
+extracted`) next to every hardware figure, and never compute a share over the extracted
+subset without stating what fraction of issues that subset is.
+
+### 6c. The capability gap — the platform-relevant metric
+
+```
+capability_gap = share of first-30-day oom_hardware issues where
+                 vram_reported_gb < vram_floor_fp16_gb for that model
+```
+
+Read as: **people attempting a model on hardware that could never have run it in that
+precision.** A high gap is not user error — it is a signal about what the ecosystem
+*wants to run* versus what it can, and it points at specific fixes (shipping a
+quantized artifact at launch, publishing a hardware-requirements table on day 0,
+clearer preflight errors).
+
+Report alongside it:
+
+- `gpu_class` mix per model and per framework — this is where framework user bases
+  visibly diverge, and it is the honest explanation for much of the category-mix
+  variation in §4
+- the quantization mix in OOM reports — if most gap issues name a quant that the
+  framework did not yet support at launch, the finding is a *launch-artifact timing*
+  problem, not a hardware problem
+
+**Limitation to publish:** hardware is self-reported by a self-selected subset of users
+who were motivated enough to file an issue. These figures describe the population of
+*reporters*, not the population of *users*, and no reweighting fixes that.
+
+## 7. Threats to validity — publish these, don't bury them
 
 | Threat | Mitigation | Residual |
 |---|---|---|
@@ -147,6 +201,7 @@ operators file different bugs), so the pooled table alone would mislead.
 | **Who files issues** | Per-framework category mixes | Self-selection of reporters is not correctable |
 | **Evidence fidelity** | Grade every support event (`exact` / `good` / `coarse`) | TensorRT-LLM dates are coarse by nature of its publishing model |
 | **Severity subjectivity** | Structural signals stored alongside; self-agreement κ published | Severity remains the softest field in the dataset |
+| **Hardware self-reporting** (§6) | Publish extraction coverage with every figure | Describes reporters, not users; not correctable by reweighting |
 
 ## Reproducibility contract
 
