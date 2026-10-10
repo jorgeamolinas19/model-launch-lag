@@ -1,0 +1,383 @@
+[
+ {
+  "arch": "Gemma4ForConditionalGeneration",
+  "id": "google/gemma-4-31B-it",
+  "created": "2026-03-11",
+  "pb": 31.3,
+  "dl": 9619659,
+  "gated": "False",
+  "base": [
+   "google/gemma-4-31B"
+  ]
+ },
+ {
+  "arch": "Glm5NextForConditionalGeneration",
+  "id": "zai-org/GLM-5.3-Flash",
+  "created": "2026-08-25",
+  "pb": 321.3,
+  "dl": 6479110,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "DSparkDraftModel",
+  "id": "RadixArk/Kimi-K3-DSpark",
+  "created": "2026-07-27",
+  "pb": 2.2,
+  "dl": 5941327,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "DeepseekV32ForCausalLM",
+  "id": "deepseek-ai/DeepSeek-V3.2",
+  "created": "2025-12-01",
+  "pb": 685.4,
+  "dl": 4576177,
+  "gated": "False",
+  "base": [
+   "deepseek-ai/DeepSeek-V3.2-Exp-Base"
+  ]
+ },
+ {
+  "arch": "Qwen3VLForConditionalGeneration",
+  "id": "Qwen/Qwen3-VL-4B-Instruct",
+  "created": "2025-10-11",
+  "pb": 4.4,
+  "dl": 3113173,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Qwen2ForCausalLM",
+  "id": "CMSManhattan/JiRackUltra_1b",
+  "created": "2026-08-02",
+  "pb": 1.8,
+  "dl": 2537624,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Qwen3_5ForConditionalGeneration",
+  "id": "Qwen/Qwen3.5-27B",
+  "created": "2026-02-24",
+  "pb": 27.8,
+  "dl": 1880136,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Qwen4ExpForConditionalGeneration",
+  "id": "Qwen/Qwen3.8-Flash-Next",
+  "created": "2026-08-24",
+  "pb": 180.0,
+  "dl": 1798393,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Glm4MoeLiteForCausalLM",
+  "id": "zai-org/GLM-4.7-Flash",
+  "created": "2026-01-19",
+  "pb": 31.2,
+  "dl": 1473173,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "DeepseekV41ForCausalLM",
+  "id": "deepseek-ai/DeepSeek-V4.1-Flash",
+  "created": "2026-09-10",
+  "pb": 763.2,
+  "dl": 1355278,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "KimiK3ForConditionalGeneration",
+  "id": "moonshotai/Kimi-K3",
+  "created": "2026-06-13",
+  "pb": 2779.9,
+  "dl": 1160630,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "InklingForConditionalGeneration",
+  "id": "thinkingmachines/Inkling",
+  "created": "2026-07-14",
+  "pb": 952.4,
+  "dl": 1019604,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "NemotronHForCausalLM",
+  "id": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+  "created": "2025-12-04",
+  "pb": 31.6,
+  "dl": 927805,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "DeepseekV4ForCausalLM",
+  "id": "deepseek-ai/DeepSeek-V4-Flash",
+  "created": "2026-04-22",
+  "pb": 290.9,
+  "dl": 904765,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Apertus1p5ForConditionalGeneration",
+  "id": "swiss-ai/Apertus-v1.5-8B",
+  "created": "2026-07-24",
+  "pb": 8.9,
+  "dl": 697845,
+  "gated": "auto",
+  "base": null
+ },
+ {
+  "arch": "DiffusionGemmaForBlockDiffusion",
+  "id": "google/diffusiongemma-26B-A4B-it",
+  "created": "2026-06-09",
+  "pb": 25.8,
+  "dl": 652523,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Qwen3NextForCausalLM",
+  "id": "Qwen/Qwen3-Coder-Next",
+  "created": "2026-01-30",
+  "pb": 79.7,
+  "dl": 594051,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "GlmMoeDsaForCausalLM",
+  "id": "zai-org/GLM-5",
+  "created": "2026-02-11",
+  "pb": 753.9,
+  "dl": 585542,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "GraniteForCausalLM",
+  "id": "ibm-granite/granite-4.1-3b",
+  "created": "2026-04-06",
+  "pb": 3.4,
+  "dl": 570792,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Qwen3_5ForCausalLM",
+  "id": "CMSManhattan/JiRackDeltaNet_27b",
+  "created": "2026-08-29",
+  "pb": 27.3,
+  "dl": 555967,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Olmo3ForCausalLM",
+  "id": "allenai/Olmo-3-7B-Think",
+  "created": "2025-11-18",
+  "pb": 7.3,
+  "dl": 490336,
+  "gated": "False",
+  "base": "allenai/Olmo-3-7B-Think-DPO"
+ },
+ {
+  "arch": "Qwen3_5MoeForConditionalGeneration",
+  "id": "Qwen/Qwen3.5-397B-A17B",
+  "created": "2026-02-16",
+  "pb": 403.4,
+  "dl": 476504,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "HYV3ForCausalLM",
+  "id": "tencent/Hy3",
+  "created": "2026-07-02",
+  "pb": 298.8,
+  "dl": 465571,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "LagunaForCausalLM",
+  "id": "poolside/Laguna-XS.2",
+  "created": "2026-04-23",
+  "pb": 33.4,
+  "dl": 335457,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "KimiK25ForConditionalGeneration",
+  "id": "moonshotai/Kimi-K2.5",
+  "created": "2026-01-01",
+  "pb": 1026.9,
+  "dl": 331059,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "DFlash2DraftModel",
+  "id": "incoai/Qwen3.8-27B-DFlash2",
+  "created": "2026-08-18",
+  "pb": 1.9,
+  "dl": 276401,
+  "gated": "False",
+  "base": [
+   "Qwen/Qwen3.8-27B"
+  ]
+ },
+ {
+  "arch": "LlamaForCausalLM",
+  "id": "utter-project/EuroLLM-22B-Instruct-2512",
+  "created": "2025-12-05",
+  "pb": 22.6,
+  "dl": 269623,
+  "gated": "False",
+  "base": [
+   "utter-project/EuroLLM-22B-2512"
+  ]
+ },
+ {
+  "arch": "SmolLM3ForCausalLM",
+  "id": "webAI-Official/TwIL-LM3",
+  "created": "2026-08-03",
+  "pb": 3.1,
+  "dl": 260235,
+  "gated": "False",
+  "base": "HuggingFaceTB/SmolLM3-3B"
+ },
+ {
+  "arch": "MuseGlimmerForConditionalGeneration",
+  "id": "meta-models/Muse-Glimmer-30B",
+  "created": "2026-08-09",
+  "pb": 29.8,
+  "dl": 250866,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "LocateAnythingForConditionalGeneration",
+  "id": "nvidia/LocateAnything-3B",
+  "created": "2026-03-02",
+  "pb": 3.8,
+  "dl": 250179,
+  "gated": "False",
+  "base": [
+   "Qwen/Qwen2.5-3B-Instruct"
+  ]
+ },
+ {
+  "arch": "MiniMaxM2ForCausalLM",
+  "id": "MiniMaxAI/MiniMax-M2",
+  "created": "2025-10-22",
+  "pb": 228.7,
+  "dl": 244494,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Step3p5ForCausalLM",
+  "id": "stepfun-ai/Step-3.5-Flash",
+  "created": "2026-02-01",
+  "pb": 199.4,
+  "dl": 242700,
+  "gated": "False",
+  "base": [
+   "stepfun-ai/step-3.5-flash"
+  ]
+ },
+ {
+  "arch": "MiniCPMV4_6ForConditionalGeneration",
+  "id": "openbmb/MiniCPM-V-4.6",
+  "created": "2026-04-13",
+  "pb": 1.3,
+  "dl": 219369,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "KimiLinearForCausalLM",
+  "id": "moonshotai/Kimi-Linear-48B-A3B-Instruct",
+  "created": "2025-10-30",
+  "pb": 49.1,
+  "dl": 218020,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Gemma3ForConditionalGeneration",
+  "id": "google/medgemma-1.5-4b-it",
+  "created": "2026-01-07",
+  "pb": 4.3,
+  "dl": 215657,
+  "gated": "auto",
+  "base": null
+ },
+ {
+  "arch": "LLaDA2MoeModelLM",
+  "id": "inclusionAI/LLaDA2.0-mini",
+  "created": "2025-11-25",
+  "pb": 16.3,
+  "dl": 215438,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "MiMoV2ForCausalLM",
+  "id": "XiaomiMiMo/MiMo-V2.5",
+  "created": "2026-04-27",
+  "pb": 310.8,
+  "dl": 209126,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "MiniMaxM3SparseForConditionalGeneration",
+  "id": "MiniMaxAI/MiniMax-M3",
+  "created": "2026-06-02",
+  "pb": 427.0,
+  "dl": 205186,
+  "gated": "False",
+  "base": null
+ },
+ {
+  "arch": "Gemma3ForCausalLM",
+  "id": "QCRI/Fanar-2-27B-Instruct",
+  "created": "2026-03-16",
+  "pb": 27.0,
+  "dl": 204838,
+  "gated": "False",
+  "base": "google/gemma-3-27b-pt"
+ },
+ {
+  "arch": "GigaChatAudioForConditionalGeneration",
+  "id": "ai-sage/GigaChat3.1-Audio-10B-A1.8B",
+  "created": "2026-07-13",
+  "pb": null,
+  "dl": 184684,
+  "gated": "False",
+  "base": "ai-sage/GigaChat3.1-10B-A1.8B"
+ },
+ {
+  "arch": "Granite4VisionForConditionalGeneration",
+  "id": "ibm-granite/granite-vision-4.1-4b",
+  "created": "2026-04-16",
+  "pb": 4.0,
+  "dl": 183486,
+  "gated": "False",
+  "base": null
+ }
+]

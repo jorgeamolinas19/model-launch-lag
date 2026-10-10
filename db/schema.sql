@@ -29,7 +29,11 @@ CREATE TABLE IF NOT EXISTS models (
   -- Hardware floor: ARITHMETIC ESTIMATES, never measurements (docs/metrics.md §6).
   vram_floor_fp16_gb     REAL,
   vram_floor_int4_gb     REAL,
-  min_gpu_class_fp16     TEXT                -- smallest common card clearing the fp16 floor
+  min_gpu_class_fp16     TEXT,               -- smallest common card clearing the fp16 floor
+  gated                  TEXT,               -- False|'auto'|'manual' (blocks weights, not metadata)
+  weights_commit_at      TEXT,               -- heuristic: first commit that looks like a weight upload
+  band                   TEXT,               -- 'primary'|'historical' (cohort.toml [bands])
+  draft_target           TEXT                -- for support_kind='draft_pair': the target model
 );
 
 -- The name-matching problem: 'Qwen3', 'qwen-3', 'Qwen/Qwen3-8B', 'qwen3:8b' (Ollama tag).
@@ -133,4 +137,18 @@ CREATE TABLE IF NOT EXISTS issue_hardware (
   quant_mentioned TEXT,        -- 'gguf_q4_k_m','awq','fp8',... normalized, else NULL
   extract_method  TEXT NOT NULL, -- 'regex_traceback'|'regex_body'|'hand'
   PRIMARY KEY (issue_id)
+);
+
+-- Quantized re-publications are derivative artifacts, not launches, so they are not
+-- cohort rows. Their TIMING is a finding: when a usable quant in a given format
+-- appeared, and who published it (the model vendor, a hardware vendor, or community).
+CREATE TABLE IF NOT EXISTS quant_artifacts (
+  hf_id          TEXT REFERENCES models(hf_id),  -- the model being quantized
+  repo           TEXT NOT NULL,                  -- the quant repo
+  fmt            TEXT NOT NULL,                  -- 'nvfp4','mxfp4','fp8','gguf','awq','gptq','mlx','int4'
+  publisher_kind TEXT NOT NULL,                  -- 'first_party'|'hardware_vendor'|'community'
+  published_at   TEXT,
+  downloads      INTEGER,
+  snapshot_date  TEXT NOT NULL,
+  PRIMARY KEY (hf_id, repo, fmt)
 );

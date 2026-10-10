@@ -89,6 +89,44 @@ do not rank TensorRT-LLM against exact-fidelity frameworks without the caveat.**
 this explicit also keeps the finding constructive: it is a publishing-visibility
 artifact, not a statement about engineering speed.
 
+## Two support questions that are not architecture support (v2)
+
+### Draft/target pairing (speculative decoding)
+
+A framework can serve a draft model and a target model individually and still reject
+them as a speculative pair. Support is therefore a claim about the **pair**, not about
+either architecture.
+
+> Pairing support for *(draft D, target T)* in framework *F* landed on the date of the
+> earliest merged artifact that lets a user run *T* with *D* as a speculative draft.
+
+- **vLLM / SGLang:** merged PR adding the draft architecture to the speculative-decoding path, or adding the method (EAGLE/MTP) for the target's architecture. **Fidelity: exact.**
+- **llama.cpp:** merged support for the draft arch in the draft-model path, since the generic `--draft` flag requires both archs to load **and** vocabularies to match. **Fidelity: exact.**
+- **TensorRT-LLM:** merged example or plugin for the speculation method on that model family, or a changelog entry. **Fidelity: coarse.**
+- **Ollama:** record `not_applicable` unless the library exposes a draft pairing.
+
+**Vocabulary compatibility is a precondition, not support.** Where a pair shares no
+tokenizer, record `not_applicable` with that reason rather than `unsupported` — the
+framework cannot be said to lack support for something arithmetically impossible.
+
+### Quant-format support (distinct from artifact availability)
+
+`quant_lag` (metrics §7) measures when a quantized *artifact* appeared. This rule
+measures when a *framework* could execute that format, which is a different date and
+often the binding one.
+
+> Format support landed on the date of the earliest merged artifact providing kernels
+> or a loader for that format, **on a GPU generation the user plausibly has.**
+
+- **vLLM / SGLang:** merged quant-method registration plus a kernel path. **Fidelity: exact.**
+- **llama.cpp:** merged quant type in the GGUF type table and the dequant path. **Fidelity: exact.**
+- **TensorRT-LLM:** changelog or example demonstrating the format. **Fidelity: coarse.**
+
+**Record the GPU generation requirement with the date.** A format supported only on the
+newest architecture is not available to most of the install base, and a date without
+that qualifier would overstate real availability. This is a capability statement about
+hardware generations, not a judgment about any vendor's roadmap.
+
 ## States a (model, framework) pair can be in
 
 Every pair gets a row. Absence of support is data, not a missing value — this is what

@@ -7,10 +7,14 @@
 # Release dates are deliberately absent: they are DERIVED (docs/metrics.md §0), never typed.
 
 [meta]
-version = "v1"
-frozen_on = "2026-10-10"
+version = "v2"
+frozen_on = "2026-10-10"  # v2: rebuilt from Hub data after v1 was found 14 months stale
 # A model is eligible only if snapshot_date >= release_date + 30 (full issue window).
 min_observation_days = 30
+
+[bands]
+primary    = { from = "2025-10-01", to = "2026-09-10" }
+historical = { from = "2024-11-01", to = "2025-08-31" }
 
 [inclusion]
 # Stated criteria, so the cohort is reproducible rather than taste.
@@ -22,10 +26,23 @@ rule = """
    or (b) is a deliberately chosen control variant of an arch already present -> variant.
 5. Weighted toward architecture novelty, NOT toward popularity: novelty is where
    days-to-support carries signal. Downloads are a normalizer, not a selection filter.
+6. Two bands. PRIMARY = launches in 2025-10-01..2026-09-10, selected by querying the
+   Hub (top-download text-generation and image-text-to-text, deduplicated to the
+   earliest repo per architecture, with quant/derivative/republisher/test-fixture repos
+   filtered out). HISTORICAL = six verified 2024-11..2025-08 launches, retained so the
+   time-trend confound in docs/metrics.md can be measured instead of merely disclaimed.
+7. Selection is data-derived, not recalled. v1 of this file was written from model
+   knowledge and proved 14 months out of date; candidate generation now runs against
+   the live API (raw/hub/candidates_*.json) and every field is API-resolved.
 """
 excluded = """
 Embedding-only, reranker, ASR, and image-generation models (frameworks in scope are
 chat/completion servers; see `not_applicable` state in docs/evidence-rules.md).
+OCR and document-parsing models: a large share of 2026 releases, but mostly served
+through separate pipelines, so they would contribute `not_applicable` rows rather than
+comparable latency. Recorded as out of scope, not as absent.
+Quantized, MLX, and GGUF re-publications: derivative artifacts, not launches. Tracked
+instead in `quant_artifacts` (docs/metrics.md) because their TIMING is a finding.
 """
 
 [frameworks]
@@ -37,133 +54,198 @@ trtllm       = { repo = "NVIDIA/TensorRT-LLM", support_via = "both" }
 transformers = { repo = "huggingface/transformers", support_via = "code" }
 
 # ---------------------------------------------------------------------------
-# new_arch cases — the actual latency measurement
+# PRIMARY BAND - new architectures (the latency measurement)
 # ---------------------------------------------------------------------------
+
+[[models]]
+hf_id = "google/gemma-4-31B-it"
+family = "gemma4"
+support_kind = "new_arch"
+band = "primary"
+why = "highest-volume launch in the window; a mainstream release is the baseline every other case is read against"
+verify = true
+
+[[models]]
+hf_id = "Qwen/Qwen3.5-27B"
+family = "qwen3.5"
+support_kind = "new_arch"
+band = "primary"
+why = "dense flagship of the most prolific open-weight vendor in the window"
+verify = true
+
+[[models]]
+hf_id = "deepseek-ai/DeepSeek-V3.2"
+family = "deepseek-v3.2"
+support_kind = "new_arch"
+band = "primary"
+why = "685B MoE iterating on a widely-supported predecessor: isolates incremental-arch work"
+verify = true
+
+[[models]]
+hf_id = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
+family = "nemotron3"
+support_kind = "new_arch"
+band = "primary"
+why = "hybrid Mamba/attention family from a vendor that also maintains a serving stack"
+verify = true
+
+[[models]]
+hf_id = "zai-org/GLM-5"
+family = "glm5"
+support_kind = "new_arch"
+band = "primary"
+why = "754B MoE with a novel sparse-attention variant; frontier scale outside the best-known families"
+verify = true
+
+[[models]]
+hf_id = "moonshotai/Kimi-K3"
+family = "kimi-k3"
+support_kind = "new_arch"
+band = "primary"
+why = "2.78T params: the extreme of the hardware-floor range, forcing multi-node serving"
+verify = true
+
+[[models]]
+hf_id = "moonshotai/Kimi-Linear-48B-A3B-Instruct"
+family = "kimi-linear"
+support_kind = "new_arch"
+band = "primary"
+why = "linear-attention architecture; a kernel-level departure that cannot be inherited"
+verify = true
+
+[[models]]
+hf_id = "Qwen/Qwen3-VL-4B-Instruct"
+family = "qwen3-vl"
+support_kind = "new_arch"
+band = "primary"
+why = "vision tower plus processor path, the canonical variant-needs-real-work case"
+verify = true
+
+[[models]]
+hf_id = "google/diffusiongemma-26B-A4B-it"
+family = "diffusiongemma"
+support_kind = "new_arch"
+band = "primary"
+why = "block-diffusion generation rather than autoregressive: expected to be unsupported in several frameworks, which makes it a genuine right-censoring case rather than a gap"
+verify = true
+
+[[models]]
+hf_id = "allenai/Olmo-3-7B-Think"
+family = "olmo3"
+support_kind = "new_arch"
+band = "primary"
+why = "fully-open lab at ~20x lower downloads than the band leaders: the direct test of the popularity confound"
+verify = true
+
+[[models]]
+hf_id = "deepseek-ai/DeepSeek-V4.1-Flash"
+family = "deepseek-v4.1"
+support_kind = "new_arch"
+band = "primary"
+why = "newest launch clearing the 30-day observation window; tests the recency edge of the method"
+verify = true
+
+# ---------------------------------------------------------------------------
+# PRIMARY BAND - variant controls (expected day 0; the finding is any exception)
+# ---------------------------------------------------------------------------
+
+[[models]]
+hf_id = "Qwen/Qwen3.5-397B-A17B"
+family = "qwen3.5"
+support_kind = "variant"
+band = "primary"
+why = "MoE sibling of a dense arch released weeks apart: the sharpest test of whether inheritance is actually free"
+verify = true
+
+[[models]]
+hf_id = "Qwen/Qwen3.8-27B"
+family = "qwen3.8"
+support_kind = "variant"
+band = "primary"
+why = "later flagship at high download volume; verification will show whether it reuses an existing arch class"
+verify = true
+
+[[models]]
+hf_id = "Qwen/Qwen3-Coder-Next"
+family = "qwen3-next"
+support_kind = "variant"
+band = "primary"
+why = "code-specialized release on its own arch class: separates domain fine-tuning from arch work"
+verify = true
+
+[[models]]
+hf_id = "ibm-granite/granite-4.1-3b"
+family = "granite4"
+support_kind = "variant"
+band = "primary"
+why = "small enterprise model on a long-supported arch family: the low end of the hardware range"
+verify = true
+
+# ---------------------------------------------------------------------------
+# PRIMARY BAND - draft/target pair (speculative decoding; new dimension in v2)
+# Support here is a PAIRING, not an architecture: a framework can serve both halves
+# and still not accept them as a speculative pair. See docs/evidence-rules.md.
+# ---------------------------------------------------------------------------
+
+[[models]]
+hf_id = "RadixArk/Kimi-K3-DSpark"
+family = "kimi-k3"
+support_kind = "draft_pair"
+band = "primary"
+draft_target = "moonshotai/Kimi-K3"
+why = "2.2B draft model with higher download volume than most full releases in the band, which makes speculative-decoding enablement a mainstream launch concern rather than a niche one"
+verify = true
+
+# ---------------------------------------------------------------------------
+# HISTORICAL BAND - verified 2024-11..2025-08, retained for the time-trend measurement
+# ---------------------------------------------------------------------------
+
 [[models]]
 hf_id = "deepseek-ai/DeepSeek-V3"
 family = "deepseek-v3"
 support_kind = "new_arch"
-why = "MLA attention + large MoE; the hardest class of launch to onboard"
-verify = true
-
-[[models]]
-hf_id = "deepseek-ai/DeepSeek-R1"
-family = "deepseek-r1"
-support_kind = "new_arch"
-why = "reasoning-token handling exercises chat templates specifically"
+band = "historical"
+why = "MLA + large MoE; the hardest 2024 onboarding case"
 verify = true
 
 [[models]]
 hf_id = "Qwen/Qwen3-8B"
 family = "qwen3"
 support_kind = "new_arch"
-why = "high-volume family launch; many simultaneous sizes"
+band = "historical"
+why = "high-volume family launch with many simultaneous sizes"
 verify = true
 
 [[models]]
 hf_id = "google/gemma-3-27b-it"
 family = "gemma3"
 support_kind = "new_arch"
-why = "interleaved local/global attention + multimodal"
-verify = true
-
-[[models]]
-hf_id = "openai/gpt-oss-20b"
-family = "gpt-oss"
-support_kind = "new_arch"
-why = "heavily pre-coordinated launch; expect negative days_to_support"
-verify = true
-
-[[models]]
-hf_id = "ai21labs/AI21-Jamba-Mini-1.6"
-family = "jamba"
-support_kind = "new_arch"
-why = "Mamba/attention hybrid; expect wide framework divergence and real censoring"
-verify = true
-
-[[models]]
-hf_id = "allenai/OLMo-2-1124-13B"
-family = "olmo2"
-support_kind = "new_arch"
-why = "fully-open lab, low downloads — tests the popularity confound directly"
-verify = true
-
-[[models]]
-hf_id = "microsoft/phi-4"
-family = "phi4"
-support_kind = "new_arch"
-verify = true
-
-[[models]]
-hf_id = "mistralai/Mistral-Small-3.1-24B-Instruct-2503"
-family = "mistral-small-3"
-support_kind = "new_arch"
-why = "non-HF-native tokenizer history makes template issues likely"
-verify = true
-
-[[models]]
-hf_id = "Qwen/Qwen2.5-VL-7B-Instruct"
-family = "qwen2.5-vl"
-support_kind = "new_arch"
-why = "vision tower + processor path; a variant that needs real work"
+band = "historical"
+why = "direct predecessor of gemma-4: a within-family two-year comparison"
 verify = true
 
 [[models]]
 hf_id = "meta-llama/Llama-4-Scout-17B-16E-Instruct"
 family = "llama4"
 support_kind = "new_arch"
-why = "MoE + interleaved-RoPE + native multimodal in one launch; widely-reported early support churn makes it the best-documented hard-launch case available"
+band = "historical"
+why = "MoE + iRoPE + native multimodal in one launch; gated, so commit history needs an accepted license"
 verify = true
 
 [[models]]
-hf_id = "nvidia/Llama-3_1-Nemotron-Nano-8B-v1"
-family = "nemotron"
+hf_id = "openai/gpt-oss-20b"
+family = "gpt-oss"
 support_kind = "new_arch"
-why = "NAS-derived layer structure: a derivative that needs its own code path despite a Llama lineage, which separates arch-derivation work from fine-tune-only work"
+band = "historical"
+why = "heavily pre-coordinated launch; expect negative days_to_support"
 verify = true
 
-# ---------------------------------------------------------------------------
-# variant controls — expected day 0; the finding is any exception
-# ---------------------------------------------------------------------------
 [[models]]
 hf_id = "Qwen/Qwen3-32B"
 family = "qwen3"
 support_kind = "variant"
-why = "same arch, different size — should be free; confirms the inheritance effect"
-verify = true
-
-[[models]]
-hf_id = "Qwen/Qwen3-30B-A3B"
-family = "qwen3"
-support_kind = "variant"
-why = "MoE sibling of a dense arch — a variant that plausibly is NOT free"
-verify = true
-
-[[models]]
-hf_id = "google/gemma-3-4b-it"
-family = "gemma3"
-support_kind = "variant"
-verify = true
-
-[[models]]
-hf_id = "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
-family = "deepseek-r1"
-support_kind = "variant"
-why = "reuses Qwen arch with R1 templates — isolates template work from arch work"
-verify = true
-
-[[models]]
-hf_id = "nvidia/Llama-3_3-Nemotron-Super-49B-v1"
-family = "nemotron"
-support_kind = "variant"
-why = "derivative arch (pruned/distilled) that often needs its own code path"
-verify = true
-
-[[models]]
-hf_id = "meta-llama/Llama-3.3-70B-Instruct"
-family = "llama3"
-support_kind = "variant"
-why = "mature arch, fine-tune-only release — the day-0 baseline every other case is measured against"
+band = "historical"
+why = "same arch as Qwen3-8B, released the same day: the inheritance baseline"
 verify = true
 
 # ---------------------------------------------------------------------------

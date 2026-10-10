@@ -53,7 +53,7 @@ Read these before writing a collector or labeling an issue. They are the project
 
 | Document | What it settles |
 |---|---|
-| [docs/codebook-v1.md](docs/codebook-v1.md) | Category and severity definitions, the precedence ladder for compound issues, exclusion rules, labeling protocol |
+|  [docs/codebook-v2.md](docs/codebook-v2.md) | 9 categories, severity, the precedence ladder for compound issues, exclusion rules, labeling protocol |
 | [docs/evidence-rules.md](docs/evidence-rules.md) | What counts as "support landed" per framework, with a fidelity grade per rule |
 | [docs/metrics.md](docs/metrics.md) | Exact formulas, censoring treatment, hardware-profile method, threats to validity |
 | [docs/readiness-checklist.md](docs/readiness-checklist.md) | The deliverable, and the evidence rule each item must satisfy to ship |

@@ -18,10 +18,34 @@ would silently corrupt every latency number downstream.
 2. the first commit date in the repo's git history
 3. the first day of non-trivial download volume
 
-Use **(2)** as `release_date` by default. Where (1) and (2) disagree by more than 2
-days, flag the model `release_date_uncertain = 1`, store `release_date_method`, and
-exclude it from headline latency figures unless hand-resolved against an external
-announcement.
+**Rule (revised in v2 after running it on 22 models):** use
+
+```
+release_date = max(createdAt, first_weight_commit)
+```
+
+The first naive version of this rule preferred the first commit outright. Running it
+surfaced two failure modes that make that wrong:
+
+- **Imported history.** `allenai/Olmo-3-7B-Think` has a first commit *18 days before*
+  its `createdAt` — history pushed from an existing repo. A commit cannot predate the
+  repo's public existence, so `createdAt` governs here.
+- **Private-then-published.** `google/gemma-4-31B-it` (22 days), `moonshotai/Kimi-K3`
+  (44 days) and `mistralai/Mistral-Small-3.1` (6 days) were created well before their
+  first content commit. Here the commit governs.
+
+Taking the **later** of the two is defensible in both directions: a model cannot be
+public before its repo exists, and cannot be runnable before its weights land.
+
+Where the candidates disagree by more than 2 days, flag `release_date_uncertain = 1`,
+store `release_date_method`, and **hand-resolve against an external announcement before
+publishing any latency figure for that model.** On the v2 cohort this flags 4 of 22
+(18%) — a rate high enough that skipping the hand resolution would visibly corrupt the
+headline.
+
+**Still not obtainable from the API:** the date a repo flipped from private to public.
+No endpoint exposes it. For 22 models, hand-resolution against vendor announcements is
+the honest fix, and it is why `release_date_method` includes `hand_resolved`.
 
 ## 1. Days to support
 
@@ -189,7 +213,38 @@ Report alongside it:
 who were motivated enough to file an issue. These figures describe the population of
 *reporters*, not the population of *users*, and no reweighting fixes that.
 
-## 7. Threats to validity — publish these, don't bury them
+## 7. Quantization-artifact lag (v2)
+
+A model is not usable by most of the ecosystem when the `bf16` weights land — it is
+usable when a quant that fits available hardware lands. Quant repos are therefore not
+cohort members (they are derivative), but their **timing** is a first-class metric.
+
+```
+quant_lag(model, fmt) = first quant_artifacts.published_at for fmt - release_date
+```
+
+Tracked formats: `nvfp4`, `mxfp4`, `fp8`, `gguf`, `awq`, `gptq`, `mlx`, `int4`.
+
+`publisher_kind` splits who closed the gap:
+
+| Value | Meaning |
+|---|---|
+| `first_party` | The model vendor shipped the quant themselves |
+| `hardware_vendor` | A hardware vendor shipped a quant of someone else's model |
+| `community` | Independent re-publishers |
+
+This is a two-sided measurement and both sides matter. **Artifact availability is not
+framework support:** an `nvfp4` repo is useless if the serving framework has no kernel
+for that format on the user's GPU generation, so `quant_lag` is always reported beside
+the framework's own support date for that format (evidence rules, §Quant formats).
+Where the artifact landed first, the gap is a framework-kernel question; where support
+landed first, it is an artifact-publishing question. Reporting only one side would
+assign the delay to the wrong place.
+
+Relation to §6c: a high `capability_gap` with a long `quant_lag` for the formats that
+fit consumer hardware is the strongest available evidence for checklist item 2.1.
+
+## 8. Threats to validity — publish these, don't bury them
 
 | Threat | Mitigation | Residual |
 |---|---|---|
@@ -201,6 +256,7 @@ who were motivated enough to file an issue. These figures describe the populatio
 | **Who files issues** | Per-framework category mixes | Self-selection of reporters is not correctable |
 | **Evidence fidelity** | Grade every support event (`exact` / `good` / `coarse`) | TensorRT-LLM dates are coarse by nature of its publishing model |
 | **Severity subjectivity** | Structural signals stored alongside; self-agreement κ published | Severity remains the softest field in the dataset |
+| **Quant-format coverage** (§7) | Hub search is keyword-based; a quant repo with an unconventional name is missed | `quant_lag` is an upper bound on speed, i.e. a lower bound on how fast the ecosystem actually moved |
 | **Hardware self-reporting** (§6) | Publish extraction coverage with every figure | Describes reporters, not users; not correctable by reweighting |
 
 ## Reproducibility contract
