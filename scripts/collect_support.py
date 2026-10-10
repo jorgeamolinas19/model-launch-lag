@@ -96,6 +96,99 @@ def merged_at(pr):
     return (pr.get("pull_request") or {}).get("merged_at") or pr.get("closed_at")
 
 
+# Frameworks with a per-architecture file or directory. For these, the first commit
+# touching that path IS the support date - exact, and immune to search ranking.
+PER_MODEL_DIR = {
+    "transformers": "src/transformers/models",
+    "vllm": "vllm/model_executor/models",
+    "sglang": "python/sglang/srt/models",
+}
+_DIR_CACHE = {}
+_ARCH_SUFFIX = re.compile(
+    r"(ForConditionalGeneration|ForCausalLM|ForBlockDiffusion|ForSequenceClassification"
+    r"|MoeModelLM|ModelLM|DraftModel|Model|LM)$")
+
+
+def _norm(s):
+    return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+def arch_candidates(arch):
+    """Normalized name fragments an implementation path is likely to use."""
+    base = _ARCH_SUFFIX.sub("", arch or "")
+    if not base:
+        return []
+    snake = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", base).lower()
+    return list(dict.fromkeys(_norm(x) for x in (base, snake, snake.replace("_", "")) if x))
+
+
+def list_model_dir(repo, path):
+    key = (repo, path)
+    if key not in _DIR_CACHE:
+        try:
+            _, d = gh.get(f"repos/{repo}/contents/{urllib.parse.quote(path)}")
+            _DIR_CACHE[key] = {_norm(e["name"].removesuffix(".py")): f"{path}/{e['name']}"
+                               for e in d}
+        except urllib.error.HTTPError:
+            _DIR_CACHE[key] = {}
+    return _DIR_CACHE[key]
+
+
+def first_commit_for_path(repo, path, cap=12):
+    """Oldest commit touching a path. Paginates to the end of its history."""
+    page, oldest = 1, None
+    while page <= cap:
+        _, c = gh.get(f"repos/{repo}/commits?path={urllib.parse.quote(path)}"
+                      f"&per_page=100&page={page}")
+        if not c:
+            break
+        oldest = c[-1]
+        if len(c) < 100:
+            break
+        page += 1
+    if not oldest:
+        return None
+    return (oldest["commit"]["committer"]["date"][:10],
+            oldest.get("html_url"),
+            oldest["commit"]["message"].splitlines()[0][:70])
+
+
+def collect_by_path(fw, repo, m, verbose):
+    """Date support by the first commit to the architecture's own implementation path."""
+    entries = list_model_dir(repo, PER_MODEL_DIR[fw])
+    if not entries:
+        return None
+    hit = None
+    for cand in arch_candidates(m["architecture"]):
+        if cand in entries:
+            hit = entries[cand]
+            break
+    if not hit:  # longest-prefix fallback: 'qwen3_5' dir for 'Qwen3_5Moe...'
+        for cand in arch_candidates(m["architecture"]):
+            matches = sorted((k for k in entries if k and (cand.startswith(k) or k.startswith(cand))),
+                             key=len, reverse=True)
+            if matches:
+                hit = entries[matches[0]]
+                break
+    if not hit:
+        return None
+    fc = first_commit_for_path(repo, hit)
+    if not fc:
+        return None
+    d, url, msg = fc
+    if verbose:
+        print(f"      {hit} first commit {d}  {msg}")
+    # Guard: a path far older than the model is a SHARED implementation (e.g. one
+    # 'qwen' dir covering several generations), so its age says nothing about this
+    # model. Fall back to PR search rather than report an inherited date.
+    if (date.fromisoformat(m["release_date"]) - date.fromisoformat(d)).days > 240:
+        if verbose:
+            print(f"      ({hit} predates release by >240d - shared path, falling back)")
+        return None
+    return dict(state="supported", event_date=d, urls=[url],
+                rule=f"{fw}:first-commit({hit})", fidelity="exact")
+
+
 def collect_code(fw, repo, m, verbose):
     """Earliest qualifying merged PR per evidence group."""
     earliest, seen = {}, set()
@@ -167,43 +260,109 @@ def main():
 
     rel_cache = {}
     if "ollama" in fws:
-        _, rels = gh.get("repos/ollama/ollama/releases?per_page=100")
+        # MUST paginate past the oldest cohort release date. A single page of 100
+        # releases reaches only ~2025-11, which silently floor-clamps every older
+        # model to the cache boundary: DeepSeek-V3 came back at exactly the floor
+        # date and looked like a plausible +329d result.
+        oldest_needed = min(m["release_date"] for m in models)
+        rels, page = [], 1
+        while page <= 30:
+            _, batch = gh.get(f"repos/ollama/ollama/releases?per_page=100&page={page}")
+            if not batch:
+                break
+            rels += batch
+            got = min((r.get("published_at") or "9999")[:10] for r in batch)
+            if got < oldest_needed:
+                break
+            page += 1
         gh.save_raw(rels, RAW / "releases", "ollama")
         rel_cache["ollama"] = rels
-        print(f"cached {len(rels)} ollama releases")
+        floor = min((r.get("published_at") or "9999")[:10] for r in rels) if rels else "?"
+        print(f"cached {len(rels)} ollama releases over {page} page(s); "
+              f"oldest {floor} (need <= {oldest_needed})")
+        if floor > oldest_needed:
+            print(f"  WARNING: release history does not reach {oldest_needed}; "
+                  f"models released before {floor} will be floor-clamped and must be "
+                  f"recorded as unsupported-or-earlier, not as a date")
 
     lim, start_rem = gh.rate()
     rows = []
+    # Resume support: a pair already collected for this snapshot is skipped, so an
+    # interrupted run continues instead of restarting. Writes are per-pair below.
+    done = {(r[0], r[1]) for r in con.execute(
+        "SELECT framework_id, hf_id FROM support_events WHERE snapshot_date=?", (SNAP,))}
+    if done:
+        print(f"resuming: {len(done)} pairs already collected for {SNAP}")
+
     for m in models:
-        print(f"\n{m['hf_id']}  (released {m['release_date']}, {m['support_kind']})")
+        print(f"\n{m['hf_id']}  (released {m['release_date']}, {m['support_kind']})", flush=True)
         for fw in fws:
+            if (fw, m["hf_id"]) in done:
+                print(f"   {fw:<13} (cached)", flush=True)
+                continue
             try:
-                r = (collect_ollama(m, rel_cache["ollama"], a.verbose) if fw == "ollama"
-                     else collect_code(fw, repos[fw], m, a.verbose))
+                if fw == "ollama":
+                    r = collect_ollama(m, rel_cache["ollama"], a.verbose)
+                else:
+                    # Path history first (exact); PR search only as fallback, because
+                    # search ranking over a popular term is unreliable - it put Qwen3
+                    # in transformers at +530d when the real answer was -27d.
+                    r = (collect_by_path(fw, repos[fw], m, a.verbose)
+                         if fw in PER_MODEL_DIR else None)
+                    if r is None and fw not in PER_MODEL_DIR:
+                        # llama.cpp and TensorRT-LLM have no per-architecture file, so
+                        # PR search is the only available method. Graded 'good'.
+                        r = collect_code(fw, repos[fw], m, a.verbose)
+                        if r:
+                            r["fidelity"] = "good"
+                    elif r is None:
+                        # Path matched nothing, or matched a SHARED implementation whose
+                        # age predates this model. PR search was tried here and proved
+                        # actively harmful: it dated DeepSeek-V3.2 in SGLang from a
+                        # GLM-5 MXFP4 pull request. A confident wrong date is worse
+                        # than an admitted gap, so this is its own state and is
+                        # excluded from metrics until a human resolves it.
+                        hints = []
+                        for term in search_terms(m)[:2]:
+                            hints += [p["html_url"] for p in find_prs(repos[fw], term)[:3]]
+                        r = dict(state="undetermined", event_date=None, urls=hints[:5],
+                                 rule=f"{fw}:no-arch-path-match(needs hand resolution)",
+                                 fidelity="none")
+                        print(f"   {fw:<13} UNDETERMINED  no arch path; "
+                              f"{len(hints)} PR hint(s) stored", flush=True)
+                        rows.append((fw, m["hf_id"], r, None))
+                        con.execute("""INSERT OR REPLACE INTO support_events(framework_id,
+                            hf_id,state,event_date,days_to_support,evidence_rule,fidelity,
+                            evidence_urls,snapshot_date) VALUES(?,?,?,?,?,?,?,?,?)""",
+                            (fw, m["hf_id"], r["state"], None, None, r["rule"],
+                             r["fidelity"], json.dumps(r["urls"]), SNAP))
+                        con.commit()
+                        continue
             except urllib.error.HTTPError as e:
-                print(f"   {fw:<13} ERROR HTTP {e.code}")
+                print(f"   {fw:<13} ERROR HTTP {e.code}", flush=True)
                 continue
             if r is None:
                 days = (date.fromisoformat(SNAP) - date.fromisoformat(m["release_date"])).days
                 r = dict(state="unsupported", event_date=None, urls=[],
                          rule=f"{fw}:no-qualifying-artifact", fidelity="exact")
-                print(f"   {fw:<13} unsupported  (censored at {days}d)")
+                print(f"   {fw:<13} unsupported  (censored at {days}d)", flush=True)
                 d = None
             else:
                 d = (date.fromisoformat(r["event_date"]) - date.fromisoformat(m["release_date"])).days
                 tag = "DAY 0" if d == 0 else (f"{d:+d}d EARLY" if d < 0 else f"{d:+d}d")
-                print(f"   {fw:<13} {r['state']:<10} {r['event_date']}  {tag:<10} {r['fidelity']}")
+                print(f"   {fw:<13} {r['state']:<10} {r['event_date']}  {tag:<10} {r['fidelity']}",
+                      flush=True)
             rows.append((fw, m["hf_id"], r, d))
+            if not a.dry_run:
+                con.execute("""INSERT OR REPLACE INTO support_events(framework_id,hf_id,state,
+                    event_date,days_to_support,evidence_rule,fidelity,evidence_urls,snapshot_date)
+                    VALUES(?,?,?,?,?,?,?,?,?)""",
+                    (fw, m["hf_id"], r["state"], r["event_date"], d, r["rule"], r["fidelity"],
+                     json.dumps(r["urls"]), SNAP))
+                con.commit()   # per pair: a 20-minute job must not lose everything on a crash
 
     if not a.dry_run:
-        for fw, hf_id, r, d in rows:
-            con.execute("""INSERT OR REPLACE INTO support_events(framework_id,hf_id,state,
-                event_date,days_to_support,evidence_rule,fidelity,evidence_urls,snapshot_date)
-                VALUES(?,?,?,?,?,?,?,?,?)""",
-                (fw, hf_id, r["state"], r["event_date"], d, r["rule"], r["fidelity"],
-                 json.dumps(r["urls"]), SNAP))
-        con.commit()
-        print(f"\nwrote {len(rows)} support_events")
+        print(f"\nwrote {len(rows)} support_events this run")
     lim, rem = gh.rate()
     print(f"api calls used: {start_rem - rem} | remaining {rem}/{lim}")
 

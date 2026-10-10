@@ -25,6 +25,26 @@ evidence is dated by `published_at`.
 > artifact that makes *M* runnable by a user of *F*** — where "runnable" means loading
 > the published weights and generating, not merely parsing the config.
 
+### How the rule is implemented (and the method that failed)
+
+**Primary method — path history.** For frameworks with a per-architecture
+implementation file or directory (`transformers`, `vllm`, `sglang`), the support date is
+the **first commit touching that path**. Exact, and immune to search ranking.
+
+**Rejected method — PR search.** Dating support by "earliest merged PR naming the
+model" fails when the term appears in thousands of PRs, because the oldest *matches*
+are not the implementation PR. Measured: it placed Qwen3 support in `transformers` at
+**+530 days**; the first commit to `src/transformers/models/qwen3/` gives **−27 days**.
+Wrong sign, wrong order of magnitude, and plausible enough to write a paragraph about.
+
+PR search survives only where no per-architecture path exists (`llama.cpp`,
+`TensorRT-LLM`), and support events found that way are graded **`good`, never `exact`**.
+
+**Shared-implementation guard.** A matched path older than the model is a *shared*
+implementation — one `deepseek_v2.py` covering several generations — so its age says
+nothing about this model. Where a matched path predates release by more than 240 days,
+the date is rejected as inherited and the pair becomes `undetermined`.
+
 Two consequences worth stating up front:
 
 - **Naming is not support.** A PR mentioning the model in a test fixture, a benchmark
@@ -160,6 +180,7 @@ makes the censoring in `metrics.md` possible.
 | `partial` | Some required parts landed (llama.cpp convert-only); `event_date` of the partial, support still open |
 | `remote_code` | Runnable only via `trust_remote_code` (transformers) |
 | `unsupported` | No qualifying artifact as of `snapshot_date` — **right-censored, not missing** |
+| `undetermined` | The method could not establish a date: no architecture path matched, or the only match was a shared implementation. **Excluded from all metrics** and flagged for hand resolution, with candidate PR links stored. This state exists because the fallback it replaced was *actively harmful* — PR search dated DeepSeek-V3.2 in SGLang from a GLM-5 MXFP4 pull request. An admitted gap is worth more than a date that cannot be defended, and at 132 pairs hand resolution is tractable. |
 | `not_applicable` | Framework structurally cannot serve this model class (e.g. an embedding-only model in a chat-serving framework). Excluded from denominators with a reason. |
 
 ## Verification requirement

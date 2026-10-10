@@ -35,14 +35,24 @@ def resolve_release(meta, commits):
     created = meta.get("createdAt")
     first = commits[-1]["date"] if commits else None
     weights = next((c["date"] for c in reversed(commits) if WEIGHTY.search(c.get("title") or "")), None)
-    # Prefer the first commit; it is the earliest defensible date from the API.
-    date, method = (first or created), ("first_commit" if first else "created_at")
-    # Flag when candidates disagree enough to change a latency figure.
+    # Later of repo creation and weights landing (metrics §0): a model cannot be public
+    # before its repo exists, nor runnable before its weights land.
+    cands = [c for c in (created, first, weights) if c]
+    date = max(cands) if cands else None
+    method = ("first_commit" if date == first else
+              "weights_commit" if date == weights else "created_at")
     unc = 0
     if created and first and abs((iso(created) - iso(first)).days) > 2:
         unc = 1
     if weights and date and abs((iso(weights) - iso(date)).days) > 2:
         unc = 1
+    # Single-candidate case: gated repos 401 on /commits, leaving only createdAt. With
+    # nothing to disagree with, the checks above cannot fire - so a lone candidate is
+    # itself grounds for hand resolution, not grounds for confidence. (Found via
+    # gemma-3-27b-it, whose createdAt predates its announcement by ~11 days.)
+    if not first and not weights:
+        unc = 1
+        method = "created_at_only"
     return date, method, unc, created, first, weights
 
 
