@@ -1,0 +1,163 @@
+# v1 cohort — hand-edit this file; it is the study's scope definition.
+# TOML so it is comment-friendly and readable with stdlib `tomllib` (no dependency).
+#
+# !! EVERY hf_id BELOW IS A SEED AND MUST BE VERIFIED AGAINST THE HUB API BEFORE USE. !!
+# They are written from prior familiarity, not from a live read. `scripts/verify_cohort.py`
+# (to write) should resolve each id, fail on 404s, and fill architecture/params/dates.
+# Release dates are deliberately absent: they are DERIVED (docs/metrics.md §0), never typed.
+
+[meta]
+version = "v1"
+frozen_on = "2026-10-10"
+# A model is eligible only if snapshot_date >= release_date + 30 (full issue window).
+min_observation_days = 30
+
+[inclusion]
+# Stated criteria, so the cohort is reproducible rather than taste.
+rule = """
+1. Text-generation or multimodal-chat weights published on the HF Hub.
+2. Open weights with a license permitting local serving.
+3. Released >= 30 days before snapshot_date.
+4. Either (a) introduces an architecture not previously in the cohort  -> new_arch,
+   or (b) is a deliberately chosen control variant of an arch already present -> variant.
+5. Weighted toward architecture novelty, NOT toward popularity: novelty is where
+   days-to-support carries signal. Downloads are a normalizer, not a selection filter.
+"""
+excluded = """
+Embedding-only, reranker, ASR, and image-generation models (frameworks in scope are
+chat/completion servers; see `not_applicable` state in docs/evidence-rules.md).
+"""
+
+[frameworks]
+vllm         = { repo = "vllm-project/vllm",   support_via = "code" }
+sglang       = { repo = "sgl-project/sglang",  support_via = "code" }
+llamacpp     = { repo = "ggml-org/llama.cpp",  support_via = "code" }
+ollama       = { repo = "ollama/ollama",       support_via = "library" }
+trtllm       = { repo = "NVIDIA/TensorRT-LLM", support_via = "both" }
+transformers = { repo = "huggingface/transformers", support_via = "code" }
+
+# ---------------------------------------------------------------------------
+# new_arch cases — the actual latency measurement
+# ---------------------------------------------------------------------------
+[[models]]
+hf_id = "deepseek-ai/DeepSeek-V3"
+family = "deepseek-v3"
+support_kind = "new_arch"
+why = "MLA attention + large MoE; the hardest class of launch to onboard"
+verify = true
+
+[[models]]
+hf_id = "deepseek-ai/DeepSeek-R1"
+family = "deepseek-r1"
+support_kind = "new_arch"
+why = "reasoning-token handling exercises chat templates specifically"
+verify = true
+
+[[models]]
+hf_id = "Qwen/Qwen3-8B"
+family = "qwen3"
+support_kind = "new_arch"
+why = "high-volume family launch; many simultaneous sizes"
+verify = true
+
+[[models]]
+hf_id = "google/gemma-3-27b-it"
+family = "gemma3"
+support_kind = "new_arch"
+why = "interleaved local/global attention + multimodal"
+verify = true
+
+[[models]]
+hf_id = "openai/gpt-oss-20b"
+family = "gpt-oss"
+support_kind = "new_arch"
+why = "heavily pre-coordinated launch; expect negative days_to_support"
+verify = true
+
+[[models]]
+hf_id = "ai21labs/AI21-Jamba-Mini-1.6"
+family = "jamba"
+support_kind = "new_arch"
+why = "Mamba/attention hybrid; expect wide framework divergence and real censoring"
+verify = true
+
+[[models]]
+hf_id = "allenai/OLMo-2-1124-13B"
+family = "olmo2"
+support_kind = "new_arch"
+why = "fully-open lab, low downloads — tests the popularity confound directly"
+verify = true
+
+[[models]]
+hf_id = "microsoft/phi-4"
+family = "phi4"
+support_kind = "new_arch"
+verify = true
+
+[[models]]
+hf_id = "mistralai/Mistral-Small-3.1-24B-Instruct-2503"
+family = "mistral-small-3"
+support_kind = "new_arch"
+why = "non-HF-native tokenizer history makes template issues likely"
+verify = true
+
+[[models]]
+hf_id = "Qwen/Qwen2.5-VL-7B-Instruct"
+family = "qwen2.5-vl"
+support_kind = "new_arch"
+why = "vision tower + processor path; a variant that needs real work"
+verify = true
+
+# ---------------------------------------------------------------------------
+# variant controls — expected day 0; the finding is any exception
+# ---------------------------------------------------------------------------
+[[models]]
+hf_id = "Qwen/Qwen3-32B"
+family = "qwen3"
+support_kind = "variant"
+why = "same arch, different size — should be free; confirms the inheritance effect"
+verify = true
+
+[[models]]
+hf_id = "Qwen/Qwen3-30B-A3B"
+family = "qwen3"
+support_kind = "variant"
+why = "MoE sibling of a dense arch — a variant that plausibly is NOT free"
+verify = true
+
+[[models]]
+hf_id = "google/gemma-3-4b-it"
+family = "gemma3"
+support_kind = "variant"
+verify = true
+
+[[models]]
+hf_id = "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
+family = "deepseek-r1"
+support_kind = "variant"
+why = "reuses Qwen arch with R1 templates — isolates template work from arch work"
+verify = true
+
+[[models]]
+hf_id = "nvidia/Llama-3_3-Nemotron-Super-49B-v1"
+family = "nemotron"
+support_kind = "variant"
+why = "derivative arch (pruned/distilled) that often needs its own code path"
+verify = true
+
+# ---------------------------------------------------------------------------
+# Alias seeds for the name-matching problem. Extend as unmatched issues surface:
+# the collector should log its top unmatched candidate strings for exactly this.
+# ---------------------------------------------------------------------------
+[aliases]
+loose      = ["qwen3", "qwen-3", "qwen 3", "deepseek-v3", "deepseek v3", "dsv3",
+              "deepseek-r1", "r1", "gemma3", "gemma-3", "gpt-oss", "gptoss",
+              "jamba", "olmo2", "olmo-2", "phi-4", "phi4", "nemotron", "qwen2.5-vl", "qwen2_5_vl"]
+ollama_tag = ["qwen3:8b", "qwen3:32b", "qwen3:30b-a3b", "gemma3:27b", "gemma3:4b",
+              "deepseek-r1:32b", "gpt-oss:20b", "phi4", "olmo2:13b"]
+arch_class = ["Qwen3ForCausalLM", "Qwen3MoeForCausalLM", "DeepseekV3ForCausalLM",
+              "Gemma3ForConditionalGeneration", "GptOssForCausalLM",
+              "JambaForCausalLM", "Olmo2ForCausalLM", "Phi3ForCausalLM",
+              "Qwen2_5_VLForConditionalGeneration"]
+# arch_class strings in a traceback are the HIGHEST-confidence match signal available —
+# they appear verbatim in "architecture not supported" errors. Weight them above slugs.

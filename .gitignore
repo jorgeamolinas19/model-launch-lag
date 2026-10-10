@@ -1,0 +1,7 @@
+# Raw API snapshots: gzipped JSON, large, regenerable. Keep locally, don't commit.
+raw/**/*.json.gz
+*.sqlite
+*.sqlite-journal
+.venv/
+__pycache__/
+.env
