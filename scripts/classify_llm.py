@@ -39,16 +39,37 @@ def load_prompt(ver):
     return text.split("---", 1)[1].strip()   # drop the header block
 
 
-def chat(base_url, model, prompt, api_key, timeout=600):
+def chat(base_url, model, prompt, api_key, no_think=False, timeout=900):
+    if no_think and ":11434" in base_url:
+        # Ollama's OpenAI-compatible layer ignores thinking controls, and the /no_think
+        # soft switch was not honored either: the model spent its whole budget in the
+        # `reasoning` field and returned empty content. The native API has an explicit
+        # switch. vLLM / NIM keep the OpenAI path below.
+        native = base_url.split("/v1")[0] + "/api/chat"
+        body = {"model": model, "messages": [{"role": "user", "content": prompt}],
+                "stream": False, "think": False, "format": "json",
+                "options": {"temperature": 0, "num_predict": 400}}
+        req = urllib.request.Request(native, data=json.dumps(body).encode(),
+                                     headers={"Content-Type": "application/json"})
+        d = json.load(urllib.request.urlopen(req, timeout=timeout))
+        usage = {"prompt_tokens": d.get("prompt_eval_count", 0),
+                 "completion_tokens": d.get("eval_count", 0)}
+        return (d.get("message") or {}).get("content") or "", usage
+    if no_think:
+        prompt = prompt + "\n/no_think"
     body = {"model": model, "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0, "max_tokens": 300,
+            "temperature": 0, "max_tokens": 400,
             "response_format": {"type": "json_object"}}
     h = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key or 'none'}"}
     req = urllib.request.Request(f"{base_url.rstrip('/')}/chat/completions",
                                  data=json.dumps(body).encode(), headers=h)
     r = urllib.request.urlopen(req, timeout=timeout)
     d = json.load(r)
-    return d["choices"][0]["message"]["content"], d.get("usage", {})
+    msg = d["choices"][0]["message"]
+    text = msg.get("content") or ""
+    if "{" not in text and msg.get("reasoning"):
+        text = msg["reasoning"]          # some servers put the answer here when content is empty
+    return text, d.get("usage", {})
 
 
 def parse(text):
@@ -79,6 +100,7 @@ def main():
     ap.add_argument("--all", action="store_true", help="every non-excluded issue")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--source", default="llm", help="labels.source to write under")
+    ap.add_argument("--no-think", action="store_true", help="append /no_think (Qwen3 soft switch)")
     a = ap.parse_args()
 
     con = sqlite3.connect(DB, timeout=60)   # may run alongside a collector
@@ -112,10 +134,15 @@ def main():
     t0 = time.time()
     tok_in = tok_out = 0
     for n, i in enumerate(issues, 1):
-        prompt = tmpl.format(framework=i["framework_id"], model=i["hf_id"], title=i["title"] or "",
-                             labels=i["labels"] or "[]", body=(i["body_excerpt"] or "")[:3500])
+        # Explicit replace, not str.format: the prompt contains a literal JSON example
+        # whose braces str.format would try to interpret as fields.
+        prompt = tmpl
+        for k, v in (("framework", i["framework_id"]), ("model", i["hf_id"]),
+                     ("title", i["title"] or ""), ("labels", i["labels"] or "[]"),
+                     ("body", (i["body_excerpt"] or "")[:2500])):   # = worksheet cap
+            prompt = prompt.replace("{" + k + "}", str(v))
         try:
-            text, usage = chat(a.base_url, a.model, prompt, a.api_key)
+            text, usage = chat(a.base_url, a.model, prompt, a.api_key, no_think=a.no_think)
         except (urllib.error.URLError, TimeoutError, KeyError) as e:
             print(f"  [{n}] #{i['number']} endpoint error: {e}", flush=True)
             time.sleep(3)
