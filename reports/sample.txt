@@ -1,0 +1,23 @@
+sampled 339 issues -> labels/sample_v2_worksheet.csv  (dev 136, test 203)
+
+by regex guess (stratum):
+  install_build           65
+  quantization            57
+  other                   46
+  template_tokenizer      43
+  missing_feature         37
+  oom_hardware            27
+  performance             22
+  correctness             21
+  speculative_decoding    21
+
+by framework:
+  vllm           108
+  ollama          71
+  llamacpp        71
+  sglang          62
+  transformers    20
+  trtllm           7
+
+Label from title + excerpt ONLY (what the classifier sees). Do not open the issue
+thread first - maintainer replies leak the resolution into the label.

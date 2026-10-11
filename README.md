@@ -170,6 +170,21 @@ Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebo
 - **Q1 collected.** 22 models x 6 frameworks; 6 release dates hand-resolved with
   first-party URLs; evidence classes separated; negative offsets adjudicated by historical
   implementation evidence. Findings are in `report_support.py` output and the memo.
-- **Q2/Q3 in progress.** Issues collected and cleaned; regex baseline labels; hand-label
-  sample drawn; LLM classifier runs locally on CPU for the dev loop, GPU runbook for the
-  full batch. Hand labels and the self-agreement pass are the open human steps.
+- **Q2/Q3 collected, baseline-labelled.** 3,559 distinct first-30-day issues → 2,856
+  after codebook exclusions; keyword-baseline labels for all; 339-issue stratified
+  hand-label sample drawn (dev 136 / test 203). Top-3 problem categories are stable
+  under reweighting. Reports in `reports/`; narrative in [docs/memo.md](docs/memo.md).
+- **Classifier: dev loop running.** Qwen3-4B via Ollama on CPU (~23 s/issue, `think=false`).
+  No accuracy is quoted until hand labels exist; the test split is untouched.
+- **Open human steps:** fill `labels/sample_v2_worksheet.csv` (339 rows); re-label 50
+  dev rows ≥5 days later for the self-agreement ceiling; resolve the 14 undetermined
+  support pairs in `support_events_hand.csv`.
+
+### Running the classifier locally (no GPU)
+
+Ollama's macOS tarball is flat: `ollama`, `llama-server` and the `lib*` runners sit side
+by side. Copy all of them to `~/bin/lib/ollama/` (or run from the extracted directory),
+not the `ollama` binary alone — the server starts fine without the runner and only fails
+at first inference with `llama-server binary not found`. Qwen3 defaults to thinking mode,
+which spends the whole token budget before emitting JSON; `classify_llm.py --no-think`
+uses Ollama's native `think:false`.

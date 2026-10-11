@@ -1,0 +1,11 @@
+regex baseline labelled 2856 issues (run regex-v2-2026-10-11)
+
+  install_build           721   25.2%
+  quantization            685   24.0%
+  other                   506   17.7%
+  template_tokenizer      415   14.5%
+  missing_feature         296   10.4%
+  oom_hardware             88    3.1%
+  speculative_decoding     57    2.0%
+  performance              54    1.9%
+  correctness              34    1.2%

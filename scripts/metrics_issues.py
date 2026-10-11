@@ -116,7 +116,7 @@ def main():
         load[(i["hf_id"], i["framework_id"])] += 1
     models = [dict(r) for r in con.execute(
         "SELECT hf_id, release_date, support_kind, band FROM models ORDER BY release_date")]
-    print("§2 ISSUE LOAD - first 30 days, per framework (per 1k downloads in parens)\n")
+    print("§2 ISSUE LOAD - first 30 days, per framework (per 100k downloads in parens)\n")
     print(f"{'model':<40}" + "".join(f"{f[:6]:>12}" for f in FWS) + f"{'total':>8}")
     print("-" * (40 + 12 * len(FWS) + 8))
     fw_tot = Counter()
@@ -129,7 +129,7 @@ def main():
             n = load.get((m["hf_id"], fw), 0)
             tot += n
             fw_tot[fw] += n
-            per = f"({1000*n/d:.1f})" if d else ""
+            per = f"({1e5*n/d:.1f})" if d else ""   # per 100k downloads; per 1k rounds to 0.0
             cells.append(f"{n:>4}{per:>8}")
         print(f"{m['hf_id'][:39]:<40}" + "".join(cells) + f"{tot:>8}")
     print(f"{'ALL':<40}" + "".join(f"{fw_tot[f]:>12}" for f in FWS) + f"{sum(fw_tot.values()):>8}")

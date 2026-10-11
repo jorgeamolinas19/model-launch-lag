@@ -107,20 +107,139 @@ native date alone misrepresents the developer experience; both are reported.
 
 ## Question 2 — what broke?
 
-_Pending: filled from `metrics_issues.py` once issue collection completes. Will report
-issue load per model-framework and per 1k downloads, the match-confidence mix, and
-time-to-resolve by category with open issues censored._
+**Labels in this section are from the keyword baseline** (`regex_baseline`, codebook v2)
+and will be re-cut from hand-validated LLM labels. The *shape* of the findings is stable
+under that caveat; the exact percentages are not.
+
+### Volume
+
+4,662 (issue, model) attributions over 22 models × 6 frameworks → **3,559 distinct
+issues**, of which **2,856 survive the codebook exclusions** (1,631 passing mentions —
+mostly the same issue attributed to a sibling model via a family alias — 127 duplicates,
+45 maintainer tracking issues). Match confidence of the kept set: 58% repo short name,
+32% family name only, 10% architecture class.
+
+| framework | first-30-day issues | share |
+|---|---|---|
+| vLLM | 944 | 33% |
+| llama.cpp | 688 | 24% |
+| Ollama | 557 | 20% |
+| SGLang | 462 | 16% |
+| transformers | 159 | 6% |
+| TensorRT-LLM | 46 | 2% |
+
+Issue volume tracks user-base size and reporting culture far more than launch quality:
+the model with the most first-month issues (Qwen3.8-27B, 487) had day-0 support
+everywhere. Per-download normalisation does not rescue this — downloads are in the
+millions and the Hub figure is a rolling 30-day count at *snapshot*, not at release+30.
+Raw counts are published; cross-framework comparison of them is not.
+
+TensorRT-LLM's 46 issues are not evidence of fewer problems; its users file through
+NVIDIA channels the GitHub API cannot see. The same visibility caveat that applied to its
+support dates applies here.
+
+### Time to resolve (open issues censored at snapshot)
+
+| category | n | KM median days | still open | closed as not-planned |
+|---|---|---|---|---|
+| performance | 54 | 40 | 24% | 17% |
+| template_tokenizer | 415 | 45 | 22% | 18% |
+| quantization | 685 | 46 | 31% | 15% |
+| oom_hardware | 88 | 49 | 22% | 16% |
+| install_build | 721 | 57 | 19% | 25% |
+| missing_feature | 296 | 61 | 22% | 16% |
+| correctness | 34 | 61 | 38% | 6% |
+| speculative_decoding | 57 | 65 | 42% | 9% |
+
+Two things stand out. **Speculative-decoding issues are the slowest to resolve and the
+most likely to still be open** (42%) — consistent with pairing problems having no single
+owner. And **a quarter of install/build issues close as not-planned**, the highest
+dismissal rate of any category: many are environment-specific and never reproduce.
 
 ## Question 3 — what should a platform team fix?
 
-_Pending: top problems (count × severity, with the reweighting check), per-framework
-category mixes, the hardware capability gap, and three prioritized recommendations
-with evidence links._
+### Top problems, severity-weighted
+
+| category | n | score (3/2/1) | blocker | degraded |
+|---|---|---|---|---|
+| **install_build** | 721 | 1,844 | 414 | 295 |
+| **quantization** | 685 | 1,643 | 280 | 398 |
+| **template_tokenizer** | 415 | 963 | 149 | 250 |
+| missing_feature | 296 | 670 | 91 | 192 |
+| oom_hardware | 88 | 204 | 33 | 50 |
+| speculative_decoding | 57 | 138 | 25 | 31 |
+
+**The top three are stable under all three weightings tested** (3/2/1, 5/2/1, 3/1/0), so
+the ranking is a property of the data rather than of the weights.
+
+The pooled ranking partly re-describes who files issues where, and the per-framework
+mixes show it: vLLM is 46% install/build (CUDA/wheel/driver), llama.cpp is 40%
+quantization and 27% template/tokenizer (GGUF conversion, chat templates), SGLang leads
+on quantization (26%) and missing features, Ollama is 45% "other" (usage questions).
+A platform team's priorities differ by which stack its users are on.
+
+### Hardware
+
+Hardware was extractable from 63% of kept issues — a lower bound on what people ran.
+Where a GPU is named: 449 datacenter, 395 consumer, 119 workstation, 66 Apple Silicon.
+The split by framework is stark and explains much of the category mix above:
+
+| framework | datacenter | consumer | Apple Silicon |
+|---|---|---|---|
+| SGLang | 73% | 12% | — |
+| vLLM | 58% | 25% | — |
+| TensorRT-LLM | 57% | 29% | — |
+| transformers | 46% | 41% | 8% |
+| Ollama | 15% | 48% | 32% |
+| llama.cpp | 13% | 69% | 7% |
+
+Quant formats named in issues: GGUF 443, FP8 264, **NVFP4 126**, MXFP4 67, AWQ 51, MLX 31.
+NVFP4 is the third most-discussed format in first-month issues — a 2026 phenomenon with
+no analogue in the historical band.
+
+**Capability gap (§6c):** of 88 OOM issues, 15 state their card's VRAM; **10 of those 15
+attempted a model whose fp16 floor exceeds the card they named.** Small n, but the
+direction is unambiguous: people try to run what they want on what they have, and the
+answer is a quantized artifact on day 0, not a better error message.
+
+### Three recommendations for a GPU platform team
+
+Each is an opportunity in coordination or visibility; none is a criticism of a
+framework's engineering.
+
+**1. Ship the install path with the model, not after it.** Install/build is the largest
+and most-dismissed category (721 issues, 25% closed not-planned). Most are version
+skew: a model that needs framework ≥ X on CUDA ≥ Y, learned by failing. A one-table
+"known-good matrix" in the model card at launch — framework version, CUDA, GPU
+generation, quant format — would convert the single biggest issue category into a
+lookup. Evidence: vLLM 46% install/build; `pip`/wheel/`no kernel image` dominate.
+
+**2. Publish a quantized artifact at launch for the formats the install base can run.**
+Quantization is #2 by volume and #1 by *degraded* outcomes (398). The capability-gap
+figure shows demand for sub-fp16 memory on day 0; NVFP4 appearing in 126 first-month
+issues shows the format is already in users' hands before the kernels are everywhere.
+Pairing a day-0 NVFP4/FP8 artifact with an explicit GPU-generation requirement would
+address both the OOM demand and the "format loads on Hopper but not Ampere" failure
+mode. Evidence: `quant_artifacts` lag (§7) once collected; `issue_hardware.quant_mentioned`.
+
+**3. Validate chat templates against each target framework before release.** Template
+and tokenizer issues are #3 (415) with a 45-day median resolution and symptoms users
+cannot self-diagnose (model never stops, tool-call tags leak). A template test harness
+run against vLLM, SGLang and llama.cpp's Jinja renderers before publishing would catch
+most of these pre-release. llama.cpp's 27% template share shows where the renderer
+divergence bites hardest.
 
 ## Classifier
 
-_Pending: regex baseline vs open-model classifier on the held-out test split, with the
-self-agreement ceiling; the 2–3 model benchmark table from the GPU runbook._
+**Status: baseline only; LLM dev run in progress; no hand labels yet.**
+
+A stratified sample of **339 issues** (dev 136 / test 203) is drawn and seeded in the
+database; the worksheet awaits hand labels. Until then no accuracy figure exists, and
+none is quoted. The regex baseline's distribution is above; the open-model classifier
+(Qwen3-4B via Ollama, prompt v1, `think=false`) runs locally at ~23 s/issue on CPU and
+will be scored against the hand labels on the **test** split only after the prompt is
+frozen on **dev**. The full batch and the throughput/VRAM benchmark follow the GPU
+runbook.
 
 ## Method notes a reader should know
 

@@ -184,8 +184,10 @@ them.
 
 **Normalized form:**
 ```
-issues_per_1k_downloads = issue_load / (downloads_30d / 1000)
+issues_per_100k_downloads = issue_load / (downloads_30d / 100000)
 ```
+(Originally specified per 1,000; cohort downloads are in the millions, so every cell
+rounded to 0.0. Scale change only — the ratio is unchanged.)
 
 Download counts are a **moving target** — the Hub reports a rolling 30-day figure that
 changes daily. Snapshot it once per collection run into `download_snapshots` with the

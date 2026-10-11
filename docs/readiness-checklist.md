@@ -38,9 +38,9 @@ Counterexamples are mandatory — an item with none has not been tested, only as
 
 | # | Condition | Hypothesis | Evidence | n |
 |---|---|---|---|---|
-| 2.1 | A quantized artifact published at launch, not weeks later | Absence drives the `capability_gap`: users attempt fp16 on cards that cannot hold it | _pending_ | — |
-| 2.2 | Hardware requirements table published with the weights | Reduces `oom_hardware` volume in week 1 | _pending_ | — |
-| 2.3 | Stated minimum framework versions in the model card | `install_build` issues cluster where this is missing | _pending_ | — |
+| 2.1 | A quantized artifact published at launch, not weeks later | Absence drives the `capability_gap`: users attempt fp16 on cards that cannot hold it | **Partially earned (baseline labels).** 10 of the 15 OOM issues that state a VRAM figure attempted a model whose fp16 floor exceeds the card named (§6c). Quantization is the #2 category by volume (685) and #1 by degraded outcomes (398); NVFP4 is named in 126 first-month issues, MXFP4 in 67. Still needed: `quant_artifacts` lag per model to tie *absence of a day-0 quant* to issue volume; n=15 on the VRAM figure is small. Counterexample candidates: gpt-oss-20b shipped MXFP4 natively and still drew 323 first-month issues — volume is not purely a quant-availability effect. | 10/15 |
+| 2.2 | Hardware requirements table published with the weights | Reduces `oom_hardware` volume in week 1 | _weak_: `oom_hardware` is only 3% of kept issues (88); the demand signal is in 2.1, not here. Likely to be merged into 2.1 or deleted. | 88 |
+| 2.3 | Stated minimum framework versions in the model card | `install_build` issues cluster where this is missing | **Earned by magnitude, not yet by mechanism.** `install_build` is the largest category (721, 25% of kept issues; 46% of vLLM's) and the most-dismissed (25% closed not-planned — environment-specific, never reproduced). Mechanism test still needed: compare install/build share for models whose cards state a framework version floor vs those that do not. | 721 |
 | 2.4 | Smallest family member released alongside the largest | Gives the ecosystem something runnable on consumer hardware on day 0 | _pending_ | — |
 | 2.5 | Tokenizer files complete and self-consistent | `template_tokenizer` is hypothesized as the highest-severity-per-issue category | _pending_ | — |
 

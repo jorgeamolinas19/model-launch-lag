@@ -1,0 +1,20 @@
+issues: 4662 attributed rows (3559 distinct issues) -> 2856 kept, 1806 excluded
+
+  passing_mention   1631
+  duplicate         127
+  maintainer_task   45
+  non_english       2
+  bot               1
+
+kept, by match confidence:
+  slug        1653
+  loose       925
+  arch_class  278
+
+kept, by framework:
+  vllm         944
+  llamacpp     688
+  ollama       557
+  sglang       462
+  transformers 159
+  trtllm       46
