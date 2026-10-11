@@ -1,0 +1,26 @@
+regex_baseline vs llm: n=132
+  category agreement 32.6%  kappa 0.25
+  severity agreement 50.0%  kappa 0.10
+
+  category               regex_ba      llm
+  missing_feature              12       61
+  install_build                 9       12
+  template_tokenizer           15       17
+  quantization                 23        8
+  speculative_decoding         10        6
+  oom_hardware                  9        8
+  correctness                  14        1
+  performance                  16       13
+  other                        24        6
+
+  largest disagreements (A -> B):
+    other                -> missing_feature      13
+    quantization         -> missing_feature      10
+    template_tokenizer   -> missing_feature      8
+    correctness          -> missing_feature      7
+    other                -> template_tokenizer   5
+    correctness          -> template_tokenizer   5
+    install_build        -> missing_feature      4
+    speculative_decoding -> missing_feature      4
+
+  run notes: http://localhost:11434/v1 | 132 labelled, 0 unparseable, 22865s, 188264 in / 7030 out tokens

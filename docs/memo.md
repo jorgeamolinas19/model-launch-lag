@@ -347,10 +347,14 @@ labelled the same rows from title + excerpt as a disclosed reference
 | regex rules-v1 (naive keywords) vs ref_claude | test (203, pre-guard) | 36.0% | 0.28 | 54.2% | 0.25 |
 | regex rules-v2 (env-dump stripped, title-first) | dev (121) | 55.4% | 0.48 | 54.5% | 0.29 |
 | regex rules-v2 | **test (190)** | **56.8%** | **0.50** | 53.2% | 0.29 |
-| Qwen3-4B, prompt v1, CPU, `think=false` | dev (95 so far) | 36.8% | 0.30 | 55.8% | 0.28 |
+| Qwen3-4B, prompt v1, CPU, `think=false` | dev (118) | 34.7% | 0.28 | 53.4% | 0.24 |
+| Qwen3-4B vs `ref_claude` (the other labeler) | dev (133) | 51.1% | 0.44 | 60.2% | 0.28 |
 
-Unless marked otherwise, rows are scored against the hand labels; the Qwen3-4B row is
-partial and will be replaced when the run completes.
+Unless marked otherwise, rows are scored against the hand labels. Qwen3-4B ran on the
+2018 laptop's CPU at ~48 s/issue (1.2 issues/min; 133 of 136 dev issues labelled, 3 lost
+to endpoint timeouts). It agrees with the assistant reference (51%) much more than with
+the hand labels (35%) — two language models reading the same codebook converge on each
+other, not on the human — which is the clearest illustration of the point below.
 
 (n = sampled rows that survive the cleaning rules; 28 of 339 were excluded after
 sampling by the cross-model title guard and widened maintainer-task filter.)

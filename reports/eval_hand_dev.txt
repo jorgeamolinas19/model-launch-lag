@@ -1,5 +1,3 @@
-imported 339 hand labels from labels/sample_v2_worksheet.csv (0 rows blank or invalid)
-published 433 hand labels -> labels/labels_v2.csv (urls + labels only; CC BY 4.0)
 
 (no hand_pass2 yet: re-label 50 dev issues >=5 days later for the self-agreement reference)
 
@@ -34,29 +32,29 @@ published 433 hand labels -> labels/labels_v2.csv (urls + labels only; CC BY 4.0
 
   (15 sampled dev issue(s) excluded after sampling by the cleaning rules; not scored)
 
-=== llm  vs hand (dev, n=95) ===
-  category accuracy 36.8%   kappa 0.30
-  severity accuracy 55.8%   kappa 0.28
+=== llm  vs hand (dev, n=118) ===
+  category accuracy 34.7%   kappa 0.28
+  severity accuracy 53.4%   kappa 0.24
 
   category                 n   prec    rec
-  missing_feature         10    24%   100%
-  install_build            4    29%    50%  (n<10: unreliable)
-  template_tokenizer       4    15%    50%  (n<10: unreliable)
-  quantization            12    71%    42%
-  speculative_decoding     1    50%   100%  (n<10: unreliable)
-  oom_hardware             3    25%    67%  (n<10: unreliable)
-  correctness             14   100%     7%
-  performance             13    91%    77%
-  other                   34    50%     6%
+  missing_feature         12    23%   100%
+  install_build            6    27%    50%  (n<10: unreliable)
+  template_tokenizer       5    18%    60%  (n<10: unreliable)
+  quantization            14    71%    36%
+  speculative_decoding     3    40%    67%  (n<10: unreliable)
+  oom_hardware             4    25%    50%  (n<10: unreliable)
+  correctness             15   100%     7%
+  performance             18    92%    61%
+  other                   41    50%     5%
 
   confusion (rows = hand, cols = predicted):
                          missi insta templ quant specu oom_h corre perfo other
-  missing_feature           10     0     0     0     0     0     0     0     0
-  install_build              1     2     1     0     0     0     0     0     0
-  template_tokenizer         2     0     2     0     0     0     0     0     0
-  quantization               5     1     0     5     0     0     0     1     0
-  speculative_decoding       0     0     0     0     1     0     0     0     0
-  oom_hardware               0     0     1     0     0     2     0     0     0
-  correctness                7     0     5     0     0     1     1     0     0
-  performance                0     0     0     0     1     0     0    10     2
-  other                     17     4     4     2     0     5     0     0     2
+  missing_feature           12     0     0     0     0     0     0     0     0
+  install_build              2     3     1     0     0     0     0     0     0
+  template_tokenizer         2     0     3     0     0     0     0     0     0
+  quantization               7     1     0     5     0     0     0     1     0
+  speculative_decoding       0     0     1     0     2     0     0     0     0
+  oom_hardware               0     0     1     0     1     2     0     0     0
+  correctness                7     1     5     0     0     1     1     0     0
+  performance                4     0     0     0     1     0     0    11     2
+  other                     19     6     6     2     1     5     0     0     2
