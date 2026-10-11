@@ -6,7 +6,7 @@ framework        cover  KM med  obs med  early  day0  cens  part  fidelity
 --------------------------------------------------------------------------
 transformers     14/16      +0       +0      5     4     2     0  exact
 vllm             11/16      +1       +1      3     2     0     0  exact
-sglang           14/16      +1       +1      5     0     0     0  exact,good
+sglang           13/16      +1       +1      4     0     0     0  exact,good
 llamacpp         12/16      +2       +1      3     2     4    11  exact
 ollama           13/16      +8       +3      3     1     2     0  coarse,exact,good
 trtllm           12/16     +24      +20      3     0     1     0  exact,none
@@ -49,7 +49,7 @@ released   model                                         transf    vllm  sglang 
 2025-10-30 moonshotai/Kimi-Linear-48B-A3B-Instruct         +310       ?      +1    +99p    none    +280
 2025-11-20 allenai/Olmo-3-7B-Think                          -65       ?     -31    -64p     +23       ?
 2025-12-01 deepseek-ai/DeepSeek-V3.2                       +191       ?       ?    none     +11       ?
-2025-12-15 nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16       +78       ?     -68      +1      -2       ?
+2025-12-15 nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16       +78       ?       ?      +1      -2       ?
 2026-02-11 zai-org/GLM-5                                     -2       ?       ?     +2p      +1     -85
 2026-02-24 Qwen/Qwen3.5-27B                                 -15     -15     -15    -14p      +3     +24
 2026-04-02 google/gemma-4-31B-it                             +0      +0    +174     +0p      +0     +37
@@ -74,7 +74,7 @@ framework        A med  A n   B med  B n   C med  C n   AC  undet
 -----------------------------------------------------------------
 transformers        +0   14      +0   14      +0   14    0      0
 vllm                +1   11      +1   11      +1   11    5      0
-sglang              +1   13      +1   13      +1   14    2      0
+sglang              +1   12      +1   12      +1   13    3      0
 llamacpp           n/a    1      +2   12      +2   12    0      0
 ollama             n/a    0     n/a    0      +8   13    0      0
 trtllm             +24   12     +24   12     +24   12    2      1
@@ -91,7 +91,7 @@ trtllm             +24   12     +24   12     +24   12    2      1
 TIME TREND (the confound the historical band exists to measure)
 
   historical  n= 30 supported,   0 censored | median +1d | early 7 | day0 4
-  primary     n= 46 supported,   9 censored | median +1d | early 15 | day0 5
+  primary     n= 45 supported,   9 censored | median +1d | early 14 | day0 5
 
   Any band-to-band difference is confounded with cohort composition; it is a
   descriptive contrast, not a causal claim about frameworks improving.
