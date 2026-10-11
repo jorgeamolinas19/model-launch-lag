@@ -43,7 +43,7 @@ written evidence rule, hand-verify every one, and record never-supported pairs a
 censored rather than missing. Collect first-30-day issues, match them to models through
 an alias table, exclude bots and passing mentions, then classify category and severity
 against a frozen codebook using a local open model — evaluated against hand labels,
-with two free baselines and a published self-agreement ceiling. Mine reported GPUs and
+with two free baselines and a published self-agreement reference (the labeler's own consistency — a reference point, not a hard ceiling). Mine reported GPUs and
 VRAM from issue bodies to get the hardware picture. Then score each launch against the
 readiness checklist and test whether the score predicts the observed outcome.
 
@@ -171,14 +171,17 @@ Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebo
   first-party URLs; evidence classes separated; negative offsets adjudicated by historical
   implementation evidence. Findings are in `report_support.py` output and the memo.
 - **Q2/Q3 collected; reference-labelled sample.** 3,559 distinct first-30-day issues →
-  2,804 after codebook exclusions. A 339-issue stratified sample (dev 136 / test 203)
-  carries **disclosed assistant reference labels** (`labels.source='ref_claude'`, codebook
-  v2, title+excerpt only) standing in for human labels. The naive keyword baseline agreed
-  with that reference only **36% (κ 0.28)** on test — it over-predicted `install_build`
-  ~5x from environment dumps — so **an earlier keyword-based "top problems" ranking was
-  withdrawn**. A second rule set that strips environment dumps and trusts titles reaches
-  **52% (κ 0.45)** on test; it was written after seeing the reference confusion matrix,
-  so treat that figure as optimistic. Current findings and caveats: [docs/memo.md](docs/memo.md).
+  2,666 after codebook exclusions (a cross-model title guard, added after an external
+  audit found a Kimi-K2 issue attributed to DeepSeek-V3.2, removed a further ~140). A
+  339-issue stratified sample (dev 136 / test 203; **311 scored** after post-sampling
+  exclusions) carries **disclosed assistant reference labels**
+  (`labels.source='ref_claude'`, codebook v2, title+excerpt only) standing in for human
+  labels. The naive keyword baseline agreed with that reference only **36% (κ 0.28)** on
+  test — it over-predicted `install_build` ~5x from environment dumps — so **an earlier
+  keyword-based "top problems" ranking was withdrawn**. A second rule set that strips
+  environment dumps and trusts titles reaches **51.6% (κ 0.44)** on test; it was written
+  after seeing the reference confusion matrix, so treat that figure as optimistic.
+  Current findings and caveats: [docs/memo.md](docs/memo.md).
 - **Classifier:** regex rules-v1 and rules-v2 scored against the reference on dev and
   test; Qwen3-4B (Ollama, CPU, `think=false`, prompt v1) dev run in progress. The bar an
   open model must clear is ~50%.
@@ -193,7 +196,7 @@ Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebo
   [docs/codebook-v2.md](docs/codebook-v2.md).
 - **Open human steps:** replace the reference labels with hand labels
   (`labels/sample_v2_worksheet.csv`, then `eval_classifier.py --import`); re-label 50 dev
-  rows ≥5 days later for the self-agreement ceiling; spot-check the 16 assistant-adjudicated
+  rows ≥5 days later for the self-agreement reference; spot-check the 17 assistant-adjudicated
   support pairs in `support_events_hand.csv` and the 7 hand-resolved release dates in
   `release_dates_hand.csv` (2 support pairs remain undetermined).
 

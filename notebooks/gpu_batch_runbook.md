@@ -19,11 +19,30 @@ excerpts, which stay off GitHub) and copy it to `db/`.
 
 ## 1. Serve a candidate classifier
 
+**Capacity check first.** An 8B checkpoint in fp16 is ~16 GB of weights — it does not
+fit a single 16 GB T4 or P100 once KV cache and activations are added. On Kaggle use
+either the 2×T4 accelerator with tensor parallelism, or a quantized/smaller checkpoint:
+
+| checkpoint | weights (fp16 / 4-bit) | single T4 16 GB | 2×T4 TP=2 |
+|---|---|---|---|
+| Qwen/Qwen3-4B | ~8 GB / — | fits (~6 GB KV headroom) | fits |
+| Qwen/Qwen3-8B-AWQ (4-bit) | — / ~5 GB | fits | fits |
+| Qwen/Qwen3-8B (fp16) | ~16 GB / — | **does not fit** | fits, modest KV |
+| nvidia/NVIDIA-Nemotron-Nano-9B-v2 (fp16) | ~18 GB / — | **does not fit** | fits, modest KV |
+| google/gemma-3-4b-it | ~8 GB / — | fits | fits |
+
 ```bash
-# candidate A
+# candidate A — single T4: a 4B model in fp16
+python -m vllm.entrypoints.openai.api_server --model Qwen/Qwen3-4B \
+  --dtype half --max-model-len 6144 --gpu-memory-utilization 0.90 --port 8000 &
+
+# candidate A' — 2xT4: the 8B in fp16 with tensor parallelism
 python -m vllm.entrypoints.openai.api_server --model Qwen/Qwen3-8B \
-  --dtype half --max-model-len 8192 --gpu-memory-utilization 0.90 --port 8000 &
+  --dtype half --tensor-parallel-size 2 --max-model-len 6144 --gpu-memory-utilization 0.90 --port 8000 &
 ```
+`--max-model-len 6144` is enough: prompts are ~1.5k tokens and outputs ~100. If vLLM
+fails during profiling with an OOM, lower `--gpu-memory-utilization` to 0.85 before
+anything else.
 
 Record peak VRAM while the batch runs:
 
@@ -48,6 +67,7 @@ python scripts/eval_classifier.py --split test --sources regex_baseline,llm
 Stop the server, swap the model, write under a distinct source so labels coexist:
 
 ```bash
+# Nemotron-Nano-9B-v2 is ~18 GB in fp16: serve it with --tensor-parallel-size 2 on 2xT4
 python scripts/classify_llm.py --base-url http://localhost:8000/v1 \
   --model nvidia/NVIDIA-Nemotron-Nano-9B-v2 --all --source llm:nemotron-nano-9b
 python scripts/classify_llm.py --base-url http://localhost:8000/v1 \

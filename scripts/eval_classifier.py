@@ -76,11 +76,22 @@ def publish(con):
 
 
 def score(con, split, source):
-    # split lives on the 'hand' seed rows; the gold source may be a different table slice
+    # split lives on the 'hand' seed rows; the gold source may be a different table slice.
+    # Issues excluded AFTER sampling (e.g. by a tightened attribution rule) drop out of
+    # the gold set here, so a bad attribution never counts for or against a classifier.
     gold = {r[0]: (r[1], r[2]) for r in con.execute(
         """SELECT g.issue_id, g.category_primary, g.severity FROM labels g
            JOIN labels h ON h.issue_id=g.issue_id AND h.source='hand' AND h.split=?
-           WHERE g.source=? AND g.category_primary IS NOT NULL""", (split, GOLD))}
+           WHERE g.source=? AND g.category_primary IS NOT NULL
+             AND EXISTS (SELECT 1 FROM issues i WHERE i.id=g.issue_id AND i.excluded=0)""",
+        (split, GOLD))}
+    dropped = con.execute(
+        """SELECT count(*) FROM labels h WHERE h.source='hand' AND h.split=?
+           AND NOT EXISTS (SELECT 1 FROM issues i WHERE i.id=h.issue_id AND i.excluded=0)""",
+        (split,)).fetchone()[0]
+    if dropped:
+        print(f"\n  ({dropped} sampled {split} issue(s) excluded after sampling by the cleaning rules; "
+              f"not scored)")
     pred = {r[0]: (r[1], r[2]) for r in con.execute(
         "SELECT issue_id, category_primary, severity FROM labels WHERE source=? AND category_primary IS NOT NULL",
         (source,))}
@@ -159,9 +170,12 @@ def main():
         ids = sorted(set(g1) & set(g2))
         print(f"\nSELF-AGREEMENT (n={len(ids)}): category kappa "
               f"{kappa([g1[i][0] for i in ids],[g2[i][0] for i in ids]):.2f}, severity kappa "
-              f"{kappa([g1[i][1] for i in ids],[g2[i][1] for i in ids]):.2f}  <- the ceiling")
+              f"{kappa([g1[i][1] for i in ids],[g2[i][1] for i in ids]):.2f}")
+        print("  Reference point, not a hard ceiling: it measures the labeler's consistency.")
+        print("  A classifier scoring above it is likely fitting the labeler's noise; the gap")
+        print("  between them cannot be read as improvement.")
     else:
-        print("\n(no hand_pass2 yet: re-label 50 dev issues >=5 days later to establish the ceiling)")
+        print("\n(no hand_pass2 yet: re-label 50 dev issues >=5 days later for the self-agreement reference)")
 
     for s in a.sources.split(","):
         score(con, a.split, s.strip())

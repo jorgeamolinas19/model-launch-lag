@@ -30,6 +30,51 @@ TASK_RE = re.compile(r"\b(tracking|roadmap|release checklist|release notes|umbre
                      r"^\s*(Benchmark|\[Benchmark\]|\[Test\]|\[Perf\])\b", re.I)
 RANK = {"arch_class": 0, "slug": 1, "loose": 2}
 
+# Cross-model attribution guard. A title that names a DIFFERENT model family while the
+# attributed family is absent from it is about that other model; the attributed model
+# is a passing mention in the body. Found in audit: "[Bug]: Kimi K2 produces gibberish"
+# attributed to DeepSeek-V3.2; "Qwen2.5-VL engine failed" attributed to Qwen3-32B;
+# "MiniMax-H3-GGUF fails to load" attributed to Qwen3.8-27B.
+FAMILY_TOKENS = {
+    "llama": r"\bllama[- ]?[234]|\btinyllama", "qwen": r"\bqwen", "gemma": r"\bgemma",
+    "deepseek": r"\bdeepseek|\bdsv\d", "kimi": r"\bkimi|\bk2\b|\bk3\b", "glm": r"\bglm",
+    "mistral": r"\bmistral|\bmixtral", "phi": r"\bphi-?\d", "granite": r"\bgranite",
+    "olmo": r"\bolmo", "nemotron": r"\bnemotron", "minimax": r"\bminimax",
+    "gptoss": r"\bgpt[- ]?oss", "jamba": r"\bjamba",
+}
+# Finer-than-family distinctions that still mean "a different model": generation numbers.
+# Handles lists ("Qwen3.5/3.8", "gemma 2 and 3") and compact forms ("deepseekv32",
+# "deepseekv41-flash") - the first version of this parser read those as 3 and 4 and
+# excluded issues that were squarely about the attributed model.
+GEN_LIST_RE = re.compile(
+    r"\b(qwen|gemma|llama|glm|deepseek)[- ]?v?(\d(?:\.\d)?(?:(?:/|,\s*| and )\d(?:\.\d)?)*)(?![\d.])", re.I)
+GEN_COMPACT_RE = re.compile(r"\b(deepseek|glm|qwen)[- ]?v?(\d)(\d)\b(?!\.\d)", re.I)
+
+
+def generations(s):
+    out = set()
+    for m in GEN_LIST_RE.finditer(s):
+        out.update(re.split(r"/|,\s*| and ", m.group(2)))
+    for m in GEN_COMPACT_RE.finditer(s):          # deepseekv32 -> 3.2, deepseekv41 -> 4.1
+        out.add(f"{m.group(2)}.{m.group(3)}")
+    return {g.strip() for g in out if g.strip()}
+
+
+def title_names_other_model(title, hf_id, family):
+    """True if the title clearly names a model that is not the attributed one."""
+    t = (title or "").lower()
+    fam_key = next((k for k, rx in FAMILY_TOKENS.items() if re.search(rx, family.lower() + " " + hf_id.lower())), None)
+    named = {k for k, rx in FAMILY_TOKENS.items() if re.search(rx, t)}
+    if not named:
+        return False
+    if fam_key not in named:
+        return True                      # title names other families only
+    # Same family, different generation: "Qwen2.5-VL" vs attributed qwen3 / qwen3.5.
+    # The attributed model's generation appearing anywhere in the title keeps the row.
+    gens_in_title = generations(t)
+    gens_attr = generations(hf_id.lower() + " " + family.lower())
+    return bool(gens_in_title) and bool(gens_attr) and not (gens_in_title & gens_attr)
+
 
 def flat(s):
     return re.sub(r"[-_.\s]", "", (s or "").lower())
@@ -75,6 +120,8 @@ def main():
             decision[k] = "maintainer_task"
         elif non_english(title + " " + body):
             decision[k] = "non_english"
+        elif title_names_other_model(title, i["hf_id"], i["family"]):
+            decision[k] = "passing_mention"
         elif i["match_kind"] == "loose":
             key = flat(i["family"])
             # Named once in the body and absent from the title: not ABOUT this model.

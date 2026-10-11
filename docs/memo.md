@@ -117,9 +117,10 @@ native date alone misrepresents the developer experience; both are reported.
 
 **Label provenance, in order of trust.** Volume and attribution figures below come from
 the full collected set and need no labels. Category figures come from a **339-issue
-stratified sample labelled against codebook v2 by the assistant from title + excerpt
-only** (`ref_claude`) — a disclosed strong-model reference, not human labels, and to be
-replaced by hand labels before publication. The keyword baseline was also run over all
+stratified sample (311 scored after post-sampling exclusions) labelled against codebook
+v2 by the assistant from title + excerpt only** (`ref_claude`) — a disclosed
+strong-model reference, not human labels, and to be replaced by hand labels before
+publication. The keyword baseline was also run over all
 2,804 kept issues, but its first version agreed with the reference only **36%** (κ 0.28),
 over-predicting `install_build` ~5x because issue templates embed environment dumps.
 **An earlier draft of this memo ranked problems from those keyword labels; that ranking
@@ -129,11 +130,19 @@ was a keyword artifact and is withdrawn.** This is exactly what the baseline was
 ### Volume
 
 4,662 (issue, model) attributions over 22 models × 6 frameworks → **3,559 distinct
-issues**, of which **2,804 survive the codebook exclusions** (1,612 passing mentions —
-mostly the same issue attributed to a sibling model via a family alias — 127 duplicates,
-116 maintainer artifacts: RFCs, CI failures, test suites and benchmark posts that name a
-model in passing). Match confidence of the kept set: 58% repo short name, 33% family
-name only, 10% architecture class.
+issues**, of which **2,666 survive the codebook exclusions** (1,750 passing mentions —
+the same issue attributed to a sibling model via a family alias, plus issues whose title
+names a *different* model than the one attributed; 127 duplicates; 116 maintainer
+artifacts: RFCs, CI failures, test suites and benchmark posts). Match confidence of the
+kept set: 58% repo short name, 33% family name only, 10% architecture class.
+
+The cross-model title guard was added after an external audit found an issue titled
+"Kimi K2 produces gibberish" attributed to DeepSeek-V3.2. It removed 28 of the 339
+sampled rows (15 dev / 13 test), so category figures below are over the **311 that
+survive**. The guard trades recall for precision: a few issues whose *title* names a
+sibling generation but whose body tests the attributed model are lost too (e.g. a
+"Qwen3.5 GDN regression" report that benchmarks Qwen3.8-27B weights). That cost is
+accepted; a mis-attributed gold label is worse than a missing one.
 
 | framework | first-30-day issues | share |
 |---|---|---|
@@ -154,21 +163,21 @@ TensorRT-LLM's 46 issues are not evidence of fewer problems; its users file thro
 NVIDIA channels the GitHub API cannot see. The same visibility caveat that applied to its
 support dates applies here.
 
-### What the sample actually contains (reference labels, n = 339)
+### What the sample actually contains (reference labels, n = 311 scored)
 
-| category | share | blocker | degraded | minor | KM median days to close | still open |
-|---|---|---|---|---|---|---|
-| other | 25% | 26 | 25 | 35 | 32 | 19% |
-| missing_feature | 14% | 14 | 22 | 10 | 45 | 22% |
-| template_tokenizer | 12% | 5 | 36 | 1 | 37 | 14% |
-| correctness | 12% | 11 | 30 | 0 | 53 | 34% |
-| performance | 12% | 1 | 31 | 9 | 61 | 27% |
-| quantization | 8% | 20 | 6 | 0 | 81 | 15% |
-| oom_hardware | 6% | 11 | 9 | 0 | 68 | 20% |
-| speculative_decoding | 6% | 9 | 10 | 1 | **110** | **60%** |
-| install_build | 5% | 15 | 2 | 0 | 78 | 18% |
+| category | n | share | blocker | degraded | minor | KM median days to close | still open |
+|---|---|---|---|---|---|---|---|
+| other | 73 | 23% | 23 | 25 | 25 | 19 | 16% |
+| missing_feature | 44 | 14% | 12 | 22 | 10 | 56 | 23% |
+| template_tokenizer | 41 | 13% | 5 | 35 | 1 | 37 | 12% |
+| correctness | 39 | 13% | 11 | 28 | 0 | 53 | 33% |
+| performance | 39 | 13% | 1 | 30 | 8 | 61 | 26% |
+| quantization | 22 | 7% | 18 | 4 | 0 | 89 | 14% |
+| oom_hardware | 18 | 6% | 9 | 9 | 0 | 46 | 22% |
+| speculative_decoding | 19 | 6% | 8 | 10 | 1 | **110** | **63%** |
+| install_build | 16 | 5% | 14 | 2 | 0 | 61 | 19% |
 
-Three things are robust here even at n = 339:
+Three things are robust here even at n = 311:
 
 - **`other` is a bucket, not a finding.** A quarter of issues are runtime crashes,
   hangs, assertion failures and segfaults with no more specific cause named. Codebook v2
@@ -176,38 +185,41 @@ Three things are robust here even at n = 339:
   fall through. This is the single largest gap the labeling found and is logged for v3
   as `runtime_crash` ([codebook-v2.md](codebook-v2.md#gaps-found-while-labeling-339-issues-candidates-for-v3--v2-is-frozen)).
 - **Speculative decoding is the slowest category by a wide margin** — a 110-day median
-  and 60% still open, versus 32–81 days elsewhere. Draft/target pairing problems sit
+  and 63% still open, versus 19–89 days elsewhere. Draft/target pairing problems sit
   between two code paths and often two teams.
-- **Quantization and install/build are rare but almost always blockers.** 20 of 26
-  quantization issues and 15 of 17 install/build issues stop the user cold. Template and
-  performance issues are frequent but almost never block.
+- **Quantization and install/build are rare but almost always blockers.** 18 of 22
+  quantization issues and 14 of 16 install/build issues stop the user cold. Template and
+  performance issues are frequent but almost never block (6 blockers in 80).
 
 ## Question 3 — what should a platform team fix?
 
 ### Top problems, severity-weighted — and why the ranking is not stable
 
-| category | n | score (3/2/1) | blocker | degraded |
-|---|---|---|---|---|
-| other (crashes/hangs) | 86 | 163 | 26 | 25 |
-| missing_feature | 46 | 96 | 14 | 22 |
-| correctness | 41 | 93 | 11 | 30 |
-| template_tokenizer | 42 | 88 | 5 | 36 |
-| performance | 41 | 74 | 1 | 31 |
-| **quantization** | 26 | 72 | **20** | 6 |
-| oom_hardware | 20 | 51 | 11 | 9 |
-| install_build | 17 | 49 | 15 | 2 |
-| speculative_decoding | 20 | 48 | 9 | 10 |
+| category | n | score (3/2/1) | blocker | degraded | blocker rate |
+|---|---|---|---|---|---|
+| other (crashes/hangs) | 73 | 144 | 23 | 25 | 32% |
+| missing_feature | 44 | 90 | 12 | 22 | 27% |
+| correctness | 39 | 89 | 11 | 28 | 28% |
+| template_tokenizer | 41 | 86 | 5 | 35 | 12% |
+| performance | 39 | 71 | 1 | 30 | 3% |
+| **quantization** | 22 | 62 | **18** | 4 | **82%** |
+| install_build | 16 | 46 | 14 | 2 | **88%** |
+| oom_hardware | 18 | 45 | 9 | 9 | 50% |
+| speculative_decoding | 19 | 45 | 8 | 10 | 42% |
 
 **The top three change under reweighting** (3/2/1 and 5/2/1: other > missing_feature >
-correctness; blocker-only: other > **quantization** > missing_feature). So the memo does
-not publish a single ranking. The weight-dependence *is* the finding: by volume, the
-ecosystem's first-month pain is implementation defects and missing features; by
-severity, it is **quantization** — rare, but a blocker four times out of five.
+correctness; blocker-only: other > correctness > missing_feature), so the memo does not
+publish a single ranking. The weight-dependence *is* the finding, and the two lenses
+disagree: by **count** — any weighting — the first-month pain is implementation defects
+and missing features; by **blocker rate** it is quantization (82%) and install/build
+(88%), which are rare but stop the user cold, while performance (3%) and templates (12%)
+are frequent and almost never block. A platform team optimising for "fewest users
+stuck" and one optimising for "fewest issues filed" would pick different targets.
 
 Per-framework mixes differ enough that one priority list would mislead: `transformers`
-skews to missing features (35%); llama.cpp to templates and performance (20% / 15%);
-Ollama to performance and templates (23% / 15%); SGLang to quantization (15%). vLLM's
-108 sampled issues are the most evenly spread.
+skews to missing features (37%); llama.cpp to templates and performance (21% / 16%);
+Ollama to performance and templates (23% / 16%); SGLang to quantization and speculative
+decoding (18% / 14%). vLLM's 98 scored issues are the most evenly spread.
 
 ### Hardware
 
@@ -240,8 +252,9 @@ framework's engineering. Evidence is from the reference-labelled sample and is m
 provisional until hand labels confirm it.
 
 **1. Pair every quantized artifact with an explicit GPU-generation statement, and ship
-the quant for the install base's hardware on day 0.** Quantization is the most severe
-category in the sample — 20 of 26 issues are blockers — and the failure mode is
+the quant for the install base's hardware on day 0.** Quantization has the highest
+blocker rate of any substantive category in the sample — 18 of 22 issues — and the
+failure mode is
 consistent: a format whose kernels exist only on newer silicon (`fp8e4nv not supported`
 on A10; NVFP4 on Ampere; MXFP4 persistent-kernel requirement on Blackwell; `machete`
 missing on RTX 5090). Hardware mined from all 2,856 issues shows the split that makes
@@ -253,8 +266,8 @@ convert most of these from a traceback into a lookup. Checklist items 2.1 / 2.2.
 **2. Treat speculative-decoding pairing as part of launch readiness, not a follow-up.**
 Draft models now launch alongside targets (Kimi-K3-DSpark has more downloads than most
 full models in the cohort), and pairing issues are the slowest to resolve of any
-category — 110-day median, 60% still open — because the defect sits between the target
-model's code path and the speculative subsystem. Of the 20 sampled, 9 were blockers.
+category — 110-day median, 63% still open — because the defect sits between the target
+model's code path and the speculative subsystem. Of the 19 scored, 8 were blockers.
 A pairing smoke test (draft loads against target; vocab matches; one verify step runs)
 in each framework before announcing a draft would catch the recurring shapes seen here:
 `decoder_layer_cls` ignored, `spec_info None` under disaggregation, aux hidden states
@@ -282,10 +295,13 @@ hand labels exist (`labels.source = 'ref_claude'`, run id recorded). Against it:
 
 | classifier | split | category acc | κ | severity acc | κ |
 |---|---|---|---|---|---|
-| regex rules-v1 (naive keywords) | test (203) | 36.0% | 0.28 | 54.2% | 0.25 |
-| regex rules-v2 (env-dump stripped, title-first) | dev (136) | 55.9% | 0.50 | 55.9% | 0.27 |
-| regex rules-v2 | **test (203)** | **52.2%** | **0.45** | 50.7% | 0.20 |
-| Qwen3-4B, prompt v1, CPU | dev (136) | _running_ | | | |
+| regex rules-v1 (naive keywords) | test (203, pre-guard) | 36.0% | 0.28 | 54.2% | 0.25 |
+| regex rules-v2 (env-dump stripped, title-first) | dev (121) | 57.0% | 0.51 | 57.0% | 0.27 |
+| regex rules-v2 | **test (190)** | **51.6%** | **0.44** | 50.5% | 0.19 |
+| Qwen3-4B, prompt v1, CPU | dev (121) | _running_ | | | |
+
+(n = sampled rows that survive the cleaning rules; 28 of 339 were excluded after
+sampling by the cross-model title guard and widened maintainer-task filter.)
 
 Rules-v1 was good at `missing_feature` (72% precision / 75% recall — the vocabulary is
 distinctive) and poor everywhere else, because issue templates embed environment dumps

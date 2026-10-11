@@ -1,33 +1,33 @@
 QUESTIONS 2 & 3 - snapshot 2026-10-11, labels from 'ref_claude'
-2804 issues in scope, 331 labelled, 2473 unlabelled (excluded from category figures)
+2666 issues in scope, 311 labelled, 2355 unlabelled (excluded from category figures)
 
 §2 ISSUE LOAD - first 30 days, per framework (per 100k downloads in parens)
 
 model                                         transf        vllm      sglang      llamac      ollama      trtllm   total
 ------------------------------------------------------------------------------------------------------------------------
-deepseek-ai/DeepSeek-V3                    4   (0.3)  20   (1.4)  35   (2.4)   9   (0.6)   8   (0.5)   1   (0.1)      77
-google/gemma-3-27b-it                     30   (7.2)  43  (10.3)  17   (4.1)  20   (4.8)  71  (17.0)   3   (0.7)     184
-meta-llama/Llama-4-Scout-17B-16E-Instru   21  (12.8)  37  (22.6)  11   (6.7)  11   (6.7)   2   (1.2)   2   (1.2)      84
-Qwen/Qwen3-8B                             11   (0.1)  57   (0.6)  24   (0.2)  40   (0.4)  36   (0.4)   5   (0.1)     173
-Qwen/Qwen3-32B                             1   (0.0)  34   (1.0)  16   (0.5)  11   (0.3)  13   (0.4)   1   (0.0)      76
-openai/gpt-oss-20b                        23   (0.4)  83   (1.4)  30   (0.5)  60   (1.0) 118   (2.0)   6   (0.1)     320
+deepseek-ai/DeepSeek-V3                    4   (0.3)  19   (1.3)  34   (2.3)   8   (0.5)   8   (0.5)   1   (0.1)      74
+google/gemma-3-27b-it                     29   (6.9)  41   (9.8)  14   (3.4)  19   (4.5)  70  (16.8)   2   (0.5)     175
+meta-llama/Llama-4-Scout-17B-16E-Instru   20  (12.2)  36  (22.0)   9   (5.5)  11   (6.7)   2   (1.2)   2   (1.2)      80
+Qwen/Qwen3-8B                             11   (0.1)  55   (0.6)  23   (0.2)  38   (0.4)  36   (0.4)   5   (0.1)     168
+Qwen/Qwen3-32B                             0   (0.0)  33   (1.0)  15   (0.4)  10   (0.3)  13   (0.4)   1   (0.0)      72
+openai/gpt-oss-20b                        23   (0.4)  81   (1.4)  29   (0.5)  59   (1.0) 116   (1.9)   6   (0.1)     314
 Qwen/Qwen3-VL-4B-Instruct                  8   (0.3)  54   (1.7)  13   (0.4)  12   (0.4)  31   (1.0)   1   (0.0)     119
 moonshotai/Kimi-Linear-48B-A3B-Instruct    0   (0.0)   4   (1.8)   1   (0.5)   1   (0.5)   0   (0.0)   0   (0.0)       6
 allenai/Olmo-3-7B-Think                    1   (0.2)   1   (0.2)   1   (0.2)   0   (0.0)   1   (0.2)   0   (0.0)       4
-deepseek-ai/DeepSeek-V3.2                  2   (0.0)  22   (0.5)  46   (1.0)   0   (0.0)   2   (0.0)   4   (0.1)      76
-nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-B    0   (0.0)   3   (0.3)   4   (0.4)   2   (0.2)   0   (0.0)   0   (0.0)       9
-Qwen/Qwen3-Coder-Next                      3   (0.5)  15   (2.5)   9   (1.5)  45   (7.6)  21   (3.5)   0   (0.0)      93
-zai-org/GLM-5                              4   (0.7)  17   (2.9)  29   (5.0)  14   (2.4)   7   (1.2)   2   (0.3)      73
-Qwen/Qwen3.5-397B-A17B                     9   (1.9)  82  (17.2)  40   (8.4)  83  (17.4)  44   (9.2)   5   (1.0)     263
-Qwen/Qwen3.5-27B                          10   (0.5)  93   (4.9)  23   (1.2)  71   (3.8)  30   (1.6)   2   (0.1)     229
-google/gemma-4-31B-it                     20   (0.2)  81   (0.8)   7   (0.1) 100   (1.0)  99   (1.0)   5   (0.1)     312
+deepseek-ai/DeepSeek-V3.2                  2   (0.0)  22   (0.5)  44   (1.0)   0   (0.0)   2   (0.0)   3   (0.1)      73
+nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-B    0   (0.0)   3   (0.3)   3   (0.3)   2   (0.2)   0   (0.0)   0   (0.0)       8
+Qwen/Qwen3-Coder-Next                      3   (0.5)  15   (2.5)   9   (1.5)  44   (7.4)  19   (3.2)   0   (0.0)      90
+zai-org/GLM-5                              4   (0.7)  16   (2.7)  23   (3.9)   7   (1.2)   7   (1.2)   1   (0.2)      58
+Qwen/Qwen3.5-397B-A17B                     9   (1.9)  75  (15.7)  40   (8.4)  80  (16.8)  44   (9.2)   4   (0.8)     252
+Qwen/Qwen3.5-27B                           9   (0.5)  89   (4.7)  22   (1.2)  70   (3.7)  29   (1.5)   2   (0.1)     221
+google/gemma-4-31B-it                     20   (0.2)  80   (0.8)   7   (0.1)  99   (1.0)  99   (1.0)   5   (0.1)     310
 ibm-granite/granite-4.1-3b                 1   (0.2)   0   (0.0)   0   (0.0)   1   (0.2)   3   (0.5)   0   (0.0)       5
-google/diffusiongemma-26B-A4B-it           3   (0.5)   8   (1.2)   1   (0.2)   1   (0.2)   1   (0.2)   0   (0.0)      14
-moonshotai/Kimi-K3                         1   (0.1)  63   (5.4)  36   (3.1)   1   (0.1)   4   (0.3)   2   (0.2)     107
+google/diffusiongemma-26B-A4B-it           3   (0.5)   8   (1.2)   1   (0.2)   1   (0.2)   0   (0.0)   0   (0.0)      13
+moonshotai/Kimi-K3                         1   (0.1)  57   (4.9)  34   (2.9)   1   (0.1)   3   (0.3)   1   (0.1)      97
 RadixArk/Kimi-K3-DSpark                    0   (0.0)   0   (0.0)   0   (0.0)   0   (0.0)   0   (0.0)   0   (0.0)       0
-Qwen/Qwen3.8-27B                           6   (0.1) 133   (2.0)  76   (1.1) 204   (3.0)  53   (0.8)   5   (0.1)     477
-deepseek-ai/DeepSeek-V4.1-Flash            1   (0.1)  56   (4.1)  31   (2.3)   1   (0.1)  13   (1.0)   1   (0.1)     103
-ALL                                              159         906         450         687         557          45    2804
+Qwen/Qwen3.8-27B                           4   (0.1) 116   (1.7)  68   (1.0) 192   (2.8)  52   (0.8)   4   (0.1)     436
+deepseek-ai/DeepSeek-V4.1-Flash            1   (0.1)  50   (3.7)  28   (2.1)   1   (0.1)  10   (0.7)   1   (0.1)      91
+ALL                                              153         855         418         656         545          39    2666
 
   Downloads are the Hub's rolling 30-day figure at snapshot, not at release+30 -
   a stated limitation (metrics §2). Hub downloads measure interest in weights,
@@ -38,15 +38,15 @@ ALL                                              159         906         450    
 
 category                  n  KM med d  % open closed:done not_planned
 ---------------------------------------------------------------------
-missing_feature          46        45     22%          33           3
-install_build            17        78     18%          12           2
-template_tokenizer       42        37     14%          28           8
-quantization             26        81     15%          14           8
-speculative_decoding     20       110     60%           6           2
-oom_hardware             20        68     20%          11           5
-correctness              41        53     34%          21           6
-performance              40        61     28%          23           6
-other                    79        25     18%          48          17
+missing_feature          44        56     23%          31           3
+install_build            16        61     19%          11           2
+template_tokenizer       41        37     12%          28           8
+quantization             22        89     14%          12           7
+speculative_decoding     19       110     63%           5           2
+oom_hardware             18        46     22%          10           4
+correctness              39        53     33%          20           6
+performance              39        61     26%          23           6
+other                    73        19     16%          45          16
 
   'completed' vs 'not_planned' is GitHub's close reason - the closest available
   proxy for fixed-vs-dismissed. closed_by_fix (linked commit) is not collected yet.
@@ -56,38 +56,38 @@ other                    79        25     18%          48          17
 
 category                  n  score  blocker  degraded  minor
 ------------------------------------------------------------
-other                    79    156       26        25     28
-missing_feature          46     96       14        22     10
-correctness              41     93       11        30      0
-template_tokenizer       42     88        5        36      1
-performance              40     73        1        31      8
-quantization             26     72       20         6      0
-oom_hardware             20     51       11         9      0
-install_build            17     49       15         2      0
-speculative_decoding     20     48        9        10      1
+other                    73    144       23        25     25
+missing_feature          44     90       12        22     10
+correctness              39     89       11        28      0
+template_tokenizer       41     86        5        35      1
+performance              39     71        1        30      8
+quantization             22     62       18         4      0
+install_build            16     46       14         2      0
+oom_hardware             18     45        9         9      0
+speculative_decoding     19     45        8        10      1
 
   default       top-3: other > missing_feature > correctness
   steep         top-3: other > missing_feature > correctness
-  blocker_only  top-3: other > quantization > missing_feature
+  blocker_only  top-3: other > correctness > missing_feature
 
   top-3 NOT STABLE under reweighting - report the weight-dependence, not a single ranking
 
   per-framework category mix (pooled rankings partly re-describe user bases):
-    transformers  n=20    missing_feature 35%, other 35%, correctness 25%
-    vllm          n=104   other 19%, missing_feature 16%, correctness 16%
-    sglang        n=58    quantization 16%, missing_feature 16%, other 16%
-    llamacpp      n=71    other 28%, template_tokenizer 20%, performance 15%
-    ollama        n=71    other 31%, performance 23%, template_tokenizer 15%
-    trtllm        n=7     correctness 29%, quantization 14%, install_build 14%
+    transformers  n=19    missing_feature 37%, other 32%, correctness 26%
+    vllm          n=98    other 19%, missing_feature 17%, correctness 17%
+    sglang        n=51    quantization 18%, missing_feature 16%, speculative_decoding 14%
+    llamacpp      n=68    other 29%, template_tokenizer 21%, performance 16%
+    ollama        n=69    other 30%, performance 23%, template_tokenizer 16%
+    trtllm        n=6     quantization 17%, install_build 17%, performance 17%
 
 
-§6 HARDWARE PROFILE - mined from issue text; coverage 1775/2804 (63%) - a LOWER BOUND
+§6 HARDWARE PROFILE - mined from issue text; coverage 1684/2666 (63%) - a LOWER BOUND
 
-  gpu class among issues naming a GPU: datacenter 435, consumer 393, workstation 117, apple_silicon 66, edge 13
-  quant formats mentioned: gguf 442, fp8 254, nvfp4 122, q4_k_m 115, q8_0 72, mxfp4 65, awq 51, mlx 31
+  gpu class among issues naming a GPU: datacenter 414, consumer 377, workstation 109, apple_silicon 64, edge 12
+  quant formats mentioned: gguf 423, fp8 233, q4_k_m 111, nvfp4 111, q8_0 69, mxfp4 62, awq 49, mlx 31
 
-  §6c capability gap: of 20 oom_hardware issues, 4 report VRAM;
-  3/4 (75%) attempted a model whose fp16
+  §6c capability gap: of 18 oom_hardware issues, 3 report VRAM;
+  3/3 (100%) attempted a model whose fp16
   floor exceeds the card they named - a demand signal for day-0 quantized artifacts
   (checklist 2.1), not user error.
 
@@ -97,7 +97,7 @@ speculative_decoding     20     48        9        10      1
   gpu class by framework (where named):
     transformers  datacenter 46%, consumer 41%, apple_silicon 8%, workstation 5%
     vllm          datacenter 58%, consumer 26%, workstation 15%, edge 1%, apple_silicon 0%
-    sglang        datacenter 73%, workstation 14%, consumer 12%, edge 1%
-    llamacpp      consumer 69%, datacenter 13%, workstation 10%, apple_silicon 7%, edge 2%
-    ollama        consumer 48%, apple_silicon 32%, datacenter 15%, workstation 3%, edge 1%
-    trtllm        datacenter 60%, consumer 25%, edge 10%, workstation 5%
+    sglang        datacenter 71%, workstation 15%, consumer 13%, edge 1%
+    llamacpp      consumer 69%, datacenter 13%, workstation 10%, apple_silicon 6%, edge 2%
+    ollama        consumer 49%, apple_silicon 33%, datacenter 15%, workstation 2%, edge 1%
+    trtllm        datacenter 69%, consumer 19%, edge 6%, workstation 6%

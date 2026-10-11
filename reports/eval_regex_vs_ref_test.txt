@@ -3,33 +3,35 @@ REFERENCE SET IS 'ref_claude', NOT HUMAN LABELS. Figures below measure agreement
 disclosed strong-model reference labelled from the same title+excerpt against codebook
 v2. Replace with hand labels (eval_classifier.py --import ...) before publication.
 
-(no hand_pass2 yet: re-label 50 dev issues >=5 days later to establish the ceiling)
+(no hand_pass2 yet: re-label 50 dev issues >=5 days later for the self-agreement reference)
 
-=== regex_baseline  vs ref_claude (test, n=203) ===
-  category accuracy 52.2%   kappa 0.45
-  severity accuracy 50.7%   kappa 0.20
+  (13 sampled test issue(s) excluded after sampling by the cleaning rules; not scored)
+
+=== regex_baseline  vs ref_claude (test, n=190) ===
+  category accuracy 51.6%   kappa 0.44
+  severity accuracy 50.5%   kappa 0.19
 
   category                 n   prec    rec
-  missing_feature         24    65%    71%
+  missing_feature         22    67%    73%
   install_build            9    56%    56%  (n<10: unreliable)
-  template_tokenizer      29    60%    72%
-  quantization            15    32%    60%
+  template_tokenizer      28    61%    71%
+  quantization            13    31%    62%
   speculative_decoding    12    53%    67%
-  oom_hardware            15    50%    80%
-  correctness             20    56%    25%
-  performance             22    62%    59%
-  other                   57    44%    28%
+  oom_hardware            13    45%    77%
+  correctness             20    62%    25%
+  performance             21    63%    57%
+  other                   52    41%    27%
 
   confusion (rows = ref_claude, cols = predicted):
                          missi insta templ quant specu oom_h corre perfo other
-  missing_feature           17     0     0     2     1     0     0     1     3
+  missing_feature           16     0     0     1     1     0     0     1     3
   install_build              0     5     0     0     0     0     0     0     4
-  template_tokenizer         0     1    21     1     0     1     2     0     3
-  quantization               3     0     0     9     0     0     0     1     2
+  template_tokenizer         0     1    20     1     0     1     2     0     3
+  quantization               2     0     0     8     0     0     0     1     2
   speculative_decoding       1     0     0     2     8     0     0     1     0
-  oom_hardware               0     0     0     2     0    12     0     0     1
+  oom_hardware               0     0     0     2     0    10     0     0     1
   correctness                0     1     4     2     1     1     5     0     6
-  performance                1     1     0     3     0     3     0    13     1
-  other                      4     1    10     7     5     7     2     5    16
+  performance                1     1     0     3     0     3     0    12     1
+  other                      4     1     9     7     5     7     1     4    14
 
 NOTE: test split touched. Do not iterate the prompt against these numbers.

@@ -176,6 +176,15 @@ is kept, and the rest are excluded as `passing_mention`. (The first schema keyed
 issue alone and silently kept whichever model was collected last. Caught when 988 rows
 had 988 distinct ids, which is impossible given overlapping family aliases.)
 
+**Cross-model titles are excluded.** If the title clearly names a *different* model —
+another family, or another generation of the same family — while the attributed model
+is absent from it, the row is a passing mention regardless of match kind. Added after
+an external audit found "[Bug]: Kimi K2 produces gibberish" attributed to DeepSeek-V3.2
+(the body mentioned V3.2 in passing). The parser handles lists ("Qwen3.5/3.8",
+"gemma 2 and 3") and compact versions ("deepseekv32"); it still loses a few issues whose
+title names a sibling generation but whose body tests the attributed model. Precision
+over recall: a mis-attributed label is worse than a missing one.
+
 **Loose-only matches are weak evidence.** An issue matched only by family name, with
 the model absent from the title and named once in the body, is excluded as a passing
 mention. The share of kept issues matched by `arch_class` vs `slug` vs `loose` is
