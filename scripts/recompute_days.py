@@ -20,12 +20,14 @@ DB = ROOT / "db" / "launch_lag.sqlite"
 def main():
     con = sqlite3.connect(DB)
     rows = list(con.execute("""
-        SELECT s.framework_id, s.hf_id, s.event_date, s.days_to_support, m.release_date
+        SELECT s.framework_id, s.hf_id, s.event_date, s.days_to_support, m.release_date, s.state
         FROM support_events s JOIN models m USING(hf_id)"""))
     changed = 0
-    for fw, hf_id, event, stored, rel in rows:
+    for fw, hf_id, event, stored, rel, state in rows:
         want = None
-        if event and rel:
+        # arch_compatible carries NO latency value by adjudication standard (a declared
+        # architecture is not proof the checkpoint ran); never re-derive one for it.
+        if event and rel and state != "arch_compatible":
             want = (date.fromisoformat(event) - date.fromisoformat(rel)).days
         if want != stored:
             con.execute("UPDATE support_events SET days_to_support=? "

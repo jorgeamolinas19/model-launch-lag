@@ -21,8 +21,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DB = ROOT / "db" / "launch_lag.sqlite"
 
+# Maintainer artifacts that name a model in passing. Widened after labeling: RFCs, CI
+# failures, test-suite additions, perf roadmap sub-tasks and benchmark contributions
+# were leaking through and landing in `other` (docs/codebook-v2.md, gaps section).
 TASK_RE = re.compile(r"\b(tracking|roadmap|release checklist|release notes|umbrella|meta[- ]issue|"
-                     r"\[RFC\]|\[Roadmap\]|\[Tracker\])", re.I)
+                     r"sub-?task|test suite)\b|"
+                     r"\[(RFC|Roadmap|Tracker|Test|CI Failure|CI|Perf|Benchmark|Feature\] update CIs)\]|"
+                     r"^\s*(Benchmark|\[Benchmark\]|\[Test\]|\[Perf\])\b", re.I)
 RANK = {"arch_class": 0, "slug": 1, "loose": 2}
 
 

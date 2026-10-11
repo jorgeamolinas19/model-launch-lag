@@ -42,8 +42,9 @@ regenerate from `reports/`; everything is "as of" snapshot 2026-10-10/11. Items 
 *Source: scripts/detect_remote_code.py*
 
 ## 6. What breaks: the keyword ranking was wrong
-- Keyword baseline vs reference labels: **36% agreement (κ 0.28)**; it over-predicted `install_build` ~5x from environment dumps
+- Naive keyword baseline vs reference labels: **36% agreement (κ 0.28)**; it over-predicted `install_build` ~5x from environment dumps in issue templates
 - The earlier "install/build > quantization > templates" ranking is withdrawn
+- Stripping environment dumps and trusting titles lifts the baseline to **52% (κ 0.45)** — the bar an open model must clear
 - Reference sample (n=339): other 25% · missing_feature 14% · template 12% · correctness 12% · performance 12% · quantization 8% · OOM 6% · spec-decode 6% · install 5%
 *Source: reports/eval_regex_vs_ref_test.txt, reports/metrics_ref.txt — provisional*
 
@@ -82,7 +83,7 @@ regenerate from `reports/`; everything is "as of" snapshot 2026-10-10/11. Items 
 
 ### Backup: limitations in one slide
 - Ollama/llama.cpp have no exact-fidelity support dates by construction; TensorRT-LLM issue volume is a visibility artifact (NVIDIA channels)
-- 4 support pairs undetermined; 16 adjudicated from API-verified PRs by the assistant, pending human spot-check
-- Category figures: one labeler (assistant), no self-agreement κ yet, n=339 of 2,856
+- 2 support pairs undetermined; 16 adjudicated from API-verified PRs by the assistant, pending human spot-check; 2 Ollama dates are Wayback-capture upper bounds
+- Category figures: one labeler (assistant), no self-agreement κ yet, n=339 of 2,804; the 52% keyword figure was tuned after seeing the reference confusion matrix
 - Downloads normalizer is at snapshot, not release+30; Hub downloads ≠ framework users
 - Everything is as of 2026-10-10/11; issue state mutates

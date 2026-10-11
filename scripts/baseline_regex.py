@@ -44,11 +44,41 @@ RULES = [
 COMPILED = [(c, re.compile(p, re.I)) for c, p in RULES]
 
 
+# Issue templates embed environment dumps ("CUDA used to build PyTorch", pip/cmake/
+# glibc versions) regardless of what the issue is about. Matching inside them made the
+# baseline predict install_build ~5x too often (36% agreement with the reference set).
+ENV_DUMP_RE = re.compile(
+    r"(Collecting environment information|System Info\s*=+|PyTorch Info|CUDA / GPU Info|"
+    r"Your current environment|### System Info|### Name and Version|### Environment|"
+    r"python collect_env\.py|sglang\.check_env).*?(?=\n### |\Z)", re.S | re.I)
+# Title-only rules: when the title itself names the category, trust it over the body.
+TITLE_HINT = [(c, rx) for c, rx in [
+    ("missing_feature", re.compile(r"not supported|unsupported|feature request|\[feature\]|add support|support for", re.I)),
+    ("performance", re.compile(r"\bslow|throughput|tok(en)?s?/s|latency|performance|\d+x (slower|faster)", re.I)),
+    ("oom_hardware", re.compile(r"out of memory|\boom\b|vram|not enough memory", re.I)),
+    ("quantization", re.compile(r"gguf|awq|gptq|fp8|nvfp4|mxfp4|int4|q[0-9]_k|quantiz", re.I)),
+    ("template_tokenizer", re.compile(r"template|tokeniz|<think>|thinking|tool.?call|reasoning", re.I)),
+    ("speculative_decoding", re.compile(r"speculative|draft|eagle|mtp\b|dflash|dspark", re.I)),
+    ("correctness", re.compile(r"garbage|gibberish|wrong|incorrect|repeat|nonsens|accuracy|nan\b", re.I)),
+    ("install_build", re.compile(r"install|build fail|compil|wheel|docker image|no kernel image", re.I)),
+]]
+
+
 def classify(title, body):
+    body = ENV_DUMP_RE.sub(" ", body or "")
+    # Title first, in ladder order: the author's own one-line summary beats body noise.
+    for c, _ in COMPILED:
+        rx = dict(TITLE_HINT).get(c)
+        if rx and rx.search(title or ""):
+            primary = c
+            break
+    else:
+        primary = None
     text = f"{title}\n{body}"
     cats = [c for c, rx in COMPILED if rx.search(text)]
-    primary = cats[0] if cats else "other"
-    secondary = cats[1:3]
+    if primary is None:
+        primary = cats[0] if cats else "other"
+    secondary = [c for c in cats if c != primary][:2]
     return primary, secondary
 
 
@@ -74,8 +104,10 @@ def main():
     run_id = f"regex-{VERSION}-{now[:10]}"
     con.execute("""INSERT OR REPLACE INTO runs(run_id, started_at, snapshot_date, codebook_version,
                    classifier_model, prompt_version, notes) VALUES(?,?,?,?,?,?,?)""",
-                (run_id, now, now[:10], VERSION, "regex_baseline", "rules-v1",
-                 "keyword precedence-ladder baseline; severity from structural signals"))
+                (run_id, now, now[:10], VERSION, "regex_baseline", "rules-v2",
+                 "keyword precedence-ladder baseline; env-dump stripping + title-first rules "
+                 "(rules-v2, informed by the reference-set confusion matrix incl. test - "
+                 "treat test agreement as optimistic); severity from structural signals"))
     n, dist = 0, {}
     for i in con.execute("SELECT * FROM issues WHERE excluded=0"):
         p, s = classify(i["title"], i["body_excerpt"])

@@ -100,10 +100,18 @@ native date alone misrepresents the developer experience; both are reported.
 
 - Ollama and llama.cpp have no class-A observations by construction (no per-architecture
   file / conversion half only). Their numbers are real but not comparable to class A.
-- 14 pairs remain `undetermined` and are excluded from every figure; 5 negative offsets
+- 2 pairs remain `undetermined` (TensorRT-LLM × Olmo-3 and × granite-4.1: the
+  architecture appears only in an allowlist file, with no implementation file or
+  model-titled PR). 16 pairs were adjudicated by the assistant from API-verified PR
+  evidence and are marked `claude-ref` pending a human spot-check; 5 negative offsets
   were adjudicated by historical evidence rather than a threshold.
-- One cohort release date (Nemotron-3-Nano: repo content 2025-12-04, announcement
-  2025-12-15) is unresolved as to whether the weights were public before announcement.
+- Two Ollama dates are **upper bounds** from the earliest Wayback Machine capture of the
+  library page (DeepSeek-V3.2 ≤ +11d, granite-4.1 ≤ +23d), graded `coarse`.
+- Nemotron-3-Nano's release date was moved from the repo's content date (2025-12-04) to
+  the announcement (2025-12-15): no public capture of the model page exists before the
+  announcement. Absence of a capture is not proof of private status; confidence medium.
+  It is the third failure mode of the API rule — a non-gated repo whose content predates
+  its public flip, so both API candidates agree and neither is the public date.
 
 ## Question 2 — what broke?
 
@@ -112,18 +120,20 @@ the full collected set and need no labels. Category figures come from a **339-is
 stratified sample labelled against codebook v2 by the assistant from title + excerpt
 only** (`ref_claude`) — a disclosed strong-model reference, not human labels, and to be
 replaced by hand labels before publication. The keyword baseline was also run over all
-2,856 issues, but it agrees with the reference only **36%** (κ 0.28), over-predicting
-`install_build` ~5x because issue templates embed environment dumps. **An earlier draft
-of this memo ranked problems from the keyword labels; that ranking was a keyword
-artifact and is withdrawn.** This is exactly what the baseline was for.
+2,804 kept issues, but its first version agreed with the reference only **36%** (κ 0.28),
+over-predicting `install_build` ~5x because issue templates embed environment dumps.
+**An earlier draft of this memo ranked problems from those keyword labels; that ranking
+was a keyword artifact and is withdrawn.** This is exactly what the baseline was for.
+(A second rule set that strips environment dumps reaches 52% — see *Classifier*.)
 
 ### Volume
 
 4,662 (issue, model) attributions over 22 models × 6 frameworks → **3,559 distinct
-issues**, of which **2,856 survive the codebook exclusions** (1,631 passing mentions —
+issues**, of which **2,804 survive the codebook exclusions** (1,612 passing mentions —
 mostly the same issue attributed to a sibling model via a family alias — 127 duplicates,
-45 maintainer tracking issues). Match confidence of the kept set: 58% repo short name,
-32% family name only, 10% architecture class.
+116 maintainer artifacts: RFCs, CI failures, test suites and benchmark posts that name a
+model in passing). Match confidence of the kept set: 58% repo short name, 33% family
+name only, 10% architecture class.
 
 | framework | first-30-day issues | share |
 |---|---|---|
@@ -272,17 +282,21 @@ hand labels exist (`labels.source = 'ref_claude'`, run id recorded). Against it:
 
 | classifier | split | category acc | κ | severity acc | κ |
 |---|---|---|---|---|---|
-| regex baseline | dev (136) | 37.5% | 0.30 | 59.6% | 0.32 |
-| regex baseline | **test (203)** | **36.0%** | **0.28** | 54.2% | 0.25 |
+| regex rules-v1 (naive keywords) | test (203) | 36.0% | 0.28 | 54.2% | 0.25 |
+| regex rules-v2 (env-dump stripped, title-first) | dev (136) | 55.9% | 0.50 | 55.9% | 0.27 |
+| regex rules-v2 | **test (203)** | **52.2%** | **0.45** | 50.7% | 0.20 |
 | Qwen3-4B, prompt v1, CPU | dev (136) | _running_ | | | |
 
-The baseline is good at `missing_feature` (72% precision / 75% recall — the vocabulary
-is distinctive) and poor everywhere else; it over-predicts `install_build` and
-`quantization` because environment dumps in issue templates contain the keywords. **This
-is the number that makes the LLM's accuracy interpretable:** an open model needs to beat
-~36%, and anything above ~70% is a real gain over keywords. The test split has now been
-scored once for the baseline only; the open-model classifier will touch it once, after
-its prompt is frozen on dev. Throughput/VRAM for the 2–3 model benchmark follow the GPU
+Rules-v1 was good at `missing_feature` (72% precision / 75% recall — the vocabulary is
+distinctive) and poor everywhere else, because issue templates embed environment dumps
+(`CUDA used to build PyTorch`, `pip`, `cmake`) that match `install_build` regardless of
+the complaint. Rules-v2 strips those blocks and trusts the title first; that alone
+lifted agreement from 36% to 52%. **Disclosure:** rules-v2 was written after seeing the
+reference set's confusion matrix, including the test split, so its test figure is
+optimistic — a fair reading is "a keyword baseline that knows the codebook's traps lands
+around 50%". **That is the bar an open model has to clear**; anything above ~70% is a
+real gain over keywords. The open-model classifier will touch test once, after its
+prompt is frozen on dev. Throughput/VRAM for the 2–3 model benchmark follow the GPU
 runbook.
 
 Two caveats on the reference set itself: it is one labeler, so no self-agreement κ

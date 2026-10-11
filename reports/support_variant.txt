@@ -1,0 +1,74 @@
+DAYS TO SUPPORT - variant models, snapshot 2026-10-10
+Negative = merged before public release (early access). Latency is only
+interpretable beside coverage: see the censored column.
+
+framework        cover  KM med  obs med  early  day0  cens  part  fidelity
+--------------------------------------------------------------------------
+transformers       0/5     n/a        -      0     0     0     0  exact
+vllm               0/5     n/a        -      0     0     0     0  exact
+sglang             0/5     n/a        -      0     0     0     0  exact
+llamacpp           3/5     -18      -18      3     0     0     3  exact
+ollama             3/5     +11      +11      0     1     0     0  coarse,good
+trtllm             2/5      +4      +18      0     0     0     0  exact,none
+
+  KM med = Kaplan-Meier median including censored pairs (the defensible figure)
+  obs med = median over supported pairs only (biased low; shown for contrast)
+  n/a     = over half the pairs are still unsupported, so no median exists
+  1 pair(s) undetermined and excluded from every figure above; see hand-resolution list
+
+  CAUTION: 6 new_arch pair(s) are recorded at day 0 because the
+  architecture was ALREADY declared at the commit before release. For a new
+  architecture that means pre-release support, so the true value is <= 0 and
+  0 is a conservative FLOOR, not a measurement. Dating how far ahead would
+  need the arch-addition commit, which is still unresolved. This UNDERSTATES
+  early access rather than overstating it.
+
+
+PER-MODEL (variant)
+
+released   model                                         transf    vllm  sglang  llamac  ollama  trtllm
+-------------------------------------------------------------------------------------------------------
+2025-04-27 Qwen/Qwen3-32B                                     ?       ?       ?    -18p       ?      +4
+2026-01-30 Qwen/Qwen3-Coder-Next                              ?       ?       ?    -63p       ?       ?
+2026-02-16 Qwen/Qwen3.5-397B-A17B                             ?       ?       ?     -6p     +11     +32
+2026-04-06 ibm-granite/granite-4.1-3b                         ?       ?       ?       ?     +23       ?
+2026-08-14 Qwen/Qwen3.8-27B                                   ?       ?       ?       ?      +0       ?
+
+  p = partial support (some required parts landed, model not yet runnable)
+  none = no qualifying artifact as of snapshot (right-censored, not missing)
+
+
+SENSITIVITY BY EVIDENCE CLASS
+
+  A  model-specific support, exact fidelity   (strictest: proof this
+     checkpoint loaded, dated by implementation-path history)
+  B  + exactly-dated partial support         (llama.cpp conversion half)
+  C  + lower-fidelity dates                  (PR search / release notes)
+  AC architecture-compatible, NO latency value: arch declared pre-release but
+     checkpoint compatibility unproven. Counts for coverage only.
+
+framework        A med  A n   B med  B n   C med  C n   AC  undet
+-----------------------------------------------------------------
+transformers       n/a    0     n/a    0     n/a    0    5      0
+vllm               n/a    0     n/a    0     n/a    0    5      0
+sglang             n/a    0     n/a    0     n/a    0    5      0
+llamacpp           n/a    0     -18    3     -18    3    2      0
+ollama             n/a    0     n/a    0     +11    3    2      0
+trtllm              +4    2      +4    2      +4    2    2      1
+
+  rank A: trtllm
+  rank B: llamacpp < trtllm
+  rank C: llamacpp < trtllm < ollama
+
+  RANKING IS NOT STABLE across evidence classes. The ordering depends on
+  which evidence you accept, so no single ranking should be published as
+  the result - report the classes separately.
+
+
+TIME TREND (the confound the historical band exists to measure)
+
+  historical  n=  2 supported,   0 censored | median -7d | early 1 | day0 0
+  primary     n=  6 supported,   0 censored | median +6d | early 2 | day0 1
+
+  Any band-to-band difference is confounded with cohort composition; it is a
+  descriptive contrast, not a causal claim about frameworks improving.
