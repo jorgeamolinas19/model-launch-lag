@@ -134,11 +134,42 @@ raw/                    gzipped API snapshots (gitignored)
 labels/                 hand-label CSVs + published label set
 ```
 
-## Next steps
+## Pipeline
 
-1. Verify the cohort against the Hub API; resolve release dates by the metrics §0 rule.
-2. Verify every framework path glob in the evidence rules against each repo at HEAD.
-3. Write the collectors (Hub, GitHub, Ollama registry) against the raw-snapshot contract.
-4. Stratified-sample 300 issues, split dev/test, hand-label against the codebook.
-5. Classifier prompt on `dev` only; baselines; then `test` once.
-6. Score each launch against the checklist; delete every item the data did not earn.
+Every step is a script under `scripts/`, runs against `db/launch_lag.sqlite` (local,
+gitignored), and stores raw API responses so later steps can be re-run without
+re-fetching. Credentials come from the `gh` CLI keychain; nothing needs a token file.
+
+```
+# Question 1 - how fast was it supported
+verify_cohort.py            Hub metadata, release-date candidates, hardware floors
+apply_hand_dates.py         release_dates_hand.csv overrides (weights-public vs announced)
+recompute_days.py           re-derive days_to_support after any date change
+verify_paths.py             assert every evidence-rule path exists at each repo HEAD
+collect_support.py          support events: path history (exact) / release notes (good)
+bisect_arch.py              exact dates where only a declaring file exists (llama.cpp, TRT-LLM)
+resolve_inherited.py        architecture already declared at release -> arch_compatible
+apply_adjudication.py       negative_offsets_adjudicated.csv; never floors negatives to 0
+detect_remote_code.py       trust_remote_code companion to native transformers support
+report_support.py           KM medians beside coverage + censoring; evidence-class sensitivity
+
+# Questions 2 & 3 - what broke, what to fix
+collect_issues.py           first-30-day issues per (model, framework), alias-matched
+clean_issues.py             codebook exclusions, auditable reason codes
+baseline_regex.py           keyword precedence-ladder baseline (so LLM accuracy means something)
+sample_for_labeling.py      stratified 340, dev/test split assigned at sample time
+classify_llm.py             any OpenAI-compatible endpoint; prompt + model tag pinned per run
+eval_classifier.py          import hand labels, accuracy/kappa/confusion, publish labels_v2.csv
+metrics_issues.py           issue load, time-to-resolve (KM), top problems + reweighting, hardware
+```
+
+Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebooks/gpu_batch_runbook.md).
+
+## Status
+
+- **Q1 collected.** 22 models x 6 frameworks; 6 release dates hand-resolved with
+  first-party URLs; evidence classes separated; negative offsets adjudicated by historical
+  implementation evidence. Findings are in `report_support.py` output and the memo.
+- **Q2/Q3 in progress.** Issues collected and cleaned; regex baseline labels; hand-label
+  sample drawn; LLM classifier runs locally on CPU for the dev loop, GPU runbook for the
+  full batch. Hand labels and the self-agreement pass are the open human steps.

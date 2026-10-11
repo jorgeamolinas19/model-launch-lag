@@ -95,7 +95,8 @@ def main():
 
     cohort = tomllib.loads((ROOT / "cohort.toml").read_text())
     repos = {k: v["repo"] for k, v in cohort["frameworks"].items()}
-    con = sqlite3.connect(DB)
+    con = sqlite3.connect(DB, timeout=60)
+    con.execute("PRAGMA busy_timeout=60000")   # a concurrent reader killed a 2h run once
     con.row_factory = sqlite3.Row
     models = [dict(r) for r in con.execute(
         "SELECT hf_id, family, architecture, release_date FROM models ORDER BY release_date")]

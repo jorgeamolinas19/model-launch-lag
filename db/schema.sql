@@ -70,8 +70,13 @@ CREATE TABLE IF NOT EXISTS support_events (
   PRIMARY KEY (framework_id, hf_id)
 );
 
+-- One row per (issue, attributed model). A loose family alias hits every sibling model
+-- in the same release window, so the same GitHub issue legitimately appears under two
+-- hf_ids; clean_issues.py keeps the strongest attribution and marks the rest
+-- passing_mention. With a plain `id` key the collector silently overwrote the first
+-- attribution - found when 988 rows had 988 distinct ids.
 CREATE TABLE IF NOT EXISTS issues (
-  id             INTEGER PRIMARY KEY,      -- GitHub issue node numeric id
+  id             INTEGER NOT NULL,         -- GitHub issue numeric id
   framework_id   TEXT REFERENCES frameworks(id),
   number         INTEGER NOT NULL,
   url            TEXT NOT NULL,            -- link, never redistribute body text
@@ -93,7 +98,8 @@ CREATE TABLE IF NOT EXISTS issues (
   match_kind     TEXT,                     -- which alias kind matched (confidence proxy)
   excluded       INTEGER DEFAULT 0,
   exclude_reason TEXT,                     -- codebook exclusion code
-  snapshot_date  TEXT NOT NULL
+  snapshot_date  TEXT NOT NULL,
+  PRIMARY KEY (id, hf_id)
 );
 CREATE INDEX IF NOT EXISTS ix_issues_fw_created ON issues(framework_id, created_at);
 CREATE INDEX IF NOT EXISTS ix_issues_model ON issues(hf_id);

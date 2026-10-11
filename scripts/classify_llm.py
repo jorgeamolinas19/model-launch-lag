@@ -81,7 +81,7 @@ def main():
     ap.add_argument("--source", default="llm", help="labels.source to write under")
     a = ap.parse_args()
 
-    con = sqlite3.connect(DB)
+    con = sqlite3.connect(DB, timeout=60)   # may run alongside a collector
     con.row_factory = sqlite3.Row
     tmpl = load_prompt(a.prompt_version)
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")

@@ -163,6 +163,25 @@ issue_load = count(issues) for (model, framework)
 **Observation-window rule:** a model needs `snapshot_date >= release_date + 30` to be
 eligible. Models released inside the window are excluded, not partially counted.
 
+**Attribution rule.** Issues are found by searching each framework repo for the model's
+aliases within its window, highest-confidence alias first: the HF architecture class
+(`Qwen3_5ForConditionalGeneration`, which appears verbatim in "architecture not
+supported" errors), then the repo short name, then the family name. `match_kind`
+records which alias hit, and is published with every count.
+
+A family alias hits every sibling released in the same window — `qwen3.5` matches
+issues about both Qwen3.5-27B and Qwen3.5-397B — so one GitHub issue can be attributed
+to several cohort models. The table keys on `(issue, model)`, the strongest attribution
+is kept, and the rest are excluded as `passing_mention`. (The first schema keyed on the
+issue alone and silently kept whichever model was collected last. Caught when 988 rows
+had 988 distinct ids, which is impossible given overlapping family aliases.)
+
+**Loose-only matches are weak evidence.** An issue matched only by family name, with
+the model absent from the title and named once in the body, is excluded as a passing
+mention. The share of kept issues matched by `arch_class` vs `slug` vs `loose` is
+reported so a reader can judge the attribution confidence of every figure built on
+them.
+
 **Normalized form:**
 ```
 issues_per_1k_downloads = issue_load / (downloads_30d / 1000)
