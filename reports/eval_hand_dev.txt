@@ -1,0 +1,62 @@
+imported 339 hand labels from labels/sample_v2_worksheet.csv (0 rows blank or invalid)
+published 433 hand labels -> labels/labels_v2.csv (urls + labels only; CC BY 4.0)
+
+(no hand_pass2 yet: re-label 50 dev issues >=5 days later for the self-agreement reference)
+
+  (15 sampled dev issue(s) excluded after sampling by the cleaning rules; not scored)
+
+=== regex_baseline  vs hand (dev, n=121) ===
+  category accuracy 55.4%   kappa 0.48
+  severity accuracy 54.5%   kappa 0.29
+
+  category                 n   prec    rec
+  missing_feature         12    67%    67%
+  install_build            6    38%    50%  (n<10: unreliable)
+  template_tokenizer       5    31%    80%  (n<10: unreliable)
+  quantization            14    55%    79%
+  speculative_decoding     3    38%   100%  (n<10: unreliable)
+  oom_hardware             4    25%    50%  (n<10: unreliable)
+  correctness             17    60%    53%
+  performance             18    86%    67%
+  other                   42    65%    36%
+
+  confusion (rows = hand, cols = predicted):
+                         missi insta templ quant specu oom_h corre perfo other
+  missing_feature            8     0     1     1     0     0     0     0     2
+  install_build              0     3     0     1     0     0     0     0     2
+  template_tokenizer         0     0     4     0     0     0     1     0     0
+  quantization               2     0     0    11     0     0     1     0     0
+  speculative_decoding       0     0     0     0     3     0     0     0     0
+  oom_hardware               0     0     0     0     2     2     0     0     0
+  correctness                0     0     1     0     0     1     9     2     4
+  performance                0     2     0     1     2     0     1    12     0
+  other                      2     3     7     6     1     5     3     0    15
+
+  (15 sampled dev issue(s) excluded after sampling by the cleaning rules; not scored)
+
+=== llm  vs hand (dev, n=95) ===
+  category accuracy 36.8%   kappa 0.30
+  severity accuracy 55.8%   kappa 0.28
+
+  category                 n   prec    rec
+  missing_feature         10    24%   100%
+  install_build            4    29%    50%  (n<10: unreliable)
+  template_tokenizer       4    15%    50%  (n<10: unreliable)
+  quantization            12    71%    42%
+  speculative_decoding     1    50%   100%  (n<10: unreliable)
+  oom_hardware             3    25%    67%  (n<10: unreliable)
+  correctness             14   100%     7%
+  performance             13    91%    77%
+  other                   34    50%     6%
+
+  confusion (rows = hand, cols = predicted):
+                         missi insta templ quant specu oom_h corre perfo other
+  missing_feature           10     0     0     0     0     0     0     0     0
+  install_build              1     2     1     0     0     0     0     0     0
+  template_tokenizer         2     0     2     0     0     0     0     0     0
+  quantization               5     1     0     5     0     0     0     1     0
+  speculative_decoding       0     0     0     0     1     0     0     0     0
+  oom_hardware               0     0     1     0     0     2     0     0     0
+  correctness                7     0     5     0     0     1     1     0     0
+  performance                0     0     0     0     1     0     0    10     2
+  other                     17     4     4     2     0     5     0     0     2

@@ -1,0 +1,312 @@
+issue_url,framework,model,split,category_primary,category_secondary,severity,reason,codebook_version
+https://github.com/NVIDIA/TensorRT-LLM/issues/11833,trtllm,Qwen/Qwen3.5-397B-A17B,test,missing_feature,[],minor,Requested capability or model architecture lacks an implementation,v2
+https://github.com/NVIDIA/TensorRT-LLM/issues/12954,trtllm,google/gemma-4-31B-it,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/NVIDIA/TensorRT-LLM/issues/16910,trtllm,moonshotai/Kimi-K3,dev,missing_feature,[],minor,Request to add support for NumPy token IDs in executor interfaces,v2
+https://github.com/NVIDIA/TensorRT-LLM/issues/18849,trtllm,Qwen/Qwen3.8-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/NVIDIA/TensorRT-LLM/issues/3554,trtllm,meta-llama/Llama-4-Scout-17B-16E-Instruct,test,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/NVIDIA/TensorRT-LLM/issues/4684,trtllm,Qwen/Qwen3-8B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/10981,llamacpp,deepseek-ai/DeepSeek-V3,test,missing_feature,[],blocker,Title identifies missing model or feature implementation,v2
+https://github.com/ggml-org/llama.cpp/issues/11361,llamacpp,deepseek-ai/DeepSeek-V3,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ggml-org/llama.cpp/issues/12499,llamacpp,google/gemma-3-27b-it,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ggml-org/llama.cpp/issues/12637,llamacpp,google/gemma-3-27b-it,dev,missing_feature,[],minor,Requested interleaved sliding-window attention feature,v2
+https://github.com/ggml-org/llama.cpp/issues/13189,llamacpp,Qwen/Qwen3-32B,dev,template_tokenizer,[],degraded,"Title names a template, tokenizer or control-token behavior",v2
+https://github.com/ggml-org/llama.cpp/issues/13212,llamacpp,Qwen/Qwen3-8B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/13329,llamacpp,Qwen/Qwen3-8B,test,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/ggml-org/llama.cpp/issues/13428,llamacpp,Qwen/Qwen3-8B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/13437,llamacpp,Qwen/Qwen3-8B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/13516,llamacpp,Qwen/Qwen3-8B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/13652,llamacpp,Qwen/Qwen3-32B,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ggml-org/llama.cpp/issues/13690,llamacpp,Qwen/Qwen3-32B,test,other,[],blocker,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/15113,llamacpp,openai/gpt-oss-20b,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/15122,llamacpp,openai/gpt-oss-20b,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/15146,llamacpp,openai/gpt-oss-20b,dev,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/ggml-org/llama.cpp/issues/15163,llamacpp,openai/gpt-oss-20b,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ggml-org/llama.cpp/issues/15190,llamacpp,openai/gpt-oss-20b,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ggml-org/llama.cpp/issues/15266,llamacpp,openai/gpt-oss-20b,dev,correctness,[],degraded,Title reports wrong or degraded model output,v2
+https://github.com/ggml-org/llama.cpp/issues/15390,llamacpp,openai/gpt-oss-20b,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/15452,llamacpp,openai/gpt-oss-20b,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/15478,llamacpp,openai/gpt-oss-20b,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ggml-org/llama.cpp/issues/15755,llamacpp,openai/gpt-oss-20b,test,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/ggml-org/llama.cpp/issues/19327,llamacpp,Qwen/Qwen3-Coder-Next,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ggml-org/llama.cpp/issues/19794,llamacpp,Qwen/Qwen3-Coder-Next,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/19862,llamacpp,Qwen/Qwen3.5-27B,dev,install_build,[],blocker,"Installation, compilation, missing dependency, or binary mismatch prevents setup",v2
+https://github.com/ggml-org/llama.cpp/issues/19863,llamacpp,Qwen/Qwen3.5-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/19901,llamacpp,Qwen/Qwen3-Coder-Next,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/20035,llamacpp,Qwen/Qwen3.5-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/20039,llamacpp,Qwen/Qwen3.5-27B,test,speculative_decoding,[],minor,Title explicitly attributes failure to speculative decoding,v2
+https://github.com/ggml-org/llama.cpp/issues/20165,llamacpp,Qwen/Qwen3.5-397B-A17B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/20315,llamacpp,Qwen/Qwen3.5-397B-A17B,test,oom_hardware,[],minor,Title describes a memory or hardware capacity limit,v2
+https://github.com/ggml-org/llama.cpp/issues/20345,llamacpp,Qwen/Qwen3.5-397B-A17B,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ggml-org/llama.cpp/issues/20414,llamacpp,Qwen/Qwen3.5-397B-A17B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/20497,llamacpp,Qwen/Qwen3.5-397B-A17B,dev,performance,[],degraded,Reported excessive CPU utilization with BF16 KV-cache configuration,v2
+https://github.com/ggml-org/llama.cpp/issues/20516,llamacpp,Qwen/Qwen3.5-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/20614,llamacpp,Qwen/Qwen3.5-397B-A17B,test,template_tokenizer,[],degraded,"Title names a template, tokenizer or control-token behavior",v2
+https://github.com/ggml-org/llama.cpp/issues/20713,llamacpp,Qwen/Qwen3.5-397B-A17B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/20755,llamacpp,Qwen/Qwen3.5-27B,dev,correctness,[],degraded,Multiturn image handling repeatedly processes prior images,v2
+https://github.com/ggml-org/llama.cpp/issues/20789,llamacpp,Qwen/Qwen3.5-27B,test,template_tokenizer,[],degraded,"Title names a template, tokenizer or control-token behavior",v2
+https://github.com/ggml-org/llama.cpp/issues/20861,llamacpp,Qwen/Qwen3.5-27B,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ggml-org/llama.cpp/issues/20883,llamacpp,Qwen/Qwen3.5-27B,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ggml-org/llama.cpp/issues/21336,llamacpp,google/gemma-4-31B-it,dev,other,[],blocker,Segmentation fault at long context; runtime crash not output correctness,v2
+https://github.com/ggml-org/llama.cpp/issues/21416,llamacpp,google/gemma-4-31B-it,test,other,[],blocker,ROCm inference enters endless loop; root cause of stopping unknown,v2
+https://github.com/ggml-org/llama.cpp/issues/21430,llamacpp,google/gemma-4-31B-it,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/21502,llamacpp,google/gemma-4-31B-it,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ggml-org/llama.cpp/issues/21514,llamacpp,google/gemma-4-31B-it,dev,other,[],minor,Question about differing VRAM footprint between CLI and server,v2
+https://github.com/ggml-org/llama.cpp/issues/21777,llamacpp,google/gemma-4-31B-it,dev,quantization,[],minor,Named quantized format or quantization path is unsupported or fails,v2
+https://github.com/ggml-org/llama.cpp/issues/21825,llamacpp,google/gemma-4-31B-it,test,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/ggml-org/llama.cpp/issues/21902,llamacpp,google/gemma-4-31B-it,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/22243,llamacpp,google/gemma-4-31B-it,test,missing_feature,[],blocker,Requested capability or model architecture lacks an implementation,v2
+https://github.com/ggml-org/llama.cpp/issues/27090,llamacpp,Qwen/Qwen3.8-27B,test,other,[],blocker,Server crashes during very long-context prefill,v2
+https://github.com/ggml-org/llama.cpp/issues/27162,llamacpp,Qwen/Qwen3.8-27B,test,oom_hardware,[],minor,Title describes a memory or hardware capacity limit,v2
+https://github.com/ggml-org/llama.cpp/issues/27249,llamacpp,Qwen/Qwen3.8-27B,dev,template_tokenizer,[],degraded,"Title names a template, tokenizer or control-token behavior",v2
+https://github.com/ggml-org/llama.cpp/issues/27431,llamacpp,Qwen/Qwen3.8-27B,test,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/ggml-org/llama.cpp/issues/27444,llamacpp,Qwen/Qwen3.8-27B,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ggml-org/llama.cpp/issues/27588,llamacpp,Qwen/Qwen3.8-27B,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ggml-org/llama.cpp/issues/27595,llamacpp,Qwen/Qwen3.8-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/27623,llamacpp,Qwen/Qwen3.8-27B,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ggml-org/llama.cpp/issues/27756,llamacpp,Qwen/Qwen3.8-27B,test,template_tokenizer,[],degraded,Premature EOS emission at long context; stop-token handling implicated,v2
+https://github.com/ggml-org/llama.cpp/issues/27859,llamacpp,Qwen/Qwen3.8-27B,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/27862,llamacpp,Qwen/Qwen3.8-27B,test,speculative_decoding,[],degraded,Title explicitly attributes failure to speculative decoding,v2
+https://github.com/ggml-org/llama.cpp/issues/27993,llamacpp,Qwen/Qwen3.8-27B,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ggml-org/llama.cpp/issues/28286,llamacpp,Qwen/Qwen3.8-27B,test,quantization,[],degraded,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/ggml-org/llama.cpp/issues/28369,llamacpp,Qwen/Qwen3.8-27B,dev,speculative_decoding,[],blocker,DFlash2 speculative decoding stalls during long-prompt prefill,v2
+https://github.com/ggml-org/llama.cpp/issues/28506,llamacpp,Qwen/Qwen3.8-27B,test,oom_hardware,[],minor,Title describes a memory or hardware capacity limit,v2
+https://github.com/ggml-org/llama.cpp/issues/28744,llamacpp,Qwen/Qwen3.8-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/28745,llamacpp,Qwen/Qwen3.8-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ggml-org/llama.cpp/issues/28761,llamacpp,Qwen/Qwen3.8-27B,dev,performance,[],degraded,Kernel tile/register configuration causes suboptimal performance,v2
+https://github.com/huggingface/transformers/issues/35425,transformers,deepseek-ai/DeepSeek-V3,test,speculative_decoding,[],degraded,Issue implicates speculative draft/target pathway,v2
+https://github.com/huggingface/transformers/issues/35688,transformers,deepseek-ai/DeepSeek-V3,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/huggingface/transformers/issues/36766,transformers,google/gemma-3-27b-it,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/huggingface/transformers/issues/36911,transformers,google/gemma-3-27b-it,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/huggingface/transformers/issues/36977,transformers,google/gemma-3-27b-it,test,missing_feature,[],minor,Requested capability or model architecture lacks an implementation,v2
+https://github.com/huggingface/transformers/issues/37296,transformers,google/gemma-3-27b-it,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/huggingface/transformers/issues/37323,transformers,meta-llama/Llama-4-Scout-17B-16E-Instruct,dev,install_build,[],minor,"Installation, compilation, missing dependency, or binary mismatch prevents setup",v2
+https://github.com/huggingface/transformers/issues/37465,transformers,meta-llama/Llama-4-Scout-17B-16E-Instruct,dev,missing_feature,[],minor,Requested capability or model architecture lacks an implementation,v2
+https://github.com/huggingface/transformers/issues/40170,transformers,openai/gpt-oss-20b,dev,quantization,[],degraded,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/huggingface/transformers/issues/41809,transformers,Qwen/Qwen3-VL-4B-Instruct,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/huggingface/transformers/issues/42084,transformers,Qwen/Qwen3-VL-4B-Instruct,dev,other,[],minor,Comment or code documentation correction; no demonstrated model malfunction,v2
+https://github.com/huggingface/transformers/issues/43940,transformers,Qwen/Qwen3-Coder-Next,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/huggingface/transformers/issues/44368,transformers,Qwen/Qwen3.5-27B,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/huggingface/transformers/issues/44485,transformers,zai-org/GLM-5,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/huggingface/transformers/issues/44717,transformers,Qwen/Qwen3.5-397B-A17B,test,missing_feature,[],blocker,Requested capability or model architecture lacks an implementation,v2
+https://github.com/huggingface/transformers/issues/44977,transformers,Qwen/Qwen3.5-27B,test,template_tokenizer,[],degraded,"Reported tokenization, template, control-token, or stop behavior",v2
+https://github.com/huggingface/transformers/issues/45206,transformers,google/gemma-4-31B-it,dev,other,[],minor,Documentation/config semantics problem without reported erroneous generation,v2
+https://github.com/huggingface/transformers/issues/45676,transformers,google/gemma-4-31B-it,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/huggingface/transformers/issues/48511,transformers,Qwen/Qwen3.8-27B,dev,missing_feature,[],blocker,"Image processor mapping references missing implementation, blocking model processing",v2
+https://github.com/ollama/ollama/issues/10159,ollama,google/gemma-3-27b-it,test,correctness,[],degraded,Model repeats same token and emits nonsensical output,v2
+https://github.com/ollama/ollama/issues/10181,ollama,google/gemma-3-27b-it,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/10448,ollama,Qwen/Qwen3-8B,test,template_tokenizer,[],degraded,"Title names a template, tokenizer or control-token behavior",v2
+https://github.com/ollama/ollama/issues/10457,ollama,Qwen/Qwen3-8B,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/10503,ollama,Qwen/Qwen3-8B,test,template_tokenizer,[],degraded,"Reported tokenization, template, control-token, or stop behavior",v2
+https://github.com/ollama/ollama/issues/10538,ollama,Qwen/Qwen3-8B,dev,template_tokenizer,[],degraded,"Reported tokenization, template, control-token, or stop behavior",v2
+https://github.com/ollama/ollama/issues/11680,ollama,openai/gpt-oss-20b,dev,install_build,[],blocker,Missing currentDate template function prevents model initialization,v2
+https://github.com/ollama/ollama/issues/11688,ollama,openai/gpt-oss-20b,dev,quantization,[],degraded,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/ollama/ollama/issues/11703,ollama,openai/gpt-oss-20b,test,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/ollama/ollama/issues/11706,ollama,openai/gpt-oss-20b,test,install_build,[],blocker,"Template engine lacks currentDate function, blocking model setup",v2
+https://github.com/ollama/ollama/issues/11721,ollama,openai/gpt-oss-20b,test,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/ollama/ollama/issues/11745,ollama,openai/gpt-oss-20b,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/11769,ollama,openai/gpt-oss-20b,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/11773,ollama,openai/gpt-oss-20b,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/11806,ollama,openai/gpt-oss-20b,test,other,[],minor,Windows UI accessibility issue; screen for not_model_specific exclusion,v2
+https://github.com/ollama/ollama/issues/11889,ollama,openai/gpt-oss-20b,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/11982,ollama,openai/gpt-oss-20b,dev,correctness,[],degraded,Title reports wrong or degraded model output,v2
+https://github.com/ollama/ollama/issues/12035,ollama,openai/gpt-oss-20b,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/12037,ollama,openai/gpt-oss-20b,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/12048,ollama,openai/gpt-oss-20b,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/12063,ollama,openai/gpt-oss-20b,test,oom_hardware,[],minor,Memory or hardware capacity prevents intended execution,v2
+https://github.com/ollama/ollama/issues/12069,ollama,openai/gpt-oss-20b,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/12084,ollama,openai/gpt-oss-20b,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/12854,ollama,Qwen/Qwen3-VL-4B-Instruct,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/12906,ollama,Qwen/Qwen3-VL-4B-Instruct,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/13029,ollama,Qwen/Qwen3-VL-4B-Instruct,test,oom_hardware,[],blocker,Memory or hardware capacity prevents intended execution,v2
+https://github.com/ollama/ollama/issues/13418,ollama,deepseek-ai/DeepSeek-V3.2,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/14073,ollama,Qwen/Qwen3-Coder-Next,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/14155,ollama,Qwen/Qwen3-Coder-Next,dev,quantization,[],degraded,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/ollama/ollama/issues/14275,ollama,zai-org/GLM-5,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/14493,ollama,Qwen/Qwen3.5-27B,dev,template_tokenizer,[],degraded,"Reported tokenization, template, control-token, or stop behavior",v2
+https://github.com/ollama/ollama/issues/14500,ollama,Qwen/Qwen3.5-397B-A17B,dev,other,[],blocker,GPU model loading failure; evidence does not establish output correctness or memory ceiling,v2
+https://github.com/ollama/ollama/issues/14502,ollama,Qwen/Qwen3.5-397B-A17B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/14557,ollama,Qwen/Qwen3.5-27B,dev,oom_hardware,[],blocker,Title describes a memory or hardware capacity limit,v2
+https://github.com/ollama/ollama/issues/14579,ollama,Qwen/Qwen3.5-27B,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/14751,ollama,Qwen/Qwen3.5-27B,test,oom_hardware,[],blocker,Title describes a memory or hardware capacity limit,v2
+https://github.com/ollama/ollama/issues/14759,ollama,Qwen/Qwen3.5-397B-A17B,dev,other,[],blocker,OCR run crashes intermittently; no output quality issue demonstrated,v2
+https://github.com/ollama/ollama/issues/14855,ollama,Qwen/Qwen3.5-397B-A17B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/14868,ollama,Qwen/Qwen3.5-27B,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/15016,ollama,Qwen/Qwen3.5-27B,test,oom_hardware,[],minor,Memory or hardware capacity prevents intended execution,v2
+https://github.com/ollama/ollama/issues/15067,ollama,Qwen/Qwen3.5-27B,dev,missing_feature,[],blocker,Requested capability or model architecture lacks an implementation,v2
+https://github.com/ollama/ollama/issues/15248,ollama,google/gemma-4-31B-it,dev,correctness,[],degraded,Title reports wrong or degraded model output,v2
+https://github.com/ollama/ollama/issues/15249,ollama,google/gemma-4-31B-it,dev,other,[],blocker,Quantized Gemma 4 load fails at CUBLAS runtime; precise quant cause unproven,v2
+https://github.com/ollama/ollama/issues/15278,ollama,google/gemma-4-31B-it,test,template_tokenizer,[],degraded,"Title names a template, tokenizer or control-token behavior",v2
+https://github.com/ollama/ollama/issues/15284,ollama,google/gemma-4-31B-it,test,oom_hardware,[],blocker,Title describes a memory or hardware capacity limit,v2
+https://github.com/ollama/ollama/issues/15286,ollama,google/gemma-4-31B-it,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/15288,ollama,google/gemma-4-31B-it,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/15318,ollama,google/gemma-4-31B-it,dev,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/ollama/ollama/issues/15338,ollama,google/gemma-4-31B-it,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/15508,ollama,google/gemma-4-31B-it,dev,missing_feature,[],blocker,Architecture is not recognized or implemented,v2
+https://github.com/ollama/ollama/issues/15579,ollama,google/gemma-4-31B-it,test,missing_feature,[],blocker,Named quant variant cannot load due to unsupported architecture; confirm whether underlying arch or quant format is absent,v2
+https://github.com/ollama/ollama/issues/15634,ollama,google/gemma-4-31B-it,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/15635,ollama,google/gemma-4-31B-it,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/15697,ollama,google/gemma-4-31B-it,test,missing_feature,[],blocker,Requested capability or model architecture lacks an implementation,v2
+https://github.com/ollama/ollama/issues/15749,ollama,google/gemma-4-31B-it,test,oom_hardware,[],minor,Memory or hardware capacity prevents intended execution,v2
+https://github.com/ollama/ollama/issues/15888,ollama,google/gemma-4-31B-it,test,template_tokenizer,[],degraded,Internal control tags leak in multimodal output,v2
+https://github.com/ollama/ollama/issues/17765,ollama,Qwen/Qwen3.8-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/17802,ollama,Qwen/Qwen3.8-27B,test,oom_hardware,[],degraded,Multi-GPU VRAM accounting desynchronizes; hardware resource management issue,v2
+https://github.com/ollama/ollama/issues/17816,ollama,Qwen/Qwen3.8-27B,dev,install_build,[],minor,"Installation, compilation, missing dependency, or binary mismatch prevents setup",v2
+https://github.com/ollama/ollama/issues/17924,ollama,Qwen/Qwen3.8-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/17968,ollama,Qwen/Qwen3.8-27B,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/18225,ollama,Qwen/Qwen3.8-27B,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/ollama/ollama/issues/18419,ollama,deepseek-ai/DeepSeek-V4.1-Flash,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/ollama/ollama/issues/18484,ollama,deepseek-ai/DeepSeek-V4.1-Flash,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/18534,ollama,deepseek-ai/DeepSeek-V4.1-Flash,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/9683,ollama,google/gemma-3-27b-it,test,quantization,[],degraded,KV-cache quantization specifically causes extreme slowdown,v2
+https://github.com/ollama/ollama/issues/9764,ollama,google/gemma-3-27b-it,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/ollama/ollama/issues/9799,ollama,google/gemma-3-27b-it,test,other,[],blocker,Gemma 3 process hangs after prompting; no specific cause reported,v2
+https://github.com/ollama/ollama/issues/9948,ollama,google/gemma-3-27b-it,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/sgl-project/sglang/issues/12122,sglang,Qwen/Qwen3-VL-4B-Instruct,test,missing_feature,[],minor,Title identifies missing model or feature implementation,v2
+https://github.com/sgl-project/sglang/issues/14694,sglang,deepseek-ai/DeepSeek-V3.2,dev,speculative_decoding,[],degraded,Title explicitly attributes failure to speculative decoding,v2
+https://github.com/sgl-project/sglang/issues/14747,sglang,deepseek-ai/DeepSeek-V3.2,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/sgl-project/sglang/issues/15286,sglang,nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/sgl-project/sglang/issues/15453,sglang,deepseek-ai/DeepSeek-V3.2,test,oom_hardware,[],minor,Title describes a memory or hardware capacity limit,v2
+https://github.com/sgl-project/sglang/issues/18980,sglang,zai-org/GLM-5,dev,other,[],blocker,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/sgl-project/sglang/issues/19393,sglang,Qwen/Qwen3.5-27B,test,other,[],blocker,Model returns no response; no installation failure demonstrated,v2
+https://github.com/sgl-project/sglang/issues/19822,sglang,Qwen/Qwen3.5-397B-A17B,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/sgl-project/sglang/issues/19914,sglang,Qwen/Qwen3.5-27B,dev,install_build,[],blocker,"Installation, compilation, missing dependency, or binary mismatch prevents setup",v2
+https://github.com/sgl-project/sglang/issues/20269,sglang,zai-org/GLM-5,test,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/sgl-project/sglang/issues/20274,sglang,zai-org/GLM-5,test,template_tokenizer,[],degraded,"Reported tokenization, template, control-token, or stop behavior",v2
+https://github.com/sgl-project/sglang/issues/20280,sglang,Qwen/Qwen3.5-397B-A17B,test,missing_feature,[],blocker,Title identifies missing model or feature implementation,v2
+https://github.com/sgl-project/sglang/issues/20466,sglang,Qwen/Qwen3.5-397B-A17B,test,speculative_decoding,[],degraded,Issue implicates speculative draft/target pathway,v2
+https://github.com/sgl-project/sglang/issues/20640,sglang,Qwen/Qwen3.5-397B-A17B,test,oom_hardware,[],minor,Memory or hardware capacity prevents intended execution,v2
+https://github.com/sgl-project/sglang/issues/20786,sglang,Qwen/Qwen3.5-397B-A17B,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/sgl-project/sglang/issues/21150,sglang,Qwen/Qwen3.5-27B,test,quantization,[],blocker,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/sgl-project/sglang/issues/21158,sglang,Qwen/Qwen3.5-27B,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/sgl-project/sglang/issues/22510,sglang,google/gemma-4-31B-it,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/sgl-project/sglang/issues/2673,sglang,deepseek-ai/DeepSeek-V3,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/sgl-project/sglang/issues/2706,sglang,deepseek-ai/DeepSeek-V3,test,quantization,[],degraded,Named quantized format or quantization path is unsupported or fails,v2
+https://github.com/sgl-project/sglang/issues/2739,sglang,deepseek-ai/DeepSeek-V3,test,missing_feature,[],minor,Requested capability or model architecture lacks an implementation,v2
+https://github.com/sgl-project/sglang/issues/2740,sglang,deepseek-ai/DeepSeek-V3,test,missing_feature,[],minor,Title identifies missing model or feature implementation,v2
+https://github.com/sgl-project/sglang/issues/2794,sglang,deepseek-ai/DeepSeek-V3,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/sgl-project/sglang/issues/2802,sglang,deepseek-ai/DeepSeek-V3,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/sgl-project/sglang/issues/3100,sglang,deepseek-ai/DeepSeek-V3,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/sgl-project/sglang/issues/3108,sglang,deepseek-ai/DeepSeek-V3,test,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/sgl-project/sglang/issues/32750,sglang,moonshotai/Kimi-K3,test,missing_feature,[],minor,Title identifies missing model or feature implementation,v2
+https://github.com/sgl-project/sglang/issues/32855,sglang,moonshotai/Kimi-K3,test,speculative_decoding,[],blocker,DSpark paired decode crashes at long context,v2
+https://github.com/sgl-project/sglang/issues/32968,sglang,moonshotai/Kimi-K3,dev,speculative_decoding,[],degraded,Issue implicates speculative draft/target pathway,v2
+https://github.com/sgl-project/sglang/issues/33893,sglang,moonshotai/Kimi-K3,dev,missing_feature,[],minor,Requested capability or model architecture lacks an implementation,v2
+https://github.com/sgl-project/sglang/issues/34604,sglang,moonshotai/Kimi-K3,dev,other,[],degraded,Tool-call parser raises TypeError repeatedly; runtime failure rather than incorrect generated content,v2
+https://github.com/sgl-project/sglang/issues/34920,sglang,moonshotai/Kimi-K3,test,speculative_decoding,[],blocker,DSpark target verification with DCP crashes in prefix-length handling,v2
+https://github.com/sgl-project/sglang/issues/35242,sglang,Qwen/Qwen3.8-27B,test,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/sgl-project/sglang/issues/36048,sglang,Qwen/Qwen3.8-27B,test,quantization,[],blocker,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/sgl-project/sglang/issues/36140,sglang,moonshotai/Kimi-K3,dev,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/sgl-project/sglang/issues/37834,sglang,Qwen/Qwen3.8-27B,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/sgl-project/sglang/issues/38589,sglang,Qwen/Qwen3.8-27B,test,speculative_decoding,[],degraded,Title explicitly attributes failure to speculative decoding,v2
+https://github.com/sgl-project/sglang/issues/38899,sglang,Qwen/Qwen3.8-27B,test,speculative_decoding,[],degraded,Issue implicates speculative draft/target pathway,v2
+https://github.com/sgl-project/sglang/issues/39147,sglang,Qwen/Qwen3.8-27B,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/sgl-project/sglang/issues/39226,sglang,deepseek-ai/DeepSeek-V4.1-Flash,dev,quantization,[],blocker,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/sgl-project/sglang/issues/39279,sglang,deepseek-ai/DeepSeek-V4.1-Flash,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/sgl-project/sglang/issues/40417,sglang,deepseek-ai/DeepSeek-V4.1-Flash,test,quantization,[],degraded,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/sgl-project/sglang/issues/43050,sglang,deepseek-ai/DeepSeek-V4.1-Flash,test,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/sgl-project/sglang/issues/4332,sglang,google/gemma-3-27b-it,test,missing_feature,[],minor,Request to add Gemma 3 model support,v2
+https://github.com/sgl-project/sglang/issues/4708,sglang,google/gemma-3-27b-it,test,oom_hardware,[],minor,Title describes a memory or hardware capacity limit,v2
+https://github.com/sgl-project/sglang/issues/4895,sglang,google/gemma-3-27b-it,dev,oom_hardware,[],blocker,Title describes a memory or hardware capacity limit,v2
+https://github.com/sgl-project/sglang/issues/5871,sglang,Qwen/Qwen3-8B,dev,quantization,[],blocker,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/sgl-project/sglang/issues/5937,sglang,Qwen/Qwen3-32B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/sgl-project/sglang/issues/6074,sglang,Qwen/Qwen3-32B,test,missing_feature,[],minor,Requested capability or model architecture lacks an implementation,v2
+https://github.com/sgl-project/sglang/issues/6294,sglang,Qwen/Qwen3-32B,dev,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/sgl-project/sglang/issues/8896,sglang,openai/gpt-oss-20b,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/11520,vllm,deepseek-ai/DeepSeek-V3,test,missing_feature,[],blocker,Model architecture explicitly not implemented in framework,v2
+https://github.com/vllm-project/vllm/issues/14696,vllm,google/gemma-3-27b-it,test,missing_feature,[],minor,Title identifies missing model or feature implementation,v2
+https://github.com/vllm-project/vllm/issues/14723,vllm,google/gemma-3-27b-it,dev,missing_feature,[],blocker,Requested capability or model architecture lacks an implementation,v2
+https://github.com/vllm-project/vllm/issues/14762,vllm,google/gemma-3-27b-it,test,correctness,[],degraded,Title reports wrong or degraded model output,v2
+https://github.com/vllm-project/vllm/issues/14881,vllm,google/gemma-3-27b-it,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/15676,vllm,google/gemma-3-27b-it,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/15825,vllm,google/gemma-3-27b-it,dev,missing_feature,[],degraded,Vision inputs ignored by multimodal Gemma 3; variant-specific capability missing,v2
+https://github.com/vllm-project/vllm/issues/16118,vllm,meta-llama/Llama-4-Scout-17B-16E-Instruct,dev,missing_feature,[],minor,"Request for automatic max-model-len estimation, not observed OOM",v2
+https://github.com/vllm-project/vllm/issues/16131,vllm,google/gemma-3-27b-it,test,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/vllm-project/vllm/issues/16177,vllm,meta-llama/Llama-4-Scout-17B-16E-Instruct,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/17327,vllm,Qwen/Qwen3-8B,test,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/vllm-project/vllm/issues/17430,vllm,Qwen/Qwen3-8B,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/17501,vllm,meta-llama/Llama-4-Scout-17B-16E-Instruct,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/17534,vllm,Qwen/Qwen3-32B,test,other,[],blocker,Long-token requests produce CUDA error/hang; not memory ceiling without evidence,v2
+https://github.com/vllm-project/vllm/issues/17540,vllm,Qwen/Qwen3-32B,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/vllm-project/vllm/issues/17609,vllm,Qwen/Qwen3-32B,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/18730,vllm,Qwen/Qwen3-32B,dev,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/vllm-project/vllm/issues/22361,vllm,openai/gpt-oss-20b,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/22470,vllm,openai/gpt-oss-20b,dev,correctness,[],degraded,GPT-OSS emits strange characters before failing,v2
+https://github.com/vllm-project/vllm/issues/22502,vllm,openai/gpt-oss-20b,test,other,[],blocker,A100 model run fails; no precise cause identified in title,v2
+https://github.com/vllm-project/vllm/issues/22551,vllm,openai/gpt-oss-20b,test,speculative_decoding,[],degraded,Issue implicates speculative draft/target pathway,v2
+https://github.com/vllm-project/vllm/issues/22704,vllm,openai/gpt-oss-20b,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/vllm-project/vllm/issues/22750,vllm,openai/gpt-oss-20b,test,oom_hardware,[],degraded,Capture-size setting provokes memory exhaustion,v2
+https://github.com/vllm-project/vllm/issues/23108,vllm,openai/gpt-oss-20b,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/23335,vllm,openai/gpt-oss-20b,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/23610,vllm,openai/gpt-oss-20b,dev,missing_feature,[],blocker,Title identifies missing model or feature implementation,v2
+https://github.com/vllm-project/vllm/issues/23694,vllm,openai/gpt-oss-20b,dev,correctness,[],degraded,Title reports wrong or degraded model output,v2
+https://github.com/vllm-project/vllm/issues/26902,vllm,Qwen/Qwen3-VL-4B-Instruct,test,correctness,[],degraded,Model produces inaccurate temporal localization versus comparator,v2
+https://github.com/vllm-project/vllm/issues/27333,vllm,Qwen/Qwen3-VL-4B-Instruct,dev,quantization,[],degraded,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/vllm-project/vllm/issues/27340,vllm,Qwen/Qwen3-VL-4B-Instruct,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/27651,vllm,Qwen/Qwen3-VL-4B-Instruct,test,correctness,[],degraded,Title reports wrong or degraded model output,v2
+https://github.com/vllm-project/vllm/issues/27991,vllm,Qwen/Qwen3-VL-4B-Instruct,dev,quantization,[],degraded,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/vllm-project/vllm/issues/28052,vllm,Qwen/Qwen3-VL-4B-Instruct,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/28297,vllm,Qwen/Qwen3-VL-4B-Instruct,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/30311,vllm,deepseek-ai/DeepSeek-V3.2,test,other,[],blocker,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/vllm-project/vllm/issues/30453,vllm,deepseek-ai/DeepSeek-V3.2,test,correctness,[],degraded,Frequent repetitive decoding demonstrates degraded outputs,v2
+https://github.com/vllm-project/vllm/issues/30853,vllm,deepseek-ai/DeepSeek-V3.2,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/vllm-project/vllm/issues/31368,vllm,deepseek-ai/DeepSeek-V3.2,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/vllm-project/vllm/issues/33544,vllm,Qwen/Qwen3-Coder-Next,dev,quantization,[],degraded,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/vllm-project/vllm/issues/34553,vllm,zai-org/GLM-5,test,oom_hardware,[],minor,Title describes a memory or hardware capacity limit,v2
+https://github.com/vllm-project/vllm/issues/34845,vllm,Qwen/Qwen3-Coder-Next,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/vllm-project/vllm/issues/35286,vllm,Qwen/Qwen3.5-397B-A17B,test,missing_feature,[],blocker,Model fails when enable_lora set; variant-specific LoRA support potentially missing,v2
+https://github.com/vllm-project/vllm/issues/35504,vllm,Qwen/Qwen3-Coder-Next,dev,other,[],blocker,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/35572,vllm,zai-org/GLM-5,dev,other,[],blocker,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/35743,vllm,Qwen/Qwen3.5-27B,test,quantization,[],blocker,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/vllm-project/vllm/issues/36122,vllm,Qwen/Qwen3.5-27B,test,speculative_decoding,[],degraded,Title explicitly attributes failure to speculative decoding,v2
+https://github.com/vllm-project/vllm/issues/36441,vllm,zai-org/GLM-5,test,quantization,[],degraded,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/vllm-project/vllm/issues/36640,vllm,Qwen/Qwen3.5-397B-A17B,test,other,[],blocker,Runtime KeyError during model execution; no specific category identified,v2
+https://github.com/vllm-project/vllm/issues/36783,vllm,Qwen/Qwen3.5-397B-A17B,dev,quantization,[],degraded,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/vllm-project/vllm/issues/36794,vllm,Qwen/Qwen3.5-397B-A17B,test,missing_feature,[],minor,Requested capability or model architecture lacks an implementation,v2
+https://github.com/vllm-project/vllm/issues/36870,vllm,Qwen/Qwen3.5-397B-A17B,dev,other,[],blocker,Qwen 3.5 model fails on server startup; cause unspecified,v2
+https://github.com/vllm-project/vllm/issues/36872,vllm,Qwen/Qwen3.5-397B-A17B,test,correctness,[],degraded,Title reports wrong or degraded model output,v2
+https://github.com/vllm-project/vllm/issues/36994,vllm,Qwen/Qwen3.5-397B-A17B,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/37618,vllm,Qwen/Qwen3.5-27B,dev,quantization,[],degraded,Title identifies a specific quantized format as failing or unsupported,v2
+https://github.com/vllm-project/vllm/issues/37658,vllm,Qwen/Qwen3.5-27B,dev,oom_hardware,[],blocker,Memory or hardware capacity prevents intended execution,v2
+https://github.com/vllm-project/vllm/issues/37746,vllm,Qwen/Qwen3.5-27B,dev,other,[],blocker,Hybrid model livelock with prompt_logprobs; no VRAM ceiling shown,v2
+https://github.com/vllm-project/vllm/issues/37758,vllm,Qwen/Qwen3.5-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/38024,vllm,Qwen/Qwen3.5-27B,test,template_tokenizer,[],degraded,"Title names a template, tokenizer or control-token behavior",v2
+https://github.com/vllm-project/vllm/issues/38122,vllm,Qwen/Qwen3.5-27B,test,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/vllm-project/vllm/issues/38912,vllm,google/gemma-4-31B-it,dev,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/vllm-project/vllm/issues/38926,vllm,google/gemma-4-31B-it,test,other,[],blocker,Gemma 4 load hangs on multiple GPUs,v2
+https://github.com/vllm-project/vllm/issues/39089,vllm,google/gemma-4-31B-it,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/39133,vllm,google/gemma-4-31B-it,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/39204,vllm,google/gemma-4-31B-it,test,install_build,[],minor,Title identifies installation/build or missing runtime dependency,v2
+https://github.com/vllm-project/vllm/issues/39246,vllm,google/gemma-4-31B-it,dev,missing_feature,[],blocker,Title identifies missing model or feature implementation,v2
+https://github.com/vllm-project/vllm/issues/39827,vllm,google/gemma-4-31B-it,dev,template_tokenizer,[],degraded,"Reported tokenization, template, control-token, or stop behavior",v2
+https://github.com/vllm-project/vllm/issues/40095,vllm,google/gemma-4-31B-it,dev,correctness,[],degraded,Audio embedding normalization inconsistency yields bad inference outputs,v2
+https://github.com/vllm-project/vllm/issues/40677,vllm,google/gemma-4-31B-it,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/40994,vllm,google/gemma-4-31B-it,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/47424,vllm,google/diffusiongemma-26B-A4B-it,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/vllm-project/vllm/issues/50604,vllm,moonshotai/Kimi-K3,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/50630,vllm,moonshotai/Kimi-K3,test,speculative_decoding,[],degraded,Issue implicates speculative draft/target pathway,v2
+https://github.com/vllm-project/vllm/issues/51562,vllm,moonshotai/Kimi-K3,test,speculative_decoding,[],degraded,Issue implicates speculative draft/target pathway,v2
+https://github.com/vllm-project/vllm/issues/51867,vllm,moonshotai/Kimi-K3,test,missing_feature,[],minor,Requested capability or model architecture lacks an implementation,v2
+https://github.com/vllm-project/vllm/issues/52008,vllm,moonshotai/Kimi-K3,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/53612,vllm,Qwen/Qwen3.8-27B,dev,oom_hardware,[],minor,Title describes a memory or hardware capacity limit,v2
+https://github.com/vllm-project/vllm/issues/53810,vllm,moonshotai/Kimi-K3,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/vllm-project/vllm/issues/54097,vllm,Qwen/Qwen3.8-27B,dev,install_build,[],blocker,Installed torchcodec library fails loading and breaks video requests,v2
+https://github.com/vllm-project/vllm/issues/54259,vllm,Qwen/Qwen3.8-27B,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/54521,vllm,Qwen/Qwen3.8-27B,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/vllm-project/vllm/issues/55766,vllm,Qwen/Qwen3.8-27B,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/vllm-project/vllm/issues/55775,vllm,Qwen/Qwen3.8-27B,test,speculative_decoding,[],blocker,"Crash is attributed to MTP speculative verify path, even with NVFP4 checkpoint",v2
+https://github.com/vllm-project/vllm/issues/56088,vllm,Qwen/Qwen3.8-27B,test,speculative_decoding,[],degraded,Title explicitly attributes failure to speculative decoding,v2
+https://github.com/vllm-project/vllm/issues/56384,vllm,deepseek-ai/DeepSeek-V4.1-Flash,dev,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/56389,vllm,deepseek-ai/DeepSeek-V4.1-Flash,dev,other,[],blocker,Illegal memory access in top-k kernel at high concurrency; not an out-of-memory ceiling,v2
+https://github.com/vllm-project/vllm/issues/56521,vllm,deepseek-ai/DeepSeek-V4.1-Flash,dev,other,[],degraded,"Runtime crash, hang or exception has no dedicated v2 category",v2
+https://github.com/vllm-project/vllm/issues/56700,vllm,deepseek-ai/DeepSeek-V4.1-Flash,test,other,[],minor,Field report of working configuration; screen for exclusion as non-issue,v2
+https://github.com/vllm-project/vllm/issues/56829,vllm,deepseek-ai/DeepSeek-V4.1-Flash,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/56871,vllm,deepseek-ai/DeepSeek-V4.1-Flash,test,speculative_decoding,[],degraded,Issue implicates speculative draft/target pathway,v2
+https://github.com/vllm-project/vllm/issues/57156,vllm,deepseek-ai/DeepSeek-V4.1-Flash,dev,quantization,[],blocker,Failure or incorrect behavior is tied to a quantized artifact,v2
+https://github.com/vllm-project/vllm/issues/57469,vllm,deepseek-ai/DeepSeek-V4.1-Flash,test,oom_hardware,[],blocker,Title describes a memory or hardware capacity limit,v2
+https://github.com/vllm-project/vllm/issues/57661,vllm,deepseek-ai/DeepSeek-V4.1-Flash,test,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/vllm-project/vllm/issues/58627,vllm,deepseek-ai/DeepSeek-V4.1-Flash,dev,correctness,[],degraded,Model runs but produces incorrect or degraded output without a more specific cause,v2
+https://github.com/vllm-project/vllm/issues/58799,vllm,deepseek-ai/DeepSeek-V4.1-Flash,test,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2
+https://github.com/vllm-project/vllm/issues/59054,vllm,deepseek-ai/DeepSeek-V4.1-Flash,test,speculative_decoding,[],degraded,Title explicitly attributes failure to speculative decoding,v2
+https://github.com/vllm-project/vllm/issues/59394,vllm,deepseek-ai/DeepSeek-V4.1-Flash,dev,other,[],blocker,Assertion blocks tensor-parallel configuration greater than eight,v2
+https://github.com/vllm-project/vllm/issues/59904,vllm,deepseek-ai/DeepSeek-V4.1-Flash,test,other,[],minor,No specific cause identifiable under frozen v2 categories,v2
+https://github.com/vllm-project/vllm/issues/59970,vllm,deepseek-ai/DeepSeek-V4.1-Flash,dev,performance,[],degraded,"Title reports throughput, latency, or speed regression",v2

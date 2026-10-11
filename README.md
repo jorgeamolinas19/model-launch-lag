@@ -7,8 +7,7 @@ actually run it" ranges from below zero to never. This project measures that gap
 six serving stacks, classifies what broke along the way, and distills the result into a
 launch readiness checklist that cites its own evidence.
 
-**Status: v1 scaffold.** Definitions are frozen; no data collected yet. See
-[Next steps](#next-steps).
+**Status: v1 data collected; see [Status](#status).**
 
 ## The questions
 
@@ -170,21 +169,23 @@ Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebo
 - **Q1 collected.** 22 models x 6 frameworks; 6 release dates hand-resolved with
   first-party URLs; evidence classes separated; negative offsets adjudicated by historical
   implementation evidence. Findings are in `report_support.py` output and the memo.
-- **Q2/Q3 collected; reference-labelled sample.** 3,559 distinct first-30-day issues →
-  2,666 after codebook exclusions (a cross-model title guard, added after an external
-  audit found a Kimi-K2 issue attributed to DeepSeek-V3.2, removed a further ~140). A
-  339-issue stratified sample (dev 136 / test 203; **311 scored** after post-sampling
-  exclusions) carries **disclosed assistant reference labels**
-  (`labels.source='ref_claude'`, codebook v2, title+excerpt only) standing in for human
-  labels. The naive keyword baseline agreed with that reference only **36% (κ 0.28)** on
-  test — it over-predicted `install_build` ~5x from environment dumps — so **an earlier
-  keyword-based "top problems" ranking was withdrawn**. A second rule set that strips
-  environment dumps and trusts titles reaches **51.6% (κ 0.44)** on test; it was written
-  after seeing the reference confusion matrix, so treat that figure as optimistic.
-  Current findings and caveats: [docs/memo.md](docs/memo.md).
-- **Classifier:** regex rules-v1 and rules-v2 scored against the reference on dev and
-  test; Qwen3-4B (Ollama, CPU, `think=false`, prompt v1) dev run in progress. The bar an
-  open model must clear is ~50%.
+- **Q2/Q3 collected; hand-labelled sample published.** 3,559 distinct first-30-day
+  issues → 2,666 after codebook exclusions (a cross-model title guard, added after an
+  external audit found a Kimi-K2 issue attributed to DeepSeek-V3.2, removed a further
+  ~140). A 339-issue stratified sample (dev 136 / test 203; **311 scored** after
+  post-sampling exclusions) is **hand-labelled** against codebook v2 and published as
+  [labels/labels_v2.csv](labels/labels_v2.csv) (one labeler, one pass; severity in
+  `correctness`/`performance`/`template_tokenizer` is uniform per category and is not
+  interpreted). A disclosed assistant reference set labelled earlier from the same
+  title+excerpt (`labels.source='ref_claude'`) is kept as a **second labeler**: it agrees
+  with the hand labels **57% on category (κ 0.49), 50% on severity (κ 0.25)**. The naive
+  keyword baseline agreed with either only ~36%, over-predicting `install_build` ~5x from
+  environment dumps, so **an earlier keyword-based "top problems" ranking was
+  withdrawn**. Findings: [docs/memo.md](docs/memo.md).
+- **Classifier:** regex rules-v2 reaches **56.8% (κ 0.50)** on test against the hand
+  labels — the same level at which the two labelers agree with each other, which is the
+  ceiling this sample can show. Qwen3-4B (Ollama, CPU, `think=false`, prompt v1) dev run
+  in progress (36.8% on the first 95).
 - **Q1 adjudication:** 2 pairs remain undetermined (both TensorRT-LLM, allowlist-only
   evidence). Two Ollama dates are Wayback-capture upper bounds (fidelity `coarse`).
   Nemotron-3-Nano's release date resolved to its 2025-12-15 announcement (no public page
@@ -194,9 +195,8 @@ Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebo
   leaking past the exclusion regex; the `missing_feature`/`quantization` boundary for
   "format X unsupported for model Y". See the gaps section in
   [docs/codebook-v2.md](docs/codebook-v2.md).
-- **Open human steps:** replace the reference labels with hand labels
-  (`labels/sample_v2_worksheet.csv`, then `eval_classifier.py --import`); re-label 50 dev
-  rows ≥5 days later for the self-agreement reference; spot-check the 17 assistant-adjudicated
+- **Open human steps:** re-label 50 dev rows ≥5 days later for the self-agreement
+  reference (`eval_classifier.py --import-pass2`); spot-check the 17 assistant-adjudicated
   support pairs in `support_events_hand.csv` and the 7 hand-resolved release dates in
   `release_dates_hand.csv` (2 support pairs remain undetermined).
 

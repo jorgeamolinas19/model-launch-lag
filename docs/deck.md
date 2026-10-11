@@ -1,8 +1,9 @@
 # Deck — What makes an open-model launch go well?
 
 Ten slides. Each slide: one claim, one piece of evidence, one source line. Figures
-regenerate from `reports/`; everything is "as of" snapshot 2026-10-10/11. Items marked
-*provisional* rest on the disclosed reference labels and need hand-label confirmation.
+regenerate from `reports/`; everything is "as of" snapshot 2026-10-10/11. Category
+figures are from the hand labels (n=311); where the assistant reference labeler differs
+materially both are shown.
 
 ---
 
@@ -41,25 +42,24 @@ regenerate from `reports/`; everything is "as of" snapshot 2026-10-10/11. Items 
 - Remote code is a mechanism, not a failure mode; the native merge is a second milestone
 *Source: scripts/detect_remote_code.py*
 
-## 6. What breaks: the keyword ranking was wrong
-- Naive keyword baseline vs reference labels: **36% agreement (κ 0.28)**; it over-predicted `install_build` ~5x from environment dumps in issue templates
-- The earlier "install/build > quantization > templates" ranking is withdrawn
-- Stripping environment dumps and trusting titles lifts the baseline to **52% (κ 0.44)** — the bar an open model must clear
-- Reference sample (n=311 scored): other 23% · missing_feature 14% · template 13% · correctness 13% · performance 13% · quantization 7% · OOM 6% · spec-decode 6% · install 5%
-*Source: reports/eval_regex_vs_ref_test.txt, reports/metrics_ref.txt — provisional*
+## 6. What breaks: the keyword ranking was wrong — and labelers agree only 57%
+- Naive keyword baseline: **36% agreement (κ 0.28)** with either labeler; it over-predicted `install_build` ~5x from environment dumps in issue templates → earlier ranking withdrawn
+- Tuned keyword baseline vs hand labels: **57% (κ 0.50)**. Assistant labeler vs hand labels: **57% (κ 0.49)**. Same number — the label noise *is* the ceiling on this sample
+- Hand labels (n=311): other 36% · correctness 13% · performance 11% · missing_feature 10% · quantization 9% · OOM 6% · spec-decode 6% · template 5% · install 3%
+*Source: reports/eval_hand_test.txt, reports/agreement_hand_vs_ref_claude.txt, reports/metrics_hand.txt*
 
 ## 7. Frequency and severity point at different problems
-- By count: implementation defects (`other`) and missing features
-- By blocker rate: **quantization 82%** (18 of 22) and **install/build 88%** (14 of 16)
-- Performance (3%) and templates (12%) are frequent but almost never block
+- By count: runtime defects (`other`) and wrong output
+- By blocker rate: **quantization 52%** (15 of 29; 82% under the second labeler) and **missing features 45%**
+- Severity κ between labelers is 0.25 → blocker rates shown as ranges, never one number
 - Top-3 ranking flips under reweighting → no single ranking published
-*Source: reports/metrics_ref.txt §4 — provisional*
+*Source: reports/metrics_hand.txt §4*
 
-## 8. Speculative decoding is the slowest problem to fix
-- KM median **110 days** to close, **63% still open** (next slowest: 89 days)
-- Defects sit between the target model's code path and the speculative subsystem
-- Draft models now launch alongside targets: Kimi-K3-DSpark out-downloads most full models in the cohort
-*Source: reports/metrics_ref.txt §3 — provisional*
+## 8. Quantization and speculative decoding are the slowest problems to fix
+- Quantization: KM median **122 days** to close; speculative decoding **92 days, 47% still open** (everything else 31–68 days)
+- Direction holds under both labelers (89 / 110 days under the reference)
+- Spec-decode defects sit between the target model's code path and the speculative subsystem; Kimi-K3-DSpark out-downloads most full models in the cohort
+*Source: reports/metrics_hand.txt §3*
 
 ## 9. Hardware: two ecosystems filing into the same trackers
 | | datacenter | consumer | Apple Silicon |
@@ -73,8 +73,8 @@ regenerate from `reports/`; everything is "as of" snapshot 2026-10-10/11. Items 
 *Source: reports/metrics_regex.txt §6 (hardware mining needs no labels)*
 
 ## 10. Three recommendations for a GPU platform team
-1. **Pair every quantized artifact with an explicit GPU-generation statement**, and ship the install base's format on day 0 — quantization is rare but a blocker 4 times in 5
-2. **Smoke-test draft/target pairing before announcing a draft model** — the slowest category, with recurring, catchable shapes
+1. **Pair every quantized artifact with an explicit GPU-generation statement**, and ship the install base's format on day 0 — quantization is rare but the most likely category to block and the slowest to close
+2. **Smoke-test draft/target pairing before announcing a draft model** — the highest open rate of any category, with recurring, catchable shapes
 3. **Give runtime crashes a home** — a `runtime_crash` label split by backend, and a crash-only first-30-day dashboard per model; the biggest bucket is currently invisible to category triage
 
 *All three are coordination and visibility opportunities, not criticisms of any framework's engineering.*
@@ -84,7 +84,7 @@ regenerate from `reports/`; everything is "as of" snapshot 2026-10-10/11. Items 
 ### Backup: limitations in one slide
 - Ollama/llama.cpp have no exact-fidelity support dates by construction; TensorRT-LLM issue volume is a visibility artifact (NVIDIA channels)
 - 2 support pairs undetermined; 16 adjudicated from API-verified PRs by the assistant, pending human spot-check; 2 Ollama dates are Wayback-capture upper bounds
-- Category figures: one labeler (assistant), no self-agreement κ yet, n=311 scored of 2,666; the 52% keyword figure was tuned after seeing the reference confusion matrix
+- Category figures: one human labeler, one pass, no self-agreement κ yet; a second (assistant) labeler agrees 57% / κ 0.49 on category and κ 0.25 on severity; hand severity is uniform per category in 3 categories (not interpreted); n=311 of 2,666
 - The cross-model title guard trades recall for precision: a few issues whose title names a sibling generation but whose body tests the attributed model are lost
 - Downloads normalizer is at snapshot, not release+30; Hub downloads ≠ framework users
 - Everything is as of 2026-10-10/11; issue state mutates

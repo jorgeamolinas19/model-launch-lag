@@ -117,15 +117,20 @@ native date alone misrepresents the developer experience; both are reported.
 
 **Label provenance, in order of trust.** Volume and attribution figures below come from
 the full collected set and need no labels. Category figures come from a **339-issue
-stratified sample (311 scored after post-sampling exclusions) labelled against codebook
-v2 by the assistant from title + excerpt only** (`ref_claude`) — a disclosed
-strong-model reference, not human labels, and to be replaced by hand labels before
-publication. The keyword baseline was also run over all
-2,804 kept issues, but its first version agreed with the reference only **36%** (κ 0.28),
-over-predicting `install_build` ~5x because issue templates embed environment dumps.
-**An earlier draft of this memo ranked problems from those keyword labels; that ranking
-was a keyword artifact and is withdrawn.** This is exactly what the baseline was for.
-(A second rule set that strips environment dumps reaches 52% — see *Classifier*.)
+stratified sample (311 scored after post-sampling exclusions) hand-labelled against
+codebook v2** (`labels/labels_v2.csv`, CC BY 4.0). The hand labels were produced in one
+pass by one labeler; severity in three categories (`correctness`, `performance`,
+`template_tokenizer`, 91 issues) is uniformly `degraded`, which reads as a per-category
+convention rather than per-issue judgment, so **blocker rates for those three are not
+interpreted below**. A disclosed assistant reference set (`ref_claude`, same
+title+excerpt, same codebook) was labelled before the hand labels existed and is kept
+as a second labeler: it agrees with the hand labels **57% on category (κ 0.49) and 50%
+on severity (κ 0.25)** over 339 issues. The keyword baseline was also run over all kept
+issues; its first version agreed with either labeler only ~36% (κ 0.28), over-predicting
+`install_build` ~5x because issue templates embed environment dumps. **An earlier draft
+of this memo ranked problems from those keyword labels; that ranking was a keyword
+artifact and is withdrawn.** The second rule set reaches 57% against the hand labels —
+the same level at which the two labelers agree with each other (see *Classifier*).
 
 ### Volume
 
@@ -163,33 +168,45 @@ TensorRT-LLM's 46 issues are not evidence of fewer problems; its users file thro
 NVIDIA channels the GitHub API cannot see. The same visibility caveat that applied to its
 support dates applies here.
 
-### What the sample actually contains (reference labels, n = 311 scored)
+### What the sample actually contains (hand labels, n = 311 scored)
 
 | category | n | share | blocker | degraded | minor | KM median days to close | still open |
 |---|---|---|---|---|---|---|---|
-| other | 73 | 23% | 23 | 25 | 25 | 19 | 16% |
-| missing_feature | 44 | 14% | 12 | 22 | 10 | 56 | 23% |
-| template_tokenizer | 41 | 13% | 5 | 35 | 1 | 37 | 12% |
-| correctness | 39 | 13% | 11 | 28 | 0 | 53 | 33% |
-| performance | 39 | 13% | 1 | 30 | 8 | 61 | 26% |
-| quantization | 22 | 7% | 18 | 4 | 0 | 89 | 14% |
-| oom_hardware | 18 | 6% | 9 | 9 | 0 | 46 | 22% |
-| speculative_decoding | 19 | 6% | 8 | 10 | 1 | **110** | **63%** |
-| install_build | 16 | 5% | 14 | 2 | 0 | 61 | 19% |
+| other | 113 | 36% | 32 | 2 | 79 | 31 | 16% |
+| correctness | 41 | 13% | 0† | 41 | 0 | 38 | 29% |
+| performance | 35 | 11% | 0† | 35 | 0 | 64 | 37% |
+| missing_feature | 31 | 10% | 14 | 1 | 16 | 34 | 13% |
+| quantization | 29 | 9% | **15** | 13 | 1 | **122** | 28% |
+| oom_hardware | 20 | 6% | 7 | 2 | 11 | 68 | 25% |
+| speculative_decoding | 19 | 6% | 4 | 14 | 1 | 92 | **47%** |
+| template_tokenizer | 15 | 5% | 0† | 15 | 0 | 38 | 13% |
+| install_build | 8 | 3% | 5 | 0 | 3 | 1 | 12% |
 
-Three things are robust here even at n = 311:
+† uniform severity across the category — a labeling convention, not evidence (see
+provenance note above). Under the assistant reference these three had 11, 1 and 5
+blockers respectively.
 
-- **`other` is a bucket, not a finding.** A quarter of issues are runtime crashes,
+Where the two labelers disagree, the hand labels move issues *into* `other` (113 vs 86):
+17 the reference called `template_tokenizer`, 13 `install_build`, 13 `missing_feature`.
+The categories whose counts both labelers agree on within ±3 are `correctness`,
+`performance`, `speculative_decoding` and `oom_hardware`; those are the ones to trust.
+
+Three things are robust here even at n = 311 and across both labelers:
+
+- **`other` is a bucket, not a finding.** A third of issues are runtime crashes,
   hangs, assertion failures and segfaults with no more specific cause named. Codebook v2
   has no category for "the process died" — `correctness` means *wrong output* — so they
   fall through. This is the single largest gap the labeling found and is logged for v3
   as `runtime_crash` ([codebook-v2.md](codebook-v2.md#gaps-found-while-labeling-339-issues-candidates-for-v3--v2-is-frozen)).
-- **Speculative decoding is the slowest category by a wide margin** — a 110-day median
-  and 63% still open, versus 19–89 days elsewhere. Draft/target pairing problems sit
-  between two code paths and often two teams.
-- **Quantization and install/build are rare but almost always blockers.** 18 of 22
-  quantization issues and 14 of 16 install/build issues stop the user cold. Template and
-  performance issues are frequent but almost never block (6 blockers in 80).
+- **Quantization and speculative decoding are the slowest categories to resolve** —
+  122- and 92-day KM medians against 31–68 days elsewhere, and speculative decoding has
+  the highest open rate (47%). Both held under the assistant reference too (89 / 110
+  days; 14% / 63% open), so the direction is not a labeler artifact even though the
+  magnitudes move.
+- **Quantization is rare but the most likely to block.** 15 of 29 quantization issues
+  stop the user cold (18 of 22 under the reference); missing_feature (14 of 31) and
+  install/build (5 of 8, n too small) follow. Template and performance issues are
+  frequent and were never marked blockers by the hand labeler (convention, see †).
 
 ## Question 3 — what should a platform team fix?
 
@@ -197,29 +214,30 @@ Three things are robust here even at n = 311:
 
 | category | n | score (3/2/1) | blocker | degraded | blocker rate |
 |---|---|---|---|---|---|
-| other (crashes/hangs) | 73 | 144 | 23 | 25 | 32% |
-| missing_feature | 44 | 90 | 12 | 22 | 27% |
-| correctness | 39 | 89 | 11 | 28 | 28% |
-| template_tokenizer | 41 | 86 | 5 | 35 | 12% |
-| performance | 39 | 71 | 1 | 30 | 3% |
-| **quantization** | 22 | 62 | **18** | 4 | **82%** |
-| install_build | 16 | 46 | 14 | 2 | **88%** |
-| oom_hardware | 18 | 45 | 9 | 9 | 50% |
-| speculative_decoding | 19 | 45 | 8 | 10 | 42% |
+| other (crashes/hangs) | 113 | 179 | 32 | 2 | 28% |
+| correctness | 41 | 82 | 0† | 41 | — |
+| **quantization** | 29 | 72 | **15** | 13 | **52%** |
+| performance | 35 | 70 | 0† | 35 | — |
+| missing_feature | 31 | 60 | 14 | 1 | 45% |
+| speculative_decoding | 19 | 41 | 4 | 14 | 21% |
+| oom_hardware | 20 | 36 | 7 | 2 | 35% |
+| template_tokenizer | 15 | 30 | 0† | 15 | — |
+| install_build | 8 | 18 | 5 | 0 | 63% (n=8) |
 
-**The top three change under reweighting** (3/2/1 and 5/2/1: other > missing_feature >
-correctness; blocker-only: other > correctness > missing_feature), so the memo does not
+**The top three change under reweighting** (3/2/1: other > correctness > quantization;
+5/2/1 and blocker-only: other > quantization > missing_feature), so the memo does not
 publish a single ranking. The weight-dependence *is* the finding, and the two lenses
-disagree: by **count** — any weighting — the first-month pain is implementation defects
-and missing features; by **blocker rate** it is quantization (82%) and install/build
-(88%), which are rare but stop the user cold, while performance (3%) and templates (12%)
-are frequent and almost never block. A platform team optimising for "fewest users
-stuck" and one optimising for "fewest issues filed" would pick different targets.
+disagree: by **count** the first-month pain is runtime defects and wrong output; by
+**blocker rate** it is quantization (52% here, 82% under the reference labeler) and
+missing features (45%), which are rarer but stop the user cold. A platform team
+optimising for "fewest users stuck" and one optimising for "fewest issues filed" would
+pick different targets. Quantization is the one category that tops *both* the
+blocker-rate and the time-to-resolve lists under both labelers.
 
 Per-framework mixes differ enough that one priority list would mislead: `transformers`
-skews to missing features (37%); llama.cpp to templates and performance (21% / 16%);
-Ollama to performance and templates (23% / 16%); SGLang to quantization and speculative
-decoding (18% / 14%). vLLM's 98 scored issues are the most evenly spread.
+skews to missing features (21%); llama.cpp to performance (16%); Ollama to correctness
+and performance (22% / 14%); SGLang and vLLM to quantization (14% / 12%). Every
+framework's largest bucket is `other`.
 
 ### Hardware
 
@@ -248,13 +266,14 @@ answer is a quantized artifact on day 0, not a better error message.
 ### Three recommendations for a GPU platform team
 
 Each is an opportunity in coordination or visibility; none is a criticism of a
-framework's engineering. Evidence is from the reference-labelled sample and is marked
-provisional until hand labels confirm it.
+framework's engineering. Evidence is from the hand-labelled sample, with the assistant
+reference as a second labeler; where the two disagree on magnitude both figures are
+given.
 
 **1. Pair every quantized artifact with an explicit GPU-generation statement, and ship
 the quant for the install base's hardware on day 0.** Quantization has the highest
-blocker rate of any substantive category in the sample — 18 of 22 issues — and the
-failure mode is
+blocker rate of any category with n ≥ 10 — 15 of 29 issues (18 of 22 under the
+reference labeler) — and the slowest resolution (122-day KM median), and the failure mode is
 consistent: a format whose kernels exist only on newer silicon (`fp8e4nv not supported`
 on A10; NVFP4 on Ampere; MXFP4 persistent-kernel requirement on Blackwell; `machete`
 missing on RTX 5090). Hardware mined from all 2,856 issues shows the split that makes
@@ -266,15 +285,17 @@ convert most of these from a traceback into a lookup. Checklist items 2.1 / 2.2.
 **2. Treat speculative-decoding pairing as part of launch readiness, not a follow-up.**
 Draft models now launch alongside targets (Kimi-K3-DSpark has more downloads than most
 full models in the cohort), and pairing issues are the slowest to resolve of any
-category — 110-day median, 63% still open — because the defect sits between the target
-model's code path and the speculative subsystem. Of the 19 scored, 8 were blockers.
+category by open rate — 92-day median, 47% still open (110 days / 63% under the
+reference labeler) — because the defect sits between the target model's code path and
+the speculative subsystem. Of the 19 scored, 4 were blockers by the hand labels (8 by
+the reference); the case rests on resolution time, not severity.
 A pairing smoke test (draft loads against target; vocab matches; one verify step runs)
 in each framework before announcing a draft would catch the recurring shapes seen here:
 `decoder_layer_cls` ignored, `spec_info None` under disaggregation, aux hidden states
 not emitted for a new architecture. Checklist item 2.6 (new in v2).
 
-**3. Give runtime crashes a home, so the biggest bucket becomes actionable.** A quarter
-of the sample is "the process died": CUDA illegal memory access at long context,
+**3. Give runtime crashes a home, so the biggest bucket becomes actionable.** A third
+of the sample (36%) is "the process died": CUDA illegal memory access at long context,
 watchdog timeouts, segfaults on a specific backend, assertion failures in graph
 capture. They are not wrong output and not install problems, so no current taxonomy
 owns them, and they are invisible in any category-based triage. Two cheap moves:
@@ -286,19 +307,24 @@ it a launch metric.
 
 ## Classifier
 
-**Status: baseline scored against a disclosed reference set; open-model dev run in
-progress; no human labels yet.**
+**Status: hand labels in; baselines and the assistant reference scored against them;
+open-model dev run in progress.**
 
-A stratified sample of **339 issues** (dev 136 / test 203) was labelled by the
-assistant against codebook v2 from title + excerpt only, as a stand-in reference until
-hand labels exist (`labels.source = 'ref_claude'`, run id recorded). Against it:
+A stratified sample of **339 issues** (dev 136 / test 203) was hand-labelled against
+codebook v2 (`labels.source = 'hand'`). Before the hand labels existed the assistant
+labelled the same rows from title + excerpt as a disclosed reference
+(`ref_claude`); it is now reported as a second labeler, not a gold set.
 
 | classifier | split | category acc | κ | severity acc | κ |
 |---|---|---|---|---|---|
-| regex rules-v1 (naive keywords) | test (203, pre-guard) | 36.0% | 0.28 | 54.2% | 0.25 |
-| regex rules-v2 (env-dump stripped, title-first) | dev (121) | 57.0% | 0.51 | 57.0% | 0.27 |
-| regex rules-v2 | **test (190)** | **51.6%** | **0.44** | 50.5% | 0.19 |
-| Qwen3-4B, prompt v1, CPU | dev (121) | _running_ | | | |
+| **assistant reference (`ref_claude`) vs hand** | all 339 | **57.2%** | **0.49** | 50.1% | 0.25 |
+| regex rules-v1 (naive keywords) vs ref_claude | test (203, pre-guard) | 36.0% | 0.28 | 54.2% | 0.25 |
+| regex rules-v2 (env-dump stripped, title-first) | dev (121) | 55.4% | 0.48 | 54.5% | 0.29 |
+| regex rules-v2 | **test (190)** | **56.8%** | **0.50** | 53.2% | 0.29 |
+| Qwen3-4B, prompt v1, CPU, `think=false` | dev (95 so far) | 36.8% | 0.30 | 55.8% | 0.28 |
+
+Unless marked otherwise, rows are scored against the hand labels; the Qwen3-4B row is
+partial and will be replaced when the run completes.
 
 (n = sampled rows that survive the cleaning rules; 28 of 339 were excluded after
 sampling by the cross-model title guard and widened maintainer-task filter.)
@@ -307,24 +333,28 @@ Rules-v1 was good at `missing_feature` (72% precision / 75% recall — the vocab
 distinctive) and poor everywhere else, because issue templates embed environment dumps
 (`CUDA used to build PyTorch`, `pip`, `cmake`) that match `install_build` regardless of
 the complaint. Rules-v2 strips those blocks and trusts the title first; that alone
-lifted agreement from 36% to 52%. **Disclosure:** rules-v2 was written after seeing the
-reference set's confusion matrix, including the test split, so its test figure is
-optimistic — a fair reading is "a keyword baseline that knows the codebook's traps lands
-around 50%". **That is the bar an open model has to clear**; anything above ~70% is a
-real gain over keywords. The open-model classifier will touch test once, after its
-prompt is frozen on dev. Throughput/VRAM for the 2–3 model benchmark follow the GPU
-runbook.
+lifted agreement from 36% to 57%. **Disclosure:** rules-v2 was written after seeing the
+*reference* set's confusion matrix, not the hand labels, but the two label sets overlap
+57%, so treat the test figure as mildly optimistic.
 
-Two caveats on the reference set itself: it is one labeler, so no self-agreement κ
-exists yet (the protocol calls for a 50-issue re-label ≥5 days later), and it shares a
-model family with none of the classifiers under test but is still a language model —
-agreement with it is not accuracy against human judgment.
+**The number that frames everything else: the two labelers agree 57% (κ 0.49) with each
+other.** The keyword baseline against the hand labels (57%) and the assistant reference
+against the hand labels (57%) are the same figure. On this sample, with this codebook, a
+classifier cannot be shown to beat ~57% because the labels themselves disagree at that
+rate — mostly over the boundary of `other` (hand: 113, reference: 86). Severity is
+worse: κ 0.25 between labelers, and the hand set applies one severity per category in
+three categories. Two consequences: (a) the open-model benchmark is a measure of
+*which labeler the model resembles*, not of accuracy, until the codebook's `other`
+boundary is tightened (v3: `runtime_crash`); (b) severity-weighted findings are
+reported as ranges across both labelers, never as one number. A 50-issue second hand
+pass (≥5 days later) would show whether the single labeler is at least self-consistent.
 
 ## Method notes a reader should know
 
 - Everything is "as of" snapshot 2026-10-10. Issue state mutates.
-- Metrics are computed over published hand labels (`labels/labels_v2.csv`, CC BY 4.0) and
-  model labels pinned to a prompt version and model tag per run.
+- Category metrics are computed over the published hand labels (`labels/labels_v2.csv`,
+  311 rows, CC BY 4.0); the assistant reference (`ref_claude`) is reported alongside as a
+  second labeler. Model labels are pinned to a prompt version and model tag per run.
 - Negative support offsets were manually adjudicated using historical implementation
   evidence. Pre-existing architectures were distinguished from model-specific
   integrations, and architecture presence alone was not treated as proof of executable

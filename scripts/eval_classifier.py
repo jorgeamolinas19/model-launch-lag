@@ -65,7 +65,7 @@ def publish(con):
     rows = con.execute("""SELECT i.url, i.framework_id, i.hf_id, l.split, l.category_primary,
                           l.category_secondary, l.severity, l.reason, l.codebook_version
                           FROM labels l JOIN issues i ON i.id=l.issue_id
-                          WHERE l.source='hand' AND l.category_primary IS NOT NULL ORDER BY i.url""").fetchall()
+                          WHERE l.source='hand' AND l.category_primary IS NOT NULL AND i.excluded=0 ORDER BY i.url""").fetchall()
     with out.open("w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["issue_url", "framework", "model", "split", "category_primary", "category_secondary",
@@ -137,6 +137,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--import", dest="imp", help="worksheet CSV to import as hand labels")
     ap.add_argument("--import-pass2", help="second-pass worksheet for self-agreement")
+    ap.add_argument("--import-source", default="hand",
+                    help="labels.source for --import. Only 'hand' publishes labels_v2.csv; use a "
+                         "distinct name (e.g. ref_independent) for any AI-produced label set")
     ap.add_argument("--split", default="test", choices=["dev", "test"])
     ap.add_argument("--sources", default="regex_baseline,llm")
     ap.add_argument("--gold", default="hand",
@@ -147,8 +150,9 @@ def main():
     GOLD = a.gold
     con = sqlite3.connect(DB, timeout=60)
     if a.imp:
-        import_worksheet(con, a.imp, "hand")
-        publish(con)
+        import_worksheet(con, a.imp, a.import_source)
+        if a.import_source == "hand":
+            publish(con)
     if a.import_pass2:
         import_worksheet(con, a.import_pass2, "hand_pass2")
 

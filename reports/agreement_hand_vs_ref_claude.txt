@@ -1,0 +1,26 @@
+hand vs ref_claude: n=339
+  category agreement 57.2%  kappa 0.49
+  severity agreement 50.1%  kappa 0.25
+
+  category                   hand ref_clau
+  missing_feature              32       46
+  install_build                 8       17
+  template_tokenizer           18       42
+  quantization                 34       26
+  speculative_decoding         19       20
+  oom_hardware                 22       20
+  correctness                  43       41
+  performance                  37       41
+  other                       126       86
+
+  largest disagreements (A -> B):
+    other                -> template_tokenizer   17
+    other                -> install_build        13
+    other                -> missing_feature      13
+    other                -> correctness          9
+    correctness          -> template_tokenizer   7
+    correctness          -> other                7
+    other                -> quantization         6
+    other                -> oom_hardware         5
+
+  run notes: DISCLOSED reference labels by the assistant from title+excerpt only, following codebook v2 ladder; stands in for human labels until hand labels exist
