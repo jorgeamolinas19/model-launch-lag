@@ -1,0 +1,35 @@
+
+REFERENCE SET IS 'ref_claude', NOT HUMAN LABELS. Figures below measure agreement with a
+disclosed strong-model reference labelled from the same title+excerpt against codebook
+v2. Replace with hand labels (eval_classifier.py --import ...) before publication.
+
+(no hand_pass2 yet: re-label 50 dev issues >=5 days later to establish the ceiling)
+
+=== regex_baseline  vs ref_claude (test, n=203) ===
+  category accuracy 36.0%   kappa 0.28
+  severity accuracy 54.2%   kappa 0.25
+
+  category                 n   prec    rec
+  missing_feature         24    72%    75%
+  install_build            9    19%    67%  (n<10: unreliable)
+  template_tokenizer      29    43%    45%
+  quantization            15    17%    40%
+  speculative_decoding    12    38%    42%
+  oom_hardware            15    32%    40%
+  correctness             20    38%    15%
+  performance             22    46%    27%
+  other                   57    36%    18%
+
+  confusion (rows = ref_claude, cols = predicted):
+                         missi insta templ quant specu oom_h corre perfo other
+  missing_feature           18     3     0     1     1     0     0     1     0
+  install_build              0     6     0     0     0     0     0     0     3
+  template_tokenizer         0     2    13     2     0     1     3     2     6
+  quantization               2     3     1     6     0     0     0     1     2
+  speculative_decoding       1     1     0     4     5     0     0     0     1
+  oom_hardware               0     3     2     3     0     6     0     0     1
+  correctness                0     6     3     3     1     1     3     0     3
+  performance                1     1     1     7     0     4     0     6     2
+  other                      3     7    10     9     6     7     2     3    10
+
+NOTE: test split touched. Do not iterate the prompt against these numbers.

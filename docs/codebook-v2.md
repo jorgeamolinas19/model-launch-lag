@@ -92,6 +92,36 @@ reversible. They are removed from all metric denominators.
 | `maintainer_task` | Tracking issue, release checklist, roadmap item filed by a maintainer |
 | `non_english` | Body not in English and not machine-translatable with confidence (record it; do not silently drop) |
 
+## Gaps found while labeling 339 issues (candidates for v3 — v2 is frozen)
+
+Applying v2 to the stratified sample surfaced three systematic problems. They are
+recorded here, not fixed here: v2 stays frozen so the published labels stay comparable.
+
+1. **Implementation crashes have no home.** A large share of issues are runtime
+   exceptions, hangs, segfaults or assertion failures in otherwise-correct environments
+   with no more specific cause named (`AttributeError ... 'sampler'`, Xid faults, watchdog
+   timeouts, `GGML_ASSERT`). `correctness` is defined as *wrong output*, so these fall to
+   `other`, which ends up at ~25% of the reference set and becomes the top "category" —
+   a bucket, not a finding. **v3 should add `runtime_crash`** (process dies or hangs; no
+   output to be wrong) with precedence just above `correctness`.
+2. **`other` also absorbs three distinct non-defect kinds**: registry/distribution
+   problems (pull EOF, missing Docker tag), API-semantics mismatches (`reasoning_content`
+   ignored, `previous_response_id` unsupported), and maintainer artifacts (RFCs, CI, test
+   suites that mention a model in passing). The last kind should mostly have been
+   excluded as `maintainer_task`; the exclusion regex needs `\[RFC\]`, `\[Test\]`,
+   `\[CI Failure\]`, `\[Perf\]` tracking patterns and "Benchmark:" titles.
+3. **"Format X unsupported for model Y" straddles two rules.** Rule 1 (`missing_feature`:
+   no implementation) and rule 4 (`quantization`: unsupported quant+arch combination) both
+   claim it. The labels here follow rule 4 for every case where a named quant format is
+   the thing missing (FP8 for Llama 4, AWQ MoE, NVFP4 PLE tables, w4a8 on NPU), and rule 1
+   only when the architecture itself is absent. v3 should state this explicitly in the
+   boundary rules.
+
+Also observed: **the keyword baseline over-predicts `install_build` by ~5x** because
+issue templates embed environment dumps (`CUDA used to build PyTorch`, `pip`, `cmake`,
+`wheel`) regardless of what the issue is about. Any keyword rule for `install_build`
+must exclude the `collect_env.py` block, or weight the title far above the body.
+
 ## Labeling protocol
 
 1. **Stratified sample.** Draw by framework × category-guess so rare categories are not left with two examples. Target **340 labels** (9 categories in v2), minimum 20 per category after exclusions. `speculative_decoding` is expected to be the rarest and must be deliberately oversampled, not left to chance. Merge any category still under 10 into `other` for reporting and say so.

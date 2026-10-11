@@ -107,9 +107,15 @@ native date alone misrepresents the developer experience; both are reported.
 
 ## Question 2 — what broke?
 
-**Labels in this section are from the keyword baseline** (`regex_baseline`, codebook v2)
-and will be re-cut from hand-validated LLM labels. The *shape* of the findings is stable
-under that caveat; the exact percentages are not.
+**Label provenance, in order of trust.** Volume and attribution figures below come from
+the full collected set and need no labels. Category figures come from a **339-issue
+stratified sample labelled against codebook v2 by the assistant from title + excerpt
+only** (`ref_claude`) — a disclosed strong-model reference, not human labels, and to be
+replaced by hand labels before publication. The keyword baseline was also run over all
+2,856 issues, but it agrees with the reference only **36%** (κ 0.28), over-predicting
+`install_build` ~5x because issue templates embed environment dumps. **An earlier draft
+of this memo ranked problems from the keyword labels; that ranking was a keyword
+artifact and is withdrawn.** This is exactly what the baseline was for.
 
 ### Volume
 
@@ -138,45 +144,60 @@ TensorRT-LLM's 46 issues are not evidence of fewer problems; its users file thro
 NVIDIA channels the GitHub API cannot see. The same visibility caveat that applied to its
 support dates applies here.
 
-### Time to resolve (open issues censored at snapshot)
+### What the sample actually contains (reference labels, n = 339)
 
-| category | n | KM median days | still open | closed as not-planned |
-|---|---|---|---|---|
-| performance | 54 | 40 | 24% | 17% |
-| template_tokenizer | 415 | 45 | 22% | 18% |
-| quantization | 685 | 46 | 31% | 15% |
-| oom_hardware | 88 | 49 | 22% | 16% |
-| install_build | 721 | 57 | 19% | 25% |
-| missing_feature | 296 | 61 | 22% | 16% |
-| correctness | 34 | 61 | 38% | 6% |
-| speculative_decoding | 57 | 65 | 42% | 9% |
+| category | share | blocker | degraded | minor | KM median days to close | still open |
+|---|---|---|---|---|---|---|
+| other | 25% | 26 | 25 | 35 | 32 | 19% |
+| missing_feature | 14% | 14 | 22 | 10 | 45 | 22% |
+| template_tokenizer | 12% | 5 | 36 | 1 | 37 | 14% |
+| correctness | 12% | 11 | 30 | 0 | 53 | 34% |
+| performance | 12% | 1 | 31 | 9 | 61 | 27% |
+| quantization | 8% | 20 | 6 | 0 | 81 | 15% |
+| oom_hardware | 6% | 11 | 9 | 0 | 68 | 20% |
+| speculative_decoding | 6% | 9 | 10 | 1 | **110** | **60%** |
+| install_build | 5% | 15 | 2 | 0 | 78 | 18% |
 
-Two things stand out. **Speculative-decoding issues are the slowest to resolve and the
-most likely to still be open** (42%) — consistent with pairing problems having no single
-owner. And **a quarter of install/build issues close as not-planned**, the highest
-dismissal rate of any category: many are environment-specific and never reproduce.
+Three things are robust here even at n = 339:
+
+- **`other` is a bucket, not a finding.** A quarter of issues are runtime crashes,
+  hangs, assertion failures and segfaults with no more specific cause named. Codebook v2
+  has no category for "the process died" — `correctness` means *wrong output* — so they
+  fall through. This is the single largest gap the labeling found and is logged for v3
+  as `runtime_crash` ([codebook-v2.md](codebook-v2.md#gaps-found-while-labeling-339-issues-candidates-for-v3--v2-is-frozen)).
+- **Speculative decoding is the slowest category by a wide margin** — a 110-day median
+  and 60% still open, versus 32–81 days elsewhere. Draft/target pairing problems sit
+  between two code paths and often two teams.
+- **Quantization and install/build are rare but almost always blockers.** 20 of 26
+  quantization issues and 15 of 17 install/build issues stop the user cold. Template and
+  performance issues are frequent but almost never block.
 
 ## Question 3 — what should a platform team fix?
 
-### Top problems, severity-weighted
+### Top problems, severity-weighted — and why the ranking is not stable
 
 | category | n | score (3/2/1) | blocker | degraded |
 |---|---|---|---|---|
-| **install_build** | 721 | 1,844 | 414 | 295 |
-| **quantization** | 685 | 1,643 | 280 | 398 |
-| **template_tokenizer** | 415 | 963 | 149 | 250 |
-| missing_feature | 296 | 670 | 91 | 192 |
-| oom_hardware | 88 | 204 | 33 | 50 |
-| speculative_decoding | 57 | 138 | 25 | 31 |
+| other (crashes/hangs) | 86 | 163 | 26 | 25 |
+| missing_feature | 46 | 96 | 14 | 22 |
+| correctness | 41 | 93 | 11 | 30 |
+| template_tokenizer | 42 | 88 | 5 | 36 |
+| performance | 41 | 74 | 1 | 31 |
+| **quantization** | 26 | 72 | **20** | 6 |
+| oom_hardware | 20 | 51 | 11 | 9 |
+| install_build | 17 | 49 | 15 | 2 |
+| speculative_decoding | 20 | 48 | 9 | 10 |
 
-**The top three are stable under all three weightings tested** (3/2/1, 5/2/1, 3/1/0), so
-the ranking is a property of the data rather than of the weights.
+**The top three change under reweighting** (3/2/1 and 5/2/1: other > missing_feature >
+correctness; blocker-only: other > **quantization** > missing_feature). So the memo does
+not publish a single ranking. The weight-dependence *is* the finding: by volume, the
+ecosystem's first-month pain is implementation defects and missing features; by
+severity, it is **quantization** — rare, but a blocker four times out of five.
 
-The pooled ranking partly re-describes who files issues where, and the per-framework
-mixes show it: vLLM is 46% install/build (CUDA/wheel/driver), llama.cpp is 40%
-quantization and 27% template/tokenizer (GGUF conversion, chat templates), SGLang leads
-on quantization (26%) and missing features, Ollama is 45% "other" (usage questions).
-A platform team's priorities differ by which stack its users are on.
+Per-framework mixes differ enough that one priority list would mislead: `transformers`
+skews to missing features (35%); llama.cpp to templates and performance (20% / 15%);
+Ollama to performance and templates (23% / 15%); SGLang to quantization (15%). vLLM's
+108 sampled issues are the most evenly spread.
 
 ### Hardware
 
@@ -205,41 +226,69 @@ answer is a quantized artifact on day 0, not a better error message.
 ### Three recommendations for a GPU platform team
 
 Each is an opportunity in coordination or visibility; none is a criticism of a
-framework's engineering.
+framework's engineering. Evidence is from the reference-labelled sample and is marked
+provisional until hand labels confirm it.
 
-**1. Ship the install path with the model, not after it.** Install/build is the largest
-and most-dismissed category (721 issues, 25% closed not-planned). Most are version
-skew: a model that needs framework ≥ X on CUDA ≥ Y, learned by failing. A one-table
-"known-good matrix" in the model card at launch — framework version, CUDA, GPU
-generation, quant format — would convert the single biggest issue category into a
-lookup. Evidence: vLLM 46% install/build; `pip`/wheel/`no kernel image` dominate.
+**1. Pair every quantized artifact with an explicit GPU-generation statement, and ship
+the quant for the install base's hardware on day 0.** Quantization is the most severe
+category in the sample — 20 of 26 issues are blockers — and the failure mode is
+consistent: a format whose kernels exist only on newer silicon (`fp8e4nv not supported`
+on A10; NVFP4 on Ampere; MXFP4 persistent-kernel requirement on Blackwell; `machete`
+missing on RTX 5090). Hardware mined from all 2,856 issues shows the split that makes
+this bite: SGLang/vLLM users are 58–73% datacenter, llama.cpp/Ollama users 48–69%
+consumer. NVFP4 appears in 126 first-month issues and MXFP4 in 67. A model card line
+of the form *"NVFP4: Blackwell (SM100+) only; FP8: Hopper+; GGUF Q4_K_M: any"* would
+convert most of these from a traceback into a lookup. Checklist items 2.1 / 2.2.
 
-**2. Publish a quantized artifact at launch for the formats the install base can run.**
-Quantization is #2 by volume and #1 by *degraded* outcomes (398). The capability-gap
-figure shows demand for sub-fp16 memory on day 0; NVFP4 appearing in 126 first-month
-issues shows the format is already in users' hands before the kernels are everywhere.
-Pairing a day-0 NVFP4/FP8 artifact with an explicit GPU-generation requirement would
-address both the OOM demand and the "format loads on Hopper but not Ampere" failure
-mode. Evidence: `quant_artifacts` lag (§7) once collected; `issue_hardware.quant_mentioned`.
+**2. Treat speculative-decoding pairing as part of launch readiness, not a follow-up.**
+Draft models now launch alongside targets (Kimi-K3-DSpark has more downloads than most
+full models in the cohort), and pairing issues are the slowest to resolve of any
+category — 110-day median, 60% still open — because the defect sits between the target
+model's code path and the speculative subsystem. Of the 20 sampled, 9 were blockers.
+A pairing smoke test (draft loads against target; vocab matches; one verify step runs)
+in each framework before announcing a draft would catch the recurring shapes seen here:
+`decoder_layer_cls` ignored, `spec_info None` under disaggregation, aux hidden states
+not emitted for a new architecture. Checklist item 2.6 (new in v2).
 
-**3. Validate chat templates against each target framework before release.** Template
-and tokenizer issues are #3 (415) with a 45-day median resolution and symptoms users
-cannot self-diagnose (model never stops, tool-call tags leak). A template test harness
-run against vLLM, SGLang and llama.cpp's Jinja renderers before publishing would catch
-most of these pre-release. llama.cpp's 27% template share shows where the renderer
-divergence bites hardest.
+**3. Give runtime crashes a home, so the biggest bucket becomes actionable.** A quarter
+of the sample is "the process died": CUDA illegal memory access at long context,
+watchdog timeouts, segfaults on a specific backend, assertion failures in graph
+capture. They are not wrong output and not install problems, so no current taxonomy
+owns them, and they are invisible in any category-based triage. Two cheap moves:
+(a) a `runtime_crash` label in issue templates, split by *backend* (CUDA / ROCm / Vulkan
+/ Metal / SYCL / NPU), since the sample shows non-CUDA backends are heavily
+over-represented in crashes relative to their user share; (b) a crash-only dashboard
+per model in the first 30 days. The first makes the problem measurable; the second makes
+it a launch metric.
 
 ## Classifier
 
-**Status: baseline only; LLM dev run in progress; no hand labels yet.**
+**Status: baseline scored against a disclosed reference set; open-model dev run in
+progress; no human labels yet.**
 
-A stratified sample of **339 issues** (dev 136 / test 203) is drawn and seeded in the
-database; the worksheet awaits hand labels. Until then no accuracy figure exists, and
-none is quoted. The regex baseline's distribution is above; the open-model classifier
-(Qwen3-4B via Ollama, prompt v1, `think=false`) runs locally at ~23 s/issue on CPU and
-will be scored against the hand labels on the **test** split only after the prompt is
-frozen on **dev**. The full batch and the throughput/VRAM benchmark follow the GPU
+A stratified sample of **339 issues** (dev 136 / test 203) was labelled by the
+assistant against codebook v2 from title + excerpt only, as a stand-in reference until
+hand labels exist (`labels.source = 'ref_claude'`, run id recorded). Against it:
+
+| classifier | split | category acc | κ | severity acc | κ |
+|---|---|---|---|---|---|
+| regex baseline | dev (136) | 37.5% | 0.30 | 59.6% | 0.32 |
+| regex baseline | **test (203)** | **36.0%** | **0.28** | 54.2% | 0.25 |
+| Qwen3-4B, prompt v1, CPU | dev (136) | _running_ | | | |
+
+The baseline is good at `missing_feature` (72% precision / 75% recall — the vocabulary
+is distinctive) and poor everywhere else; it over-predicts `install_build` and
+`quantization` because environment dumps in issue templates contain the keywords. **This
+is the number that makes the LLM's accuracy interpretable:** an open model needs to beat
+~36%, and anything above ~70% is a real gain over keywords. The test split has now been
+scored once for the baseline only; the open-model classifier will touch it once, after
+its prompt is frozen on dev. Throughput/VRAM for the 2–3 model benchmark follow the GPU
 runbook.
+
+Two caveats on the reference set itself: it is one labeler, so no self-agreement κ
+exists yet (the protocol calls for a 50-issue re-label ≥5 days later), and it shares a
+model family with none of the classifiers under test but is still a language model —
+agreement with it is not accuracy against human judgment.
 
 ## Method notes a reader should know
 

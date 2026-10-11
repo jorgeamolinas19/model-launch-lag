@@ -170,15 +170,26 @@ Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebo
 - **Q1 collected.** 22 models x 6 frameworks; 6 release dates hand-resolved with
   first-party URLs; evidence classes separated; negative offsets adjudicated by historical
   implementation evidence. Findings are in `report_support.py` output and the memo.
-- **Q2/Q3 collected, baseline-labelled.** 3,559 distinct first-30-day issues → 2,856
-  after codebook exclusions; keyword-baseline labels for all; 339-issue stratified
-  hand-label sample drawn (dev 136 / test 203). Top-3 problem categories are stable
-  under reweighting. Reports in `reports/`; narrative in [docs/memo.md](docs/memo.md).
-- **Classifier: dev loop running.** Qwen3-4B via Ollama on CPU (~23 s/issue, `think=false`).
-  No accuracy is quoted until hand labels exist; the test split is untouched.
-- **Open human steps:** fill `labels/sample_v2_worksheet.csv` (339 rows); re-label 50
-  dev rows ≥5 days later for the self-agreement ceiling; resolve the 14 undetermined
-  support pairs in `support_events_hand.csv`.
+- **Q2/Q3 collected; reference-labelled sample.** 3,559 distinct first-30-day issues →
+  2,856 after codebook exclusions. A 339-issue stratified sample (dev 136 / test 203)
+  carries **disclosed assistant reference labels** (`labels.source='ref_claude'`, codebook
+  v2, title+excerpt only) standing in for human labels. The keyword baseline agrees with
+  that reference only **36% (κ 0.28)** on test — it over-predicts `install_build` ~5x
+  from environment dumps — so **an earlier keyword-based "top problems" ranking was
+  withdrawn**. Current findings and their caveats: [docs/memo.md](docs/memo.md).
+- **Classifier:** regex baseline scored on dev and test against the reference; Qwen3-4B
+  (Ollama, CPU, `think=false`, prompt v1) dev run in progress. Test split touched once,
+  for the baseline only.
+- **Codebook gaps found while labeling** (logged for v3, v2 stays frozen): no category
+  for runtime crashes/hangs (~25% of the sample lands in `other`); maintainer artifacts
+  leaking past the exclusion regex; the `missing_feature`/`quantization` boundary for
+  "format X unsupported for model Y". See the gaps section in
+  [docs/codebook-v2.md](docs/codebook-v2.md).
+- **Open human steps:** replace the reference labels with hand labels
+  (`labels/sample_v2_worksheet.csv`, then `eval_classifier.py --import`); re-label 50 dev
+  rows ≥5 days later for the self-agreement ceiling; confirm the 16 assistant-adjudicated
+  support pairs in `support_events_hand.csv` (4 remain undetermined); resolve whether
+  Nemotron-3-Nano's weights were public before its 2025-12-15 announcement.
 
 ### Running the classifier locally (no GPU)
 
