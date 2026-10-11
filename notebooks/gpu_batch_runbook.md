@@ -52,10 +52,17 @@ nvidia-smi --query-gpu=memory.used --format=csv -l 5 > vram_qwen3-8b.csv &
 
 ## 2. Classify
 
+> **Use a distinct `--source` per model.** The database already holds the CPU dev run
+> under `source='llm'`, and `classify_llm.py` skips issues already labelled under the
+> source it is writing to - so a GPU run left on the default would silently do nothing
+> on dev. The benchmark needs only `--split dev` and `--split test` (311 issues);
+> `--all` (2,666) is ~3 h per model on T4 and is not required for the table.
+> Qwen3 needs `--no-think`, or it spends the 400-token budget reasoning.
+
 ```bash
 # dev first, ALWAYS - never iterate the prompt on test
-python scripts/classify_llm.py --base-url http://localhost:8000/v1 --model Qwen/Qwen3-8B --split dev
-python scripts/eval_classifier.py --split dev --sources regex_baseline,llm
+python scripts/classify_llm.py --base-url http://localhost:8000/v1 --model Qwen/Qwen3-8B --split dev --source llm:qwen3-8b --no-think
+python scripts/eval_classifier.py --split dev --sources regex_baseline,llm:qwen3-8b
 
 # only when the prompt is frozen:
 python scripts/classify_llm.py --base-url http://localhost:8000/v1 --model Qwen/Qwen3-8B --all
