@@ -25,6 +25,7 @@ DB = ROOT / "db" / "launch_lag.sqlite"
 CATS = ["missing_feature", "install_build", "template_tokenizer", "quantization",
         "speculative_decoding", "oom_hardware", "correctness", "performance", "other"]
 SEVS = ["blocker", "degraded", "minor"]
+GOLD = "hand"   # overridden by --gold
 
 
 def kappa(a, b):
@@ -75,9 +76,11 @@ def publish(con):
 
 
 def score(con, split, source):
+    # split lives on the 'hand' seed rows; the gold source may be a different table slice
     gold = {r[0]: (r[1], r[2]) for r in con.execute(
-        """SELECT issue_id, category_primary, severity FROM labels
-           WHERE source='hand' AND category_primary IS NOT NULL AND split=?""", (split,))}
+        """SELECT g.issue_id, g.category_primary, g.severity FROM labels g
+           JOIN labels h ON h.issue_id=g.issue_id AND h.source='hand' AND h.split=?
+           WHERE g.source=? AND g.category_primary IS NOT NULL""", (split, GOLD))}
     pred = {r[0]: (r[1], r[2]) for r in con.execute(
         "SELECT issue_id, category_primary, severity FROM labels WHERE source=? AND category_primary IS NOT NULL",
         (source,))}
@@ -90,7 +93,7 @@ def score(con, split, source):
     gs = [gold[i][1] for i in ids]
     ps = [pred[i][1] for i in ids]
     acc = sum(x == y for x, y in zip(g, p)) / len(ids)
-    print(f"\n=== {source}  vs hand ({split}, n={len(ids)}) ===")
+    print(f"\n=== {source}  vs {GOLD} ({split}, n={len(ids)}) ===")
     print(f"  category accuracy {100*acc:.1f}%   kappa {kappa(g, p):.2f}")
     print(f"  severity accuracy {100*sum(x == y for x, y in zip(gs, ps))/len(ids):.1f}%   kappa {kappa(gs, ps):.2f}")
 
@@ -107,7 +110,7 @@ def score(con, split, source):
         warn = "  (n<10: unreliable)" if n < 10 else ""
         print(f"  {c:<22}{n:>4}{100*prec:>6.0f}%{100*rec:>6.0f}%{warn}")
 
-    print("\n  confusion (rows = hand, cols = predicted):")
+    print(f"\n  confusion (rows = {GOLD}, cols = predicted):")
     short = [c[:5] for c in CATS]
     print("  " + " " * 22 + "".join(f"{s:>6}" for s in short))
     cm = defaultdict(Counter)
@@ -125,18 +128,27 @@ def main():
     ap.add_argument("--import-pass2", help="second-pass worksheet for self-agreement")
     ap.add_argument("--split", default="test", choices=["dev", "test"])
     ap.add_argument("--sources", default="regex_baseline,llm")
+    ap.add_argument("--gold", default="hand",
+                    help="reference label source. 'hand' is the human set; 'ref_claude' is a "
+                         "disclosed strong-model reference used until hand labels exist")
     a = ap.parse_args()
-    con = sqlite3.connect(DB)
+    global GOLD
+    GOLD = a.gold
+    con = sqlite3.connect(DB, timeout=60)
     if a.imp:
         import_worksheet(con, a.imp, "hand")
         publish(con)
     if a.import_pass2:
         import_worksheet(con, a.import_pass2, "hand_pass2")
 
-    n_hand = con.execute("SELECT count(*) FROM labels WHERE source='hand' AND category_primary IS NOT NULL").fetchone()[0]
-    if not n_hand:
-        print("\nno hand labels yet - fill labels/sample_v2_worksheet.csv then --import it")
+    n_gold = con.execute("SELECT count(*) FROM labels WHERE source=? AND category_primary IS NOT NULL", (GOLD,)).fetchone()[0]
+    if not n_gold:
+        print(f"\nno '{GOLD}' labels yet - fill labels/sample_v2_worksheet.csv then --import it")
         return
+    if GOLD != "hand":
+        print(f"\nREFERENCE SET IS '{GOLD}', NOT HUMAN LABELS. Figures below measure agreement with a")
+        print("disclosed strong-model reference labelled from the same title+excerpt against codebook")
+        print("v2. Replace with hand labels (eval_classifier.py --import ...) before publication.")
 
     # Self-agreement ceiling
     g2 = {r[0]: (r[1], r[2]) for r in con.execute(
