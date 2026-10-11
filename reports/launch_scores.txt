@@ -1,0 +1,38 @@
+LAUNCH SCORE vs OUTCOMES - checklist validation step
+items: 1.1 pre-release merge | 1.2 day-0 transformers (native or remote code) | 2.1a/b/c GGUF/FP8/NVFP4 repo <=7d
+
+model                                       kind       1.1 1.2 gguf fp8 nvfp4 score issues /100k dl med dts
+deepseek-ai/DeepSeek-V3                     new_arch     .   x    .   .     .     1     74      5.0     +12
+google/gemma-3-27b-it                       new_arch     x   x    x   x     .     4    175     41.9      +0
+meta-llama/Llama-4-Scout-17B-16E-Instruct   new_arch     x   x    x   x     .     4     80     48.9      +2
+Qwen/Qwen3-8B                               new_arch     x   x    x   x     .     4    168      1.7     -14
+Qwen/Qwen3-32B                              variant      x   .    x   x     .     3     72      2.1      -7
+openai/gpt-oss-20b                          new_arch     .   .    x   .     .     1    314      5.3      +1
+Qwen/Qwen3-VL-4B-Instruct                   new_arch     x   x    x   x     x     5    119      3.8      +0
+moonshotai/Kimi-Linear-48B-A3B-Instruct     new_arch     .   x    .   x     x     3      6      2.8    +190
+allenai/Olmo-3-7B-Think                     new_arch     x   x    x   x     x     5      4      0.8     -48
+deepseek-ai/DeepSeek-V3.2                   new_arch     .   .    x   .     .     1     73      1.6    +101
+nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16  new_arch     x   x    x   x     x     5      8      0.9      +1
+Qwen/Qwen3-Coder-Next                       variant      x   .    x   x     x     4     90     15.2     -63
+zai-org/GLM-5                               new_arch     x   x    x   x     x     5     58      9.9      -0
+Qwen/Qwen3.5-397B-A17B                      variant      x   .    x   x     x     4    252     52.9     +11
+Qwen/Qwen3.5-27B                            new_arch     x   x    x   x     x     5    221     11.8     -14
+google/gemma-4-31B-it                       new_arch     .   x    x   x     x     4    310      3.2      +0
+ibm-granite/granite-4.1-3b                  variant      .   .    .   .     .     0      5      0.9     +23
+google/diffusiongemma-26B-A4B-it            new_arch     .   x    x   x     x     4     13      2.0      +2
+moonshotai/Kimi-K3                          new_arch     .   x    x   x     x     4     97      8.4      +8
+RadixArk/Kimi-K3-DSpark                     draft_pair   x   x    x   x     x     5      0      0.0      -9
+Qwen/Qwen3.8-27B                            variant      .   .    x   x     x     3    436      6.4      +0
+deepseek-ai/DeepSeek-V4.1-Flash             new_arch     x   .    x   x     x     4     91      6.7      +1
+
+correlations (negative rho = higher score, better outcome):
+  score vs issues per 100k downloads, all models: Spearman rho = +0.02  (n=22)
+  score vs median days-to-support, new_arch only: Spearman rho = -0.72  (n=16)
+  score WITHOUT 1.1 vs median days-to-support, new_arch (1.1 is itself a support date): Spearman rho = -0.49  (n=16)
+  quant items only (2.1a-c) vs median days-to-support, new_arch: Spearman rho = -0.47  (n=16)
+  score vs raw issue count, all models: Spearman rho = -0.13  (n=22)
+  quant items only (2.1a-c) vs issues per 100k: Spearman rho = +0.13  (n=22)
+
+  n=22 and the two bands differ in both score and outcome (time trend, metrics §8), so a
+  |rho| below ~0.4 is indistinguishable from noise here. Report it either way.
+  score vs issues per 100k, primary band only: Spearman rho = -0.02  (n=16)

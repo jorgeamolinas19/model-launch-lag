@@ -160,6 +160,8 @@ sample_for_labeling.py      stratified 340, dev/test split assigned at sample ti
 classify_llm.py             any OpenAI-compatible endpoint; prompt + model tag pinned per run
 eval_classifier.py          import hand labels, accuracy/kappa/confusion, publish labels_v2.csv
 metrics_issues.py           issue load, time-to-resolve (KM), top problems + reweighting, hardware
+collect_quants.py           quant-artifact lag per model x format from Hub search (metrics §7)
+score_launches.py           checklist validation: launch score vs days-to-support / issue load
 ```
 
 Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebooks/gpu_batch_runbook.md).
@@ -186,6 +188,10 @@ Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebo
   labels — the same level at which the two labelers agree with each other, which is the
   ceiling this sample can show. Qwen3-4B (Ollama, CPU, `think=false`, prompt v1) dev run
   in progress (36.8% on the first 95).
+- **Checklist validated and pruned.** Quant-artifact lag collected (4,728 repos; GGUF at
+  median day 0 for 22/22 models, community-published). Launch score predicts
+  days-to-support (ρ −0.72; −0.49 non-circular, n=16) and not issue load (ρ ≈ 0, n=22).
+  Six unearned items deleted per the checklist's own rule; three earned.
 - **Q1 adjudication:** 2 pairs remain undetermined (both TensorRT-LLM, allowlist-only
   evidence). Two Ollama dates are Wayback-capture upper bounds (fidelity `coarse`).
   Nemotron-3-Nano's release date resolved to its 2025-12-15 announcement (no public page

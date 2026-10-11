@@ -8,3 +8,5 @@ labels/*_worksheet.csv
 .venv/
 __pycache__/
 .env
+db/launch_lag.sqlite-shm
+db/launch_lag.sqlite-wal

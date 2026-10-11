@@ -313,6 +313,15 @@ quant_lag(model, fmt) = first quant_artifacts.published_at for fmt - release_dat
 
 Tracked formats: `nvfp4`, `mxfp4`, `fp8`, `gguf`, `awq`, `gptq`, `mlx`, `int4`.
 
+**Collected** (`scripts/collect_quants.py`, `reports/quant_lag.txt`): Hub search on the
+model's base name (precision suffix stripped), whole-token match so `DeepSeek-V3` does
+not catch `DeepSeek-V3.2`, format from the repo name, publisher from the org.
+`published_at` is Hub `createdAt` — repo creation, which precedes the public flip (§0) —
+so every lag is an upper bound on speed and small negative values are a `createdAt`
+artifact, not pre-release leaks (Qwen3.8-27B's own FP8 repo is dated the day before its
+weights were public). Experimental siblings that share the base name (`DeepSeek-V3.2-Exp`)
+pass the token filter and show as large negatives; they are left in and not interpreted.
+
 `publisher_kind` splits who closed the gap:
 
 | Value | Meaning |

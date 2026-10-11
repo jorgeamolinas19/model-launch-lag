@@ -1,6 +1,6 @@
 # Open-model launch readiness checklist
 
-**Status: scaffold. Every item below is a hypothesis until it carries evidence.**
+**Status: v1 scored. Items that finished unearned were deleted (listed at the end, with why).**
 
 This is the project's primary deliverable. It is not a leaderboard and not a critique:
 it is the set of conditions that, across the cohort, separated launches that were
@@ -31,17 +31,12 @@ Counterexamples are mandatory — an item with none has not been tested, only as
 |---|---|---|---|---|
 | 1.1 | Architecture implementation upstreamed before public release | Pre-release merges produce negative `days_to_support`; this is the single largest lever on day-0 readiness | **Earned.** 17 of 44 recent-band support events merged before release (39%), vs 8 of 29 historical (28%). Class-A medians are day 0 across transformers/vLLM/SGLang and the effect survives removing architecture-compatible pairs (`report_support.py` sensitivity). Counterexample: Kimi-K3 — all pre-release activity was on the hosted API; weights landed 11 days after announcement and no framework had early access. | 17 |
 | 1.2 | `transformers` support is native, not `trust_remote_code` | Remote-code-only launches gate every downstream framework | **Reframed, not earned as written.** The 5 remote-code models (DeepSeek-V3, Kimi-Linear, Kimi-K3, Kimi-K3-DSpark, Nemotron-3-Nano) are all novel architectures from labs without a same-day native merge; remote code made them runnable on day 0 (`detect_remote_code.py`). Evidence shows remote code is the *mechanism by which novel architectures ship*, not a failure mode. Native support is a second milestone (DeepSeek-V3: +93d). Item rewritten: "ship remote code at launch when native support will lag; file the native PR concurrently." Counterexample needed: a remote-code model whose downstream (vLLM/SGLang) support lagged *because* of it — not yet observed. | 5 |
-| 1.3 | Chat template validated against each target framework's renderer | Template divergence is hypothesized as a top-3 category (metrics §4) | _pending_ | — |
-| 1.4 | Config `architectures` string stable between preview and release | A renamed arch class silently breaks shipped registry entries | _pending_ | — |
 
 ## Phase 2 — Day 0 (launch artifacts)
 
 | # | Condition | Hypothesis | Evidence | n |
 |---|---|---|---|---|
-| 2.1 | A quantized artifact published at launch, not weeks later | Absence drives the `capability_gap`: users attempt fp16 on cards that cannot hold it | **Partially earned.** 10 of the 15 OOM issues (keyword-labelled, all 2,666) that state a VRAM figure attempted a model whose fp16 floor exceeds the card named (§6c). In the hand-labelled sample, quantization is only 9% of issues but has the highest blocker rate of any category with n ≥ 10 (15 of 29; 18 of 22 under the assistant labeler) and the slowest resolution (122-day KM median); NVFP4 is named in 126 first-month issues, MXFP4 in 67. The earlier keyword-based volume claim ("#2 by volume") was an artifact and is withdrawn. Still needed: `quant_artifacts` lag per model to tie *absence of a day-0 quant* to issue volume; n=15 on the VRAM figure is small. Counterexample: gpt-oss-20b shipped MXFP4 natively and still drew 323 first-month issues — volume is not purely a quant-availability effect. | 15/29 |
-| 2.2 | Hardware requirements table published with the weights | Reduces `oom_hardware` volume in week 1 | _weak_: `oom_hardware` is only 3% of kept issues (88); the demand signal is in 2.1, not here. Likely to be merged into 2.1 or deleted. | 88 |
-| 2.3 | Stated minimum framework versions in the model card | `install_build` issues cluster where this is missing | **Earned by magnitude, not yet by mechanism.** `install_build` is the largest category (721, 25% of kept issues; 46% of vLLM's) and the most-dismissed (25% closed not-planned — environment-specific, never reproduced). Mechanism test still needed: compare install/build share for models whose cards state a framework version floor vs those that do not. | 721 |
-| 2.4 | Smallest family member released alongside the largest | Gives the ecosystem something runnable on consumer hardware on day 0 | _pending_ | — |
+| 2.1 | A quantized artifact in the install base's format available within days of launch — and a one-line GPU-generation statement with it | Absence drives the `capability_gap`: users attempt fp16 on cards that cannot hold it, or a format their silicon has no kernel for | **Earned, reframed.** The artifact half is *already solved by the community*: a GGUF repo appears at a median of **day 0** for 22/22 cohort models (19 within a week), FP8 at +1d (21/22), NVFP4 at +5d (21/22) — 4,651 community quant repos vs 27 first-party and 50 hardware-vendor (`collect_quants.py`, metrics §7; Hub `createdAt`, so upper bounds). First-party quants are almost only FP8 (Qwen, Google, zai). NVFP4 lag collapsed over the window: 59–135 days for the 2025 launches (NVIDIA first), 0–5 days for 2026 launches (community first). So the remaining gap is the *statement*, not the artifact: quantization is 9% of hand-labelled issues but the most likely category to block (15/29; 18/22 under the assistant labeler) and the slowest to close (122-day KM median), and the recurring shape is a format whose kernel does not exist on the user's GPU generation. 10 of 15 OOM issues naming a VRAM figure tried a model whose fp16 floor exceeds the card (§6c). Former item 2.2 (hardware table) is folded in here. Counterexample: gpt-oss-20b shipped MXFP4 natively on day 0 and still drew 314 first-month issues — artifact timing does not set issue volume (launch-score validation below: ρ≈0). | 22 models |
 | 2.5 | Tokenizer files complete and self-consistent | `template_tokenizer` is hypothesized as the highest-severity-per-issue category | **Hypothesis revised by data.** Template/tokenizer is 5% of the hand-labelled sample (13% under the assistant labeler — the two disagree most on this boundary) and rarely a blocker (0 of 15 hand, uniform severity; 5 of 41 reference); the highest blocker rates are quantization and missing_feature. Keep the item for frequency, drop the severity claim. | 15 |
 | 2.6 | Draft/target speculative pairing smoke-tested in each framework before the draft is announced | Pairing defects sit between the target's code path and the speculative subsystem and have no single owner | **Earned.** `speculative_decoding` has the highest open rate of any category (47%; 92-day KM median — second only to quantization) under the hand labels and was the slowest outright under the assistant labeler (110 days, 63% open); 4 of 19 are blockers by hand, 8 by the reference; recurring shapes: draft class ignored, `spec_info None` under disaggregation, aux hidden states not emitted for a new target arch. Kimi-K3-DSpark out-downloads most full models in the cohort, so this is a mainstream launch concern. Counterexample: Qwen3.8-27B's DFlash2 drafter was served in llama.cpp at ~10x SGLang's eager speed, so pairing *can* land fast when the target is already well-supported. | 19 |
 
@@ -49,20 +44,46 @@ Counterexamples are mandatory — an item with none has not been tested, only as
 
 | # | Condition | Hypothesis | Evidence | n |
 |---|---|---|---|---|
-| 3.1 | A single canonical place to report model-specific issues | Fragmentation across 6 repos duplicates triage | _pending_ | — |
-| 3.2 | Known-limitations section updated as issues land | Reduces duplicate filing | _pending_ | — |
-| 3.3 | Variant-specific gaps stated explicitly | "Base works, VL does not" surfaces repeatedly as `missing_feature` | _pending_ | — |
+| 3.1 | Give runtime crashes a label and a per-model first-30-day crash view | The largest bucket (`other`, 36% of the hand-labelled sample) is invisible to category triage because no taxonomy owns "the process died" | **Earned.** 113 of 311 hand-labelled issues are crashes/hangs/asserts with no more specific cause (86 under the assistant labeler — the two agree this is the biggest bucket). Non-CUDA backends (ROCm, Vulkan, Metal, SYCL, NPU) are over-represented in them relative to their user share (memo, Rec 3). Counterexample: none needed — this is a taxonomy fix, not a launch condition; it earns its place by size. | 113 |
 
 ---
 
-## Scoring a launch
+## Scoring a launch — the validation step
 
-Once items are earned, each cohort model is scored against the checklist and the score
-is correlated with observed `days_to_support` and `issue_load`. **This is the
-validation step, not decoration:** if the score does not correlate, the checklist is
-wrong and this document gets rewritten rather than published. Report the correlation
-even when it is weak, with n and a confidence interval — a checklist that admits its
-own predictive limits is usable; one that hides them is not.
+Each cohort model was scored on the five data-decidable items (`score_launches.py`,
+`reports/launch_scores.txt`): 1.1 pre-release merge, 1.2 day-0 `transformers`
+(native or remote code), and 2.1 GGUF / FP8 / NVFP4 repo within 7 days. Spearman ρ,
+n beside every figure; with n=22 and two time bands, |ρ| < 0.4 is noise.
+
+| score vs … | ρ | n |
+|---|---|---|
+| median signed days-to-support (new_arch) | **−0.72** | 16 |
+| same, dropping item 1.1 (which is itself a support date) | **−0.49** | 16 |
+| quant items only (2.1a–c) vs days-to-support | −0.47 | 16 |
+| issues per 100k downloads (all models) | +0.02 | 22 |
+| issues per 100k downloads (primary band only) | −0.02 | 16 |
+| raw issue count | −0.13 | 22 |
+
+**Reading.** The checklist predicts *how fast frameworks pick a model up* — the
+non-circular version still holds at ρ ≈ −0.5 — and predicts *nothing* about how many
+problems users file. That is the honest scope of this document: its items are
+coordination conditions for day-0 runnability, not levers on issue volume, which tracks
+user-base size (Qwen3.8-27B: 436 issues, perfect quant coverage, day-0 support
+everywhere). A reader who wanted "fewer issues" should look at Rec 3 (crash triage)
+rather than at any item here. No confidence interval is given: at n=16 a bootstrap CI
+on ρ spans roughly ±0.4 and would only restate the sentence above.
+
+## Deleted, not softened
+
+Per the evidence rule, these finished the analysis unearned and are removed rather than
+kept as advice:
+
+- *1.3 chat template validated per framework* — `template_tokenizer` is 5% of hand-labelled issues (13% under the assistant labeler) and never a blocker in either set; the two labelers disagree most on exactly this boundary, so no claim survives.
+- *1.4 stable `architectures` string* — no cohort launch renamed its architecture class between preview and release; untestable here.
+- *2.2 hardware requirements table* — folded into 2.1.
+- *2.3 stated minimum framework versions* — the "largest category (25%)" figure that earned it was a keyword artifact (environment dumps in issue templates); by hand labels `install_build` is 3% (8 issues). Withdrawn with the ranking.
+- *2.4 smallest family member alongside largest* — 4 of 22 cohort launches shipped a sub-10B sibling on day 0; no outcome measured here separates them.
+- *3.2 known-limitations updated as issues land*, *3.3 variant gaps stated* — no evidence slot could be filled from issue data; they describe model-card hygiene, which this study did not collect.
 
 ## Framing
 

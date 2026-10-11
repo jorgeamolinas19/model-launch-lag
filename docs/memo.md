@@ -280,7 +280,20 @@ missing on RTX 5090). Hardware mined from all 2,856 issues shows the split that 
 this bite: SGLang/vLLM users are 58–73% datacenter, llama.cpp/Ollama users 48–69%
 consumer. NVFP4 appears in 126 first-month issues and MXFP4 in 67. A model card line
 of the form *"NVFP4: Blackwell (SM100+) only; FP8: Hopper+; GGUF Q4_K_M: any"* would
-convert most of these from a traceback into a lookup. Checklist items 2.1 / 2.2.
+convert most of these from a traceback into a lookup. Checklist item 2.1.
+
+The *artifact* half of this is already handled — by the community, not the vendor.
+Across the 22 models, 4,728 quant repos on the Hub (`collect_quants.py`, metrics §7):
+a GGUF appears at a median of **day 0** (22/22 models; 19 within a week), FP8 at +1
+day (21/22), NVFP4 at +5 days (21/22). 4,651 of those repos are community-published,
+27 first-party, 50 from hardware vendors; first-party quants are almost exclusively
+FP8. The one format whose timing changed over the window is NVFP4: 59–135 days for the
+2025 launches, with NVIDIA's own repos first, versus 0–5 days for 2026 launches, with
+the community first. Dates are Hub `createdAt` (repo creation, often before the public
+flip — the same limitation as §0), so lags are upper bounds and the handful of negative
+values are not pre-release leaks. Read beside the framework support dates: where a
+day-0 NVFP4 repo exists but the user's card has no kernel for it, the gap is neither
+the artifact nor the framework — it is the missing sentence on the model card.
 
 **2. Treat speculative-decoding pairing as part of launch readiness, not a follow-up.**
 Draft models now launch alongside targets (Kimi-K3-DSpark has more downloads than most
@@ -304,6 +317,19 @@ owns them, and they are invisible in any category-based triage. Two cheap moves:
 over-represented in crashes relative to their user share; (b) a crash-only dashboard
 per model in the first 30 days. The first makes the problem measurable; the second makes
 it a launch metric.
+
+### Does the checklist predict anything?
+
+Each model was scored on the five items the data can decide — pre-release merge, day-0
+`transformers` (native or remote code), and GGUF / FP8 / NVFP4 repo within 7 days
+(`score_launches.py`). The score predicts **median days-to-support** (Spearman ρ −0.72,
+n=16 new-arch models; −0.49 once the pre-release-merge item, which is itself a support
+date, is dropped) and predicts **nothing about issue load** (ρ +0.02 against issues per
+100k downloads, n=22; −0.02 within the 2026 band alone). The checklist is therefore a
+list of day-0 runnability conditions, not a lever on first-month issue volume — which
+tracks user-base size (Qwen3.8-27B: perfect quant coverage, day-0 support everywhere,
+436 issues). Items that ended the analysis unearned were deleted from the checklist, as
+its own evidence rule requires; the deletions and reasons are listed in the document.
 
 ## Classifier
 

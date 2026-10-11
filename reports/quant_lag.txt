@@ -1,0 +1,42 @@
+QUANTIZATION-ARTIFACT LAG (metrics §7) - snapshot 2026-10-10
+first quant repo per format, days after weights-public release. '.' = none found.
+suffix: f=first-party h=hardware-vendor c=community.  Hub search is keyword-based: upper bounds.
+
+model                                           gguf     mlx     awq    gptq    int4     fp8   mxfp4   nvfp4
+deepseek-ai/DeepSeek-V3                         +8 c   +11 c    +7 c    +7 c    +2 c   +51 c  +442 c  +129 h
+google/gemma-3-27b-it                           +0 c    +0 c    +9 c    +2 c    +0 c    +1 c  +230 c  +110 c
+meta-llama/Llama-4-Scout-17B-16E-Instruct       +2 c    +1 c    +7 c  +187 c    +0 c    +5 c   +44 c    +9 h
+Qwen/Qwen3-8B                                   +1 c    +1 c    +6 f    +3 c    +1 c    +1 f  +231 c  +135 h
+Qwen/Qwen3-32B                                  +1 c    +1 c    +2 c    +2 c    +1 c    +1 f   +88 c   +59 c
+openai/gpt-oss-20b                              -2 c    +1 c       .  +330 c    +1 c   +17 h    +1 c   +27 c
+Qwen/Qwen3-VL-4B-Instruct                       +3 c    +3 c    +3 c   +19 c    +3 c    +0 f  +105 c    +6 c
+moonshotai/Kimi-Linear-48B-A3B-Instruct        +49 c    +1 c    +0 c   +33 c    +6 c    +1 c    +8 c    +1 c
+allenai/Olmo-3-7B-Think                         +0 c    +0 c    +9 c    +7 c    +1 c    +7 c  +164 c    +2 c
+deepseek-ai/DeepSeek-V3.2                       +4 c    +0 c   -61 c       .    +3 c   +44 c   +18 c   +29 h
+nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16      +0 c    +0 c   +47 c       .  +107 c    -9 f    +1 c    +1 c
+Qwen/Qwen3-Coder-Next                           +3 f    +3 c    +4 c    +9 c    +4 c    +2 f    +3 h    +5 c
+zai-org/GLM-5                                   -1 c    +1 c   +16 c       .   +14 h    +0 f    +1 h    +5 c
+Qwen/Qwen3.5-397B-A17B                          +0 c    +0 c    +2 c   +15 f    +0 c    +2 f   +11 c    +0 c
+Qwen/Qwen3.5-27B                                +0 c    +0 c    +0 c    +4 c    +2 c    +0 c    +1 c    +0 c
+google/gemma-4-31B-it                           -1 c    +0 c    +0 c    +2 c    +0 c    +0 c    +0 c    +0 c
+ibm-granite/granite-4.1-3b                      +9 c   +24 c   +29 c  +117 c   +40 c   +14 f   +24 c   +24 c
+google/diffusiongemma-26B-A4B-it                +0 c    +0 c    +4 c   +15 c    +0 c    -1 c    +0 c    -1 c
+moonshotai/Kimi-K3                              +0 c    +2 c       .   +62 c    +0 c    +0 c    +0 c    +0 c
+RadixArk/Kimi-K3-DSpark                         +5 c       .       .       .       .    +7 c   +40 c    +7 c
+Qwen/Qwen3.8-27B                                -8 c    +0 c    +0 c    +0 c    -1 c    -9 c    +0 c    -8 c
+deepseek-ai/DeepSeek-V4.1-Flash                 +0 c    +0 c       .       .    +1 c    +0 c    +4 h    +0 c
+
+per format: models with any repo / median lag / within 7 days / first-party first
+  gguf     22/22  median    +0d   <=7d: 19   first-party first: 1
+  mlx      21/22  median    +1d   <=7d: 19   first-party first: 0
+  awq      18/22  median    +4d   <=7d: 13   first-party first: 1
+  gptq     17/22  median    +9d   <=7d:  8   first-party first: 1
+  int4     21/22  median    +1d   <=7d: 18   first-party first: 0
+  fp8      22/22  median    +1d   <=7d: 18   first-party first: 8
+  mxfp4    22/22  median   +10d   <=7d: 10   first-party first: 0
+  nvfp4    22/22  median    +5d   <=7d: 14   first-party first: 0
+
+all quant repos by publisher: community 4695 repos / 78,961,787 downloads; hardware_vendor 50 repos / 2,686,688 downloads; first_party 29 repos / 13,372,918 downloads
+
+  Artifact availability is not framework support: a day-0 NVFP4 repo needs a kernel for
+  the user's GPU generation. Read beside the framework support dates (report_support.py).
