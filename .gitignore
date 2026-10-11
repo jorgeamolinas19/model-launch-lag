@@ -1,5 +1,8 @@
 # Raw API snapshots: gzipped JSON, large, regenerable. Keep locally, don't commit.
 raw/**/*.json.gz
+# Hand-label worksheets carry issue excerpts (other people's text) - local only.
+# The published label set is labels/*.csv WITHOUT excerpts.
+labels/*_worksheet.csv
 *.sqlite
 *.sqlite-journal
 .venv/
