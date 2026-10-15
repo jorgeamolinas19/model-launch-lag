@@ -167,6 +167,7 @@ collect_quants.py           quant-artifact lag per model x format from Hub searc
 score_launches.py           checklist validation: launch score vs days-to-support / issue load
 bench_table.py              classifier benchmark vs hand labels: accuracy, coverage, issues/min, RAM
 selfcheck.py                assert-based check of the non-trivial helpers (run it after edits)
+check_docs.py               recomputes headline figures from DB/reports; fails if a doc has drifted
 ```
 
 Optional GPU extension of the benchmark: [notebooks/gpu_batch_runbook.md](notebooks/gpu_batch_runbook.md).
