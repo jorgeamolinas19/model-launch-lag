@@ -103,7 +103,7 @@ native date alone misrepresents the developer experience; both are reported.
   file / conversion half only). Their numbers are real but not comparable to class A.
 - 2 pairs remain `undetermined` (TensorRT-LLM × Olmo-3 and × granite-4.1: the
   architecture appears only in an allowlist file, with no implementation file or
-  model-titled PR). 16 pairs were adjudicated by the assistant from API-verified PR
+  model-titled PR). 17 pairs were adjudicated by the assistant from API-verified PR
   evidence and are marked `claude-ref` pending a human spot-check; 5 negative offsets
   were adjudicated by historical evidence rather than a threshold.
 - Two Ollama dates are **upper bounds** from the earliest Wayback Machine capture of the
@@ -160,7 +160,7 @@ accepted; a mis-attributed gold label is worse than a missing one.
 | TensorRT-LLM | 46 | 2% |
 
 Issue volume tracks user-base size and reporting culture far more than launch quality:
-the model with the most first-month issues (Qwen3.8-27B, 487) had day-0 support
+the model with the most first-month issues (Qwen3.8-27B, 436) had day-0 support
 everywhere. Per-download normalisation does not rescue this — downloads are in the
 millions and the Hub figure is a rolling 30-day count at *snapshot*, not at release+30.
 Raw counts are published; cross-framework comparison of them is not.
@@ -255,24 +255,24 @@ framework's largest bucket is `other`.
 
 ### Hardware
 
-Hardware was extractable from 63% of kept issues — a lower bound on what people ran.
-Where a GPU is named: 449 datacenter, 395 consumer, 119 workstation, 66 Apple Silicon.
+Hardware was extractable from 63% of the 2,666 kept issues (1,684) — a lower bound on what people ran.
+Where a GPU is named: 414 datacenter, 377 consumer, 109 workstation, 64 Apple Silicon.
 The split by framework is stark and explains much of the category mix above:
 
 | framework | datacenter | consumer | Apple Silicon |
 |---|---|---|---|
-| SGLang | 73% | 12% | — |
-| vLLM | 58% | 25% | — |
-| TensorRT-LLM | 57% | 29% | — |
+| SGLang | 71% | 13% | — |
+| vLLM | 58% | 26% | — |
+| TensorRT-LLM | 69% | 19% | — |
 | transformers | 46% | 41% | 8% |
-| Ollama | 15% | 48% | 32% |
-| llama.cpp | 13% | 69% | 7% |
+| Ollama | 15% | 49% | 33% |
+| llama.cpp | 13% | 69% | 6% |
 
-Quant formats named in issues: GGUF 443, FP8 264, **NVFP4 126**, MXFP4 67, AWQ 51, MLX 31.
+Quant formats named in issues: GGUF 423, FP8 233, **NVFP4 111**, MXFP4 62, AWQ 49, MLX 31.
 NVFP4 is the third most-discussed format in first-month issues — a 2026 phenomenon with
 no analogue in the historical band.
 
-**Capability gap (§6c):** of 88 OOM issues, 15 state their card's VRAM; **10 of those 15
+**Capability gap (§6c):** of 130 keyword-labelled OOM issues, 26 state their card's VRAM; **16 of those 26 (62%)
 attempted a model whose fp16 floor exceeds the card they named.** Small n, but the
 direction is unambiguous: people try to run what they want on what they have, and the
 answer is a quantized artifact on day 0, not a better error message.
@@ -290,9 +290,9 @@ blocker rate of any category with n ≥ 10 — 15 of 29 issues (18 of 22 under t
 reference labeler) — and the slowest resolution (122-day KM median), and the failure mode is
 consistent: a format whose kernels exist only on newer silicon (`fp8e4nv not supported`
 on A10; NVFP4 on Ampere; MXFP4 persistent-kernel requirement on Blackwell; `machete`
-missing on RTX 5090). Hardware mined from all 2,856 issues shows the split that makes
-this bite: SGLang/vLLM users are 58–73% datacenter, llama.cpp/Ollama users 48–69%
-consumer. NVFP4 appears in 126 first-month issues and MXFP4 in 67. A model card line
+missing on RTX 5090). Hardware mined from all 2,666 kept issues shows the split that makes
+this bite: SGLang/vLLM users are 58–71% datacenter, llama.cpp/Ollama users 49–69%
+consumer. NVFP4 appears in 111 first-month issues and MXFP4 in 62. A model card line
 of the form *"NVFP4: Blackwell (SM100+) only; FP8: Hopper+; GGUF Q4_K_M: any"* would
 convert most of these from a traceback into a lookup. Checklist item 2.1.
 

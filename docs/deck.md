@@ -67,12 +67,12 @@ materially both are shown.
 ## 9. Hardware: two ecosystems filing into the same trackers
 | | datacenter | consumer | Apple Silicon |
 |---|---|---|---|
-| SGLang | 73% | 12% | — |
-| vLLM | 58% | 25% | — |
-| llama.cpp | 13% | 69% | 7% |
-| Ollama | 15% | 48% | 32% |
-- NVFP4 is the 3rd most-named quant format in first-month issues (126), after GGUF and FP8
-- 10 of 15 OOM reports with a VRAM figure tried a model whose fp16 floor exceeded the card
+| SGLang | 71% | 13% | — |
+| vLLM | 58% | 26% | — |
+| llama.cpp | 13% | 69% | 6% |
+| Ollama | 15% | 49% | 33% |
+- NVFP4 is the 3rd most-named quant format in first-month issues (111), after GGUF and FP8
+- 16 of 26 OOM reports with a VRAM figure tried a model whose fp16 floor exceeded the card
 *Source: reports/metrics_regex.txt §6 (hardware mining needs no labels)*
 
 ## 10. Three recommendations for a GPU platform team
@@ -86,7 +86,7 @@ materially both are shown.
 
 ### Backup: limitations in one slide
 - Ollama/llama.cpp have no exact-fidelity support dates by construction; TensorRT-LLM issue volume is a visibility artifact (NVIDIA channels)
-- 2 support pairs undetermined; 16 adjudicated from API-verified PRs by the assistant, pending human spot-check; 2 Ollama dates are Wayback-capture upper bounds
+- 2 support pairs undetermined; 17 adjudicated from API-verified PRs by the assistant, pending human spot-check; 2 Ollama dates are Wayback-capture upper bounds
 - Category figures: one human labeler, one pass, no self-agreement κ yet; a second (assistant) labeler agrees 57% / κ 0.49 on category and κ 0.25 on severity; hand severity is uniform per category in 3 categories (not interpreted); n=311 of 2,666
 - The cross-model title guard trades recall for precision: a few issues whose title names a sibling generation but whose body tests the attributed model are lost
 - Downloads normalizer is at snapshot, not release+30; Hub downloads ≠ framework users
