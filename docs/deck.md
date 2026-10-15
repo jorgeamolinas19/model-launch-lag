@@ -86,7 +86,7 @@ materially both are shown.
 
 ### Backup: limitations in one slide
 - Ollama/llama.cpp have no exact-fidelity support dates by construction; TensorRT-LLM issue volume is a visibility artifact (NVIDIA channels)
-- 2 support pairs undetermined; 17 adjudicated from API-verified PRs by the assistant, all re-verified mechanically (19/19 incl. 2 dates), 4 judgment calls pending a human read; 2 Ollama dates are Wayback-capture upper bounds
+- 2 support pairs undetermined; 17 adjudicated from API-verified PRs by the assistant, all re-verified mechanically (19/19 incl. 2 dates) and author-reviewed; 2 Ollama dates are Wayback-capture upper bounds
 - Category figures: one human labeler, one pass, no self-agreement κ yet; a second (assistant) labeler agrees 57% / κ 0.49 on category and κ 0.25 on severity; hand severity is uniform per category in 3 categories (not interpreted); n=311 of 2,666
 - The cross-model title guard trades recall for precision: a few issues whose title names a sibling generation but whose body tests the attributed model are lost
 - Downloads normalizer is at snapshot, not release+30; Hub downloads ≠ framework users

@@ -215,9 +215,10 @@ Optional GPU extension of the benchmark: [notebooks/gpu_batch_runbook.md](notebo
   "format X unsupported for model Y". See the gaps section in
   [docs/codebook-v2.md](docs/codebook-v2.md).
 - **Open human steps:** re-label 50 dev rows ≥5 days later for the self-agreement
-  reference (`eval_classifier.py --import-pass2`); read the 4 judgment calls among the 17 assistant-adjudicated
-  support pairs (all 17 + 2 dates mechanically re-verified, 19/19 OK) in `support_events_hand.csv` and the 7 hand-resolved release dates in
-  `release_dates_hand.csv` (2 support pairs remain undetermined).
+  reference (`eval_classifier.py --import-pass2`). The 17 assistant-adjudicated support
+  pairs (`support_events_hand.csv`) and the assistant-touched release dates
+  (`release_dates_hand.csv`) are mechanically re-verified (19/19) and author-reviewed;
+  2 support pairs remain undetermined.
 
 ### Running the classifier locally (no GPU)
 
