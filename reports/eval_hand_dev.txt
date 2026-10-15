@@ -32,6 +32,35 @@
 
   (15 sampled dev issue(s) excluded after sampling by the cleaning rules; not scored)
 
+=== ref_claude  vs hand (dev, n=121) ===
+  category accuracy 56.2%   kappa 0.49
+  severity accuracy 54.5%   kappa 0.28
+
+  category                 n   prec    rec
+  missing_feature         12    45%    83%
+  install_build            6    29%    33%  (n<10: unreliable)
+  template_tokenizer       5    23%    60%  (n<10: unreliable)
+  quantization            14    89%    57%
+  speculative_decoding     3    43%   100%  (n<10: unreliable)
+  oom_hardware             4    40%    50%  (n<10: unreliable)
+  correctness             17    58%    65%
+  performance             18    78%    78%
+  other                   42    71%    36%
+
+  confusion (rows = hand, cols = predicted):
+                         missi insta templ quant specu oom_h corre perfo other
+  missing_feature           10     0     1     0     0     0     1     0     0
+  install_build              0     2     1     0     0     0     0     0     3
+  template_tokenizer         1     0     3     0     0     0     1     0     0
+  quantization               2     0     0     8     0     0     2     1     1
+  speculative_decoding       0     0     0     0     3     0     0     0     0
+  oom_hardware               0     0     0     0     1     2     0     0     1
+  correctness                1     0     2     0     0     1    11     1     1
+  performance                0     0     0     0     2     0     2    14     0
+  other                      8     5     6     1     1     2     2     2    15
+
+  (15 sampled dev issue(s) excluded after sampling by the cleaning rules; not scored)
+
 === llm  vs hand (dev, n=118) ===
   category accuracy 34.7%   kappa 0.28
   severity accuracy 53.4%   kappa 0.24
@@ -58,3 +87,59 @@
   correctness                7     1     5     0     0     1     1     0     0
   performance                4     0     0     0     1     0     0    11     2
   other                     19     6     6     2     1     5     0     0     2
+
+  (15 sampled dev issue(s) excluded after sampling by the cleaning rules; not scored)
+
+=== llm:qwen3-1.7b  vs hand (dev, n=116) ===
+  category accuracy 26.7%   kappa 0.18
+  severity accuracy 48.3%   kappa 0.13
+
+  category                 n   prec    rec
+  missing_feature          9    24%    44%  (n<10: unreliable)
+  install_build            6    38%    50%  (n<10: unreliable)
+  template_tokenizer       4    11%    75%  (n<10: unreliable)
+  quantization            14    33%     7%
+  speculative_decoding     3    25%    33%  (n<10: unreliable)
+  oom_hardware             4    40%    50%  (n<10: unreliable)
+  correctness             17    50%     6%
+  performance             18    36%    89%
+  other                   41     0%     0%
+
+  confusion (rows = hand, cols = predicted):
+                         missi insta templ quant specu oom_h corre perfo other
+  missing_feature            4     0     2     0     0     0     0     0     3
+  install_build              0     3     1     0     0     0     0     2     0
+  template_tokenizer         1     0     3     0     0     0     0     0     0
+  quantization               6     2     0     1     0     0     0     5     0
+  speculative_decoding       0     0     1     0     1     0     0     1     0
+  oom_hardware               0     0     0     0     1     2     0     1     0
+  correctness                1     0     7     0     0     1     1     6     1
+  performance                0     0     0     1     1     0     0    16     0
+  other                      5     3    14     1     1     2     1    14     0
+
+  (15 sampled dev issue(s) excluded after sampling by the cleaning rules; not scored)
+
+=== llm:gemma3-1b  vs hand (dev, n=75) ===
+  category accuracy 14.7%   kappa 0.02
+  severity accuracy 30.7%   kappa 0.02
+
+  category                 n   prec    rec
+  missing_feature          8    11%    88%  (n<10: unreliable)
+  install_build            4     0%     0%  (n<10: unreliable)
+  template_tokenizer       3     0%     0%  (n<10: unreliable)
+  quantization            10     0%     0%
+  speculative_decoding     3     0%     0%  (n<10: unreliable)
+  correctness             12     0%     0%
+  performance              9    67%    22%  (n<10: unreliable)
+  other                   26    33%     8%
+
+  confusion (rows = hand, cols = predicted):
+                         missi insta templ quant specu oom_h corre perfo other
+  missing_feature            7     0     0     0     0     0     0     0     1
+  install_build              4     0     0     0     0     0     0     0     0
+  template_tokenizer         3     0     0     0     0     0     0     0     0
+  quantization               9     0     0     0     0     0     0     1     0
+  speculative_decoding       3     0     0     0     0     0     0     0     0
+  correctness               11     0     0     0     0     0     0     0     1
+  performance                5     0     0     0     0     0     0     2     2
+  other                     24     0     0     0     0     0     0     0     2

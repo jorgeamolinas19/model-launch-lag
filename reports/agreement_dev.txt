@@ -1,26 +1,26 @@
-regex_baseline vs llm: n=132
-  category agreement 32.6%  kappa 0.25
-  severity agreement 50.0%  kappa 0.10
+regex_baseline vs llm: n=322
+  category agreement 38.2%  kappa 0.30
+  severity agreement 53.1%  kappa 0.13
 
   category               regex_ba      llm
-  missing_feature              12       61
-  install_build                 9       12
-  template_tokenizer           15       17
-  quantization                 23        8
-  speculative_decoding         10        6
-  oom_hardware                  9        8
-  correctness                  14        1
-  performance                  16       13
-  other                        24        6
+  missing_feature              36      145
+  install_build                18       30
+  template_tokenizer           48       47
+  quantization                 49       18
+  speculative_decoding         25       14
+  oom_hardware                 30       29
+  correctness                  23        2
+  performance                  35       23
+  other                        58       14
 
   largest disagreements (A -> B):
-    other                -> missing_feature      13
-    quantization         -> missing_feature      10
-    template_tokenizer   -> missing_feature      8
-    correctness          -> missing_feature      7
-    other                -> template_tokenizer   5
-    correctness          -> template_tokenizer   5
-    install_build        -> missing_feature      4
-    speculative_decoding -> missing_feature      4
+    other                -> missing_feature      31
+    template_tokenizer   -> missing_feature      21
+    quantization         -> missing_feature      19
+    speculative_decoding -> missing_feature      14
+    correctness          -> missing_feature      13
+    other                -> install_build        9
+    other                -> template_tokenizer   9
+    oom_hardware         -> missing_feature      7
 
-  run notes: http://localhost:11434/v1 | 132 labelled, 0 unparseable, 22865s, 188264 in / 7030 out tokens
+  run notes: http://localhost:11434/v1 | 0 labelled, 0 unparseable, 70s, 0 in / 0 out tokens

@@ -1,0 +1,12 @@
+CLASSIFIER BENCHMARK - dev split vs hand labels (n=121), codebook v2
+
+classifier           labelled  cat acc     κ   acc*  sev acc  sev κ  issues/min  peak RAM
+regex_baseline       121/121     55.4%  0.48  55.4%    54.5%   0.29     instant         0
+ref_claude           121/121     56.2%  0.49  56.2%    54.5%   0.28           —         0
+llm                  118/121     34.7%  0.28  33.9%    53.4%   0.24         1.5    3.2 GB
+llm:qwen3-1.7b       116/121     26.7%  0.18  25.6%    48.3%   0.13         2.0    2.3 GB
+llm:gemma3-1b         75/121     14.7%  0.02   9.1%    30.7%   0.02         4.0    1.2 GB
+
+ acc* = parse failures counted wrong (denominator = all scored issues).
+ Throughput and RAM are a 2018 Intel MacBook (4-core i5, 8 GB, CPU only, Ollama Q4).
+ The labelers agree with each other 57% / κ 0.49: no classifier can be shown to beat that here.

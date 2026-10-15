@@ -1,4 +1,4 @@
-QUANTIZATION-ARTIFACT LAG (metrics §7) - snapshot 2026-10-10
+QUANTIZATION-ARTIFACT LAG (metrics §7) - snapshot 2026-10-15
 first quant repo per format, days after weights-public release. '.' = none found.
 suffix: f=first-party h=hardware-vendor c=community.  Hub search is keyword-based: upper bounds.
 

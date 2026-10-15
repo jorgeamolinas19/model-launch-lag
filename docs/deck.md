@@ -45,7 +45,8 @@ materially both are shown.
 ## 6. What breaks: the keyword ranking was wrong — and labelers agree only 57%
 - Naive keyword baseline: **36% agreement (κ 0.28)** with either labeler; it over-predicted `install_build` ~5x from environment dumps in issue templates → earlier ranking withdrawn
 - Tuned keyword baseline vs hand labels: **57% (κ 0.50)**. Assistant labeler vs hand labels: **57% (κ 0.49)**. Same number — the label noise *is* the ceiling on this sample
-- Qwen3-4B on CPU: **35%** vs hand labels but **51%** vs the assistant labeler — the two models converge on each other, not on the human
+- Open models on CPU (test, vs hand): Gemma-3-1B **17%** (invents categories on 45% of issues) · Qwen3-1.7B **24%** · Qwen3-4B **32%** — rising with size, all below keywords
+- Models agree with the assistant labeler more than the human (Qwen3-4B: 48% vs 33%, all labelled issues)
 - Hand labels (n=311): other 36% · correctness 13% · performance 11% · missing_feature 10% · quantization 9% · OOM 6% · spec-decode 6% · template 5% · install 3%
 *Source: reports/eval_hand_test.txt, reports/agreement_hand_vs_ref_claude.txt, reports/metrics_hand.txt*
 

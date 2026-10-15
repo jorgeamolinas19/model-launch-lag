@@ -24,10 +24,12 @@ Question 4 is the deliverable. Questions 1–3 are how it gets earned.
 
 ## Scope (v1)
 
-**18 models × 6 frameworks** — vLLM, SGLang, llama.cpp, Ollama, TensorRT-LLM, and
+**22 models × 6 frameworks** — vLLM, SGLang, llama.cpp, Ollama, TensorRT-LLM, and
 `transformers` — defined in [cohort.toml](cohort.toml) and weighted toward
 **architecture novelty** rather than popularity, because novelty is where
-days-to-support carries signal. Twelve new-architecture cases, six variant controls.
+days-to-support carries signal. 16 new-architecture cases, 5 variant controls and one
+draft/target pair; 16 launches from the last twelve months, 6 earlier as a time-trend
+control.
 
 `transformers` is included because it is the upstream gate: whether a model ships with
 a merged modeling file or only `trust_remote_code` largely determines when everyone
@@ -42,7 +44,7 @@ written evidence rule, hand-verify every one, and record never-supported pairs a
 censored rather than missing. Collect first-30-day issues, match them to models through
 an alias table, exclude bots and passing mentions, then classify category and severity
 against a frozen codebook using a local open model — evaluated against hand labels,
-with two free baselines and a published self-agreement reference (the labeler's own consistency — a reference point, not a hard ceiling). Mine reported GPUs and
+with a keyword baseline, a second (assistant) labeler, and a self-agreement reference still to come (the labeler's own consistency — a reference point, not a hard ceiling). Mine reported GPUs and
 VRAM from issue bodies to get the hardware picture. Then score each launch against the
 readiness checklist and test whether the score predicts the observed outcome.
 
@@ -76,25 +78,25 @@ Read these before writing a collector or labeling an issue. They are the project
 
 ## Compute plan
 
-Dev machine is a 2018 Intel MacBook — 4-core i5-8257U, 8 GB RAM, no GPU. That rules out
-serving a model locally, so the classifier splits across free tiers:
+Dev machine is a 2018 Intel MacBook — 4-core i5-8257U, 8 GB RAM, no GPU. Everything
+ran on it, at $0:
 
-| Stage | Where | Produces |
+| Stage | Where | Produced |
 |---|---|---|
-| Prompt iteration (~50 `dev` issues, many passes) | Local Ollama, 3–4B quantized, CPU | Pipeline correctness. Slow, free. |
-| Full batch + throughput/VRAM measurement | **Kaggle Notebooks** — 30 GPU-h/week, 12-h sessions | Final labels and the real memory/throughput figures |
-| Third benchmark data point | **NIM-hosted endpoint**, free starter credits | A managed-inference comparison against self-hosted |
-| Baselines | Local CPU | Regex/keyword classifier; the repos' own maintainer labels |
+| Classifier benchmark — Gemma-3-1B, Qwen3-1.7B, Qwen3-4B on the 311 hand-labelled issues | Local Ollama (Q4), CPU | Accuracy, κ, schema coverage, issues/min, peak RAM (`bench_table.py`) |
+| Baselines | Local CPU | Keyword rules-v1/v2; a second (assistant) labeler |
+| *Optional:* 8–9B models on GPU | Kaggle Notebooks, 2×T4 | Runbook with tested setup cells; not needed for the conclusion |
 
-Total cost: **$0.** The two baselines are what make the accuracy number interpretable —
-if regex scores 70% and an 8B model scores 74%, that is itself the finding.
+The baseline is what makes the accuracy number interpretable, and here it decided the
+result: the keyword ruleset (57%, κ 0.50) beat every CPU-sized model, and the two human/
+assistant labelers agree with each other at the same 57%.
 
 ## Deliverables
 
 **v1:** the readiness checklist with evidence; a memo written as a publishable blog
 post; a ~10-slide deck; one overview table (signed days-to-support with coverage and
 censoring); hand-verified support events; ~300 labeled issues published as a dataset;
-the classifier benchmark across 2–3 models with accuracy, throughput, and VRAM.
+the classifier benchmark across 3 models with accuracy, throughput, and peak memory.
 
 **Deferred:** a multi-page site, per-framework pages, Kaplan–Meier survival curves. The
 blog post and deck carry the findings; a site is decoration.
@@ -156,15 +158,17 @@ report_support.py           KM medians beside coverage + censoring; evidence-cla
 collect_issues.py           first-30-day issues per (model, framework), alias-matched
 clean_issues.py             codebook exclusions, auditable reason codes
 baseline_regex.py           keyword precedence-ladder baseline (so LLM accuracy means something)
-sample_for_labeling.py      stratified 340, dev/test split assigned at sample time
+sample_for_labeling.py      stratified 339, dev/test split assigned at sample time
 classify_llm.py             any OpenAI-compatible endpoint; prompt + model tag pinned per run
 eval_classifier.py          import hand labels, accuracy/kappa/confusion, publish labels_v2.csv
 metrics_issues.py           issue load, time-to-resolve (KM), top problems + reweighting, hardware
 collect_quants.py           quant-artifact lag per model x format from Hub search (metrics §7)
 score_launches.py           checklist validation: launch score vs days-to-support / issue load
+bench_table.py              classifier benchmark vs hand labels: accuracy, coverage, issues/min, RAM
+selfcheck.py                assert-based check of the non-trivial helpers (run it after edits)
 ```
 
-Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebooks/gpu_batch_runbook.md).
+Optional GPU extension of the benchmark: [notebooks/gpu_batch_runbook.md](notebooks/gpu_batch_runbook.md).
 
 ## Status
 
@@ -184,10 +188,13 @@ Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebo
   keyword baseline agreed with either only ~36%, over-predicting `install_build` ~5x from
   environment dumps, so **an earlier keyword-based "top problems" ranking was
   withdrawn**. Findings: [docs/memo.md](docs/memo.md).
-- **Classifier:** regex rules-v2 reaches **56.8% (κ 0.50)** on test against the hand
-  labels — the same level at which the two labelers agree with each other, which is the
-  ceiling this sample can show. Qwen3-4B (Ollama, CPU, `think=false`, prompt v1) dev run
-  in progress (36.8% on the first 95).
+- **Classifier benchmarked (CPU, $0).** On the 190-issue test split against hand labels:
+  keyword rules-v2 **56.8% (κ 0.50)**; Qwen3-4B 32.3% (κ 0.25); Qwen3-1.7B 24.3% (κ 0.17);
+  Gemma-3-1B 17.3% (κ 0.01, usable output on only 55% of issues — it invents categories).
+  Accuracy rises with size but no CPU-sized model reaches the keyword baseline, and the
+  models agree with the assistant labeler more than with the human one. The two labelers
+  agree 57% with each other, so ~57% is the ceiling this sample can show. Table and
+  method: [docs/memo.md](docs/memo.md#classifier).
 - **Checklist validated and pruned.** Quant-artifact lag collected (4,728 repos; GGUF at
   median day 0 for 22/22 models, community-published). Launch score predicts
   days-to-support (ρ −0.72; −0.49 non-circular, n=16) and not issue load (ρ ≈ 0, n=22).
@@ -197,7 +204,7 @@ Full GPU batch and classifier benchmark: [notebooks/gpu_batch_runbook.md](notebo
   Nemotron-3-Nano's release date resolved to its 2025-12-15 announcement (no public page
   capture exists earlier; medium confidence).
 - **Codebook gaps found while labeling** (logged for v3, v2 stays frozen): no category
-  for runtime crashes/hangs (~25% of the sample lands in `other`); maintainer artifacts
+  for runtime crashes/hangs (36% of the hand-labelled sample lands in `other`); maintainer artifacts
   leaking past the exclusion regex; the `missing_feature`/`quantization` boundary for
   "format X unsupported for model Y". See the gaps section in
   [docs/codebook-v2.md](docs/codebook-v2.md).

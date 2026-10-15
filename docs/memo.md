@@ -333,28 +333,49 @@ its own evidence rule requires; the deletions and reasons are listed in the docu
 
 ## Classifier
 
-**Status: hand labels in; baselines and the assistant reference scored against them;
-open-model dev run in progress.**
+**Status: hand labels in; keyword baseline, the assistant reference and three open
+models benchmarked against them on CPU (`scripts/bench_table.py`).**
 
 A stratified sample of **339 issues** (dev 136 / test 203) was hand-labelled against
 codebook v2 (`labels.source = 'hand'`). Before the hand labels existed the assistant
 labelled the same rows from title + excerpt as a disclosed reference
 (`ref_claude`); it is now reported as a second labeler, not a gold set.
 
-| classifier | split | category acc | κ | severity acc | κ |
-|---|---|---|---|---|---|
-| **assistant reference (`ref_claude`) vs hand** | all 339 | **57.2%** | **0.49** | 50.1% | 0.25 |
-| regex rules-v1 (naive keywords) vs ref_claude | test (203, pre-guard) | 36.0% | 0.28 | 54.2% | 0.25 |
-| regex rules-v2 (env-dump stripped, title-first) | dev (121) | 55.4% | 0.48 | 54.5% | 0.29 |
-| regex rules-v2 | **test (190)** | **56.8%** | **0.50** | 53.2% | 0.29 |
-| Qwen3-4B, prompt v1, CPU, `think=false` | dev (118) | 34.7% | 0.28 | 53.4% | 0.24 |
-| Qwen3-4B vs `ref_claude` (the other labeler) | dev (133) | 51.1% | 0.44 | 60.2% | 0.28 |
+**Benchmark — test split (190 scored issues) vs hand labels**
 
-Unless marked otherwise, rows are scored against the hand labels. Qwen3-4B ran on the
-2018 laptop's CPU at ~48 s/issue (1.2 issues/min; 133 of 136 dev issues labelled, 3 lost
-to endpoint timeouts). It agrees with the assistant reference (51%) much more than with
-the hand labels (35%) — two language models reading the same codebook converge on each
-other, not on the human — which is the clearest illustration of the point below.
+| classifier | labelled | category acc | κ | acc* | severity acc | κ | issues/min | peak RAM |
+|---|---|---|---|---|---|---|---|---|
+| keyword rules-v2 (env-dump stripped, title-first) | 190/190 | **56.8%** | **0.50** | 56.8% | 53.2% | 0.29 | instant | 0 |
+| assistant reference (`ref_claude`, the second labeler) | 190/190 | 56.8% | 0.49 | 56.8% | 45.3% | 0.18 | — | — |
+| Qwen3-4B (Ollama Q4, `think=false`) | 189/190 | 32.3% | 0.25 | 32.1% | 42.3% | 0.11 | 1.5 | 3.2 GB |
+| Qwen3-1.7B (Ollama Q4, `think=false`) | 185/190 | 24.3% | 0.17 | 23.7% | 43.2% | 0.09 | 2.0 | 2.3 GB |
+| Gemma-3-1B (Ollama Q4) | 104/190 | 17.3% | 0.01 | 9.5% | 29.8% | 0.05 | 4.0 | 1.2 GB |
+
+*acc\** counts a parse failure as wrong. All model rows: prompt v1 (frozen on dev before
+test was touched), codebook v2, 2018 Intel MacBook (4-core i5, 8 GB, CPU only), $0.
+Throughput is the median gap between consecutive labels, because overnight sleep stalled
+two runs and wall-clock rates would mostly measure the laptop's power settings. Dev
+split (121) agrees within a few points: keyword 55.4% / κ 0.48, Qwen3-4B 34.7% / 0.28,
+Qwen3-1.7B 26.7% / 0.18, Gemma-3-1B 14.7% / 0.02. The naive keyword rules-v1 scored
+36.0% / κ 0.28 against the assistant reference on the pre-guard test set.
+
+What the benchmark shows:
+
+- **Accuracy rises with size, and no CPU-sized model reaches the keyword baseline.**
+  κ goes 0.01 → 0.17 → 0.25 from 1B to 4B. The 4B model is the only one usefully above
+  chance, and it is still well below a keyword ruleset that knows the codebook's traps.
+- **Below ~2B parameters the schema itself breaks.** Gemma-3-1B produced a usable label
+  for only 55% of issues; the rest invent categories (`bug`, `installer`) or put a
+  severity in the category slot. Qwen3-1.7B follows the schema (97%) but picks badly.
+  Format compliance and judgment fail at different sizes.
+- **Models agree with the other model more than with the human.** Qwen3-4B matches the
+  assistant reference 48% (κ 0.41, n=322) but the hand labels only 33%; Qwen3-1.7B
+  matches the reference 40% and the hand labels 25%. Language models reading the same
+  codebook converge on each other, which is the clearest illustration of the ceiling
+  point below.
+- **The GPU leg (Kaggle, 2×T4, 8–9B models) is documented but optional.** The runbook
+  has tested setup cells; at this ceiling a larger model can at best tie the keyword
+  baseline, so it would refine the curve rather than change the conclusion.
 
 (n = sampled rows that survive the cleaning rules; 28 of 339 were excluded after
 sampling by the cross-model title guard and widened maintainer-task filter.)

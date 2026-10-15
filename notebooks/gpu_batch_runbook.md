@@ -1,4 +1,15 @@
-# GPU batch runbook — full classification + classifier benchmark
+# GPU batch runbook — optional extension of the classifier benchmark
+
+> **Status.** The v1 benchmark ran on CPU (Gemma-3-1B, Qwen3-1.7B, Qwen3-4B; see the
+> memo's Classifier section). This runbook extends it to 8–9B models on a free Kaggle
+> 2×T4 session. It is optional: the keyword baseline and the inter-labeler agreement
+> both sit at ~57%, so a larger model can refine the size curve but not beat the
+> ceiling the labels impose.
+>
+> **Kaggle notes from a real setup attempt.** `pip install vllm` upgrades PyTorch to
+> CUDA 13 (the T4 driver, 580.x, supports it) but leaves Kaggle's CUDA-12.8 `torchaudio`
+> in place, which crashes the server at import. Run `pip uninstall -y torchaudio`
+> after installing vLLM.
 
 The dev loop runs locally on CPU (Ollama, 3–4B model, slow but free). The full batch and
 the throughput/VRAM benchmark need a GPU. This runbook is for a **free** Kaggle notebook
