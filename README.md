@@ -168,6 +168,7 @@ score_launches.py           checklist validation: launch score vs days-to-suppor
 bench_table.py              classifier benchmark vs hand labels: accuracy, coverage, issues/min, RAM
 selfcheck.py                assert-based check of the non-trivial helpers (run it after edits)
 check_docs.py               recomputes headline figures from DB/reports; fails if a doc has drifted
+recheck_adjudications.py    re-fetches every assistant-adjudicated artifact and asserts the row's claim
 ```
 
 Optional GPU extension of the benchmark: [notebooks/gpu_batch_runbook.md](notebooks/gpu_batch_runbook.md).
@@ -214,8 +215,8 @@ Optional GPU extension of the benchmark: [notebooks/gpu_batch_runbook.md](notebo
   "format X unsupported for model Y". See the gaps section in
   [docs/codebook-v2.md](docs/codebook-v2.md).
 - **Open human steps:** re-label 50 dev rows ≥5 days later for the self-agreement
-  reference (`eval_classifier.py --import-pass2`); spot-check the 17 assistant-adjudicated
-  support pairs in `support_events_hand.csv` and the 7 hand-resolved release dates in
+  reference (`eval_classifier.py --import-pass2`); read the 4 judgment calls among the 17 assistant-adjudicated
+  support pairs (all 17 + 2 dates mechanically re-verified, 19/19 OK) in `support_events_hand.csv` and the 7 hand-resolved release dates in
   `release_dates_hand.csv` (2 support pairs remain undetermined).
 
 ### Running the classifier locally (no GPU)

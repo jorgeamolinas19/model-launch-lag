@@ -108,7 +108,11 @@ native date alone misrepresents the developer experience; both are reported.
 - 2 pairs remain `undetermined` (TensorRT-LLM × Olmo-3 and × granite-4.1: the
   architecture appears only in an allowlist file, with no implementation file or
   model-titled PR). 17 pairs were adjudicated by the assistant from API-verified PR
-  evidence and are marked `claude-ref` pending a human spot-check; 5 negative offsets
+  evidence and are marked `claude-ref`. A mechanical re-check re-fetched every cited
+  artifact (PR, commit, file history, archive capture) and all 17, plus the 2
+  assistant-touched release dates, matched their rows (`reports/adjudication_recheck.txt`);
+  the four *judgment* calls among them (two predecessor-reuse rulings, one docs-PR date,
+  one multi-part merge) still await a human read; 5 negative offsets
   were adjudicated by historical evidence rather than a threshold.
 - Two Ollama dates are **upper bounds** from the earliest Wayback Machine capture of the
   library page (DeepSeek-V3.2 ≤ +11d, granite-4.1 ≤ +23d), graded `coarse`.

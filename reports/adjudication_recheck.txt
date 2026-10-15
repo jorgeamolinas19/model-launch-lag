@@ -1,0 +1,66 @@
+
+SUPPORT EVENTS (resolved_by contains claude-ref)
+
+  [OK    ] vllm         deepseek-ai/DeepSeek-V3  (supported)
+           ✓ PR merged
+           ✓ merged 2024-12-27 == event 2024-12-27
+           ✓ title names model: 'Deepseek v3'
+  [OK    ] sglang       deepseek-ai/DeepSeek-V3  (supported)
+           ✓ PR merged
+           ✓ merged 2024-12-26 == event 2024-12-26
+           ✓ title names model: 'docs: add deepseek v3 launch instructions'
+  [OK    ] sglang       allenai/Olmo-3-7B-Think  (supported)
+           ✓ commit date 2025-10-20 == event 2025-10-20
+           ✓ message names model: '[Model] Add Olmo 3 model support (#11396)'
+  [OK    ] trtllm       allenai/Olmo-3-7B-Think  (undetermined)
+           ✓ file exists at HEAD (tensorrt_llm/usage/architecture_allowlist.py)
+           ✓ file born 2026-09-08 (allowlist date, not a support date)
+  [OK    ] ollama       deepseek-ai/DeepSeek-V3.2  (supported)
+           ✓ earliest capture 2025-12-12 == event 2025-12-12
+  [OK    ] trtllm       deepseek-ai/DeepSeek-V3.2  (arch_compatible)
+           ✓ PR merged
+           ✓ merged 2025-10-24 < release 2025-12-01
+           ✓ title names model: '[TRTLLM-8535][feat] Support DeepSeek V3.2 with FP8 + BF16 KV'
+  [OK    ] sglang       ibm-granite/granite-4.1-3b  (arch_compatible)
+           ✓ file exists at HEAD (python/sglang/srt/models/granite.py)
+           ✓ file born 2024-12-11 < release 2026-04-06
+  [OK    ] ollama       ibm-granite/granite-4.1-3b  (supported)
+           ✓ earliest capture 2026-04-29 == event 2026-04-29
+  [OK    ] trtllm       ibm-granite/granite-4.1-3b  (undetermined)
+           ✓ file exists at HEAD (tensorrt_llm/usage/architecture_allowlist.py)
+           ✓ file born 2026-09-08 (allowlist date, not a support date)
+  [OK    ] sglang       google/diffusiongemma-26B-A4B-it  (supported)
+           ✓ PR merged
+           ✓ merged 2026-09-23 == event 2026-09-23
+           ✓ title names model: '[dLLM] Support DiffusionGemma serving'
+  [OK    ] trtllm       google/diffusiongemma-26B-A4B-it  (unsupported)
+           ✓ code search 'DiffusionGemmaForBlockDiffusion' -> 0 files (now, not at snapshot)
+  [OK    ] transformers moonshotai/Kimi-K3  (unsupported)
+           ✓ code search 'KimiK3ForConditionalGeneration' -> 0 files (now, not at snapshot)
+  [OK    ] vllm         moonshotai/Kimi-K3  (supported)
+           ✓ PR merged
+           ✓ merged 2026-07-29 == event 2026-07-29
+           ✓ title names model: '[Model] Add Kimi K3 support: Python frontend [2/2]'
+  [OK    ] transformers RadixArk/Kimi-K3-DSpark  (unsupported)
+           ✓ code search 'DSparkDraftModel' -> 0 files (now, not at snapshot)
+  [OK    ] transformers deepseek-ai/DeepSeek-V4.1-Flash  (unsupported)
+           ✓ PR not merged
+           ✓ title names model: 'Add DeepSeek-V4.1 (deepseek_v41) text model'
+  [OK    ] vllm         deepseek-ai/DeepSeek-V4.1-Flash  (supported)
+           ✓ PR merged
+           ✓ merged 2026-09-11 == event 2026-09-11
+           ✓ title names model: '[Model] Support DeepSeek-V4.1-Flash'
+  [OK    ] sglang       nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16  (arch_compatible)
+           ✓ file exists at HEAD (python/sglang/srt/models/nemotron_h.py)
+           ✓ file born 2025-10-08 < release 2025-12-15
+
+RELEASE DATES (resolved_by contains claude-ref)
+
+  [OK    ] google/gemma-4-31B-it  (date)
+           ✓ earliest capture of HF model page 2026-04-02 == release 2026-04-02
+  [OK    ] nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16  (date)
+           ✓ earliest capture of model page 2025-12-15 == release 2025-12-15
+
+19 OK · 0 FLAG · 0 MANUAL. OK = every cited fact re-fetched and matched.
+This is a mechanical re-check by the same assistant that made the calls - it confirms the
+evidence says what the row claims, not that the judgment (e.g. 'predecessor reuse') is right.
