@@ -139,8 +139,8 @@ def main():
 
     # ---------------- §3 time to resolve ----------------
     print(f"\n\n§3 TIME TO RESOLVE - by category (open issues censored at snapshot)\n")
-    print(f"{'category':<22}{'n':>5}{'KM med d':>10}{'% open':>8}{'closed:done':>12}{'not_planned':>12}")
-    print("-" * 69)
+    print(f"{'category':<22}{'n':>5}{'KM med d':>10}{'% open':>8}{'closed:done':>12}{'not_planned':>12}{'by PR/commit':>13}")
+    print("-" * 82)
     for cat in CATS:
         rs = [i for i in labelled if i["cat"] == cat]
         if not rs:
@@ -157,10 +157,13 @@ def main():
         pct_open = 100 * sum(1 for i in rs if not i["closed_at"]) / len(rs)
         done = sum(1 for i in rs if i["state_reason"] == "completed")
         npl = sum(1 for i in rs if i["state_reason"] == "not_planned")
+        fix = sum(1 for i in rs if i["closed_by_fix"])
         print(f"{cat:<22}{len(rs):>5}{(str(km) if km is not None else 'n/a'):>10}{pct_open:>7.0f}%"
-              f"{done:>12}{npl:>12}")
-    print("\n  'completed' vs 'not_planned' is GitHub's close reason - the closest available")
-    print("  proxy for fixed-vs-dismissed. closed_by_fix (linked commit) is not collected yet.")
+              f"{done:>12}{npl:>12}{fix:>13}")
+    print("\n  'completed' vs 'not_planned' is GitHub's close reason. 'by PR/commit' is the ClosedEvent")
+    print("  closer (collect_close_reason.py): set only when a PR/commit closed the issue via a closing")
+    print("  keyword, so it is a LOWER bound on fixes; 'completed' is an upper bound. Across all kept")
+    print("  closed issues the two differ by 5x (15% vs 77%), so neither alone is a fix rate.")
 
     # ---------------- §4 top problems ----------------
     print(f"\n\n§4 TOP PROBLEMS - count x severity weight, with the reweighting check\n")

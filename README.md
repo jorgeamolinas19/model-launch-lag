@@ -162,6 +162,7 @@ sample_for_labeling.py      stratified 339, dev/test split assigned at sample ti
 classify_llm.py             any OpenAI-compatible endpoint; prompt + model tag pinned per run
 eval_classifier.py          import hand labels, accuracy/kappa/confusion, publish labels_v2.csv
 metrics_issues.py           issue load, time-to-resolve (KM), top problems + reweighting, hardware
+collect_close_reason.py     ClosedEvent closer per closed issue -> closed_by_fix (metrics §3)
 collect_quants.py           quant-artifact lag per model x format from Hub search (metrics §7)
 score_launches.py           checklist validation: launch score vs days-to-support / issue load
 bench_table.py              classifier benchmark vs hand labels: accuracy, coverage, issues/min, RAM
@@ -195,6 +196,9 @@ Optional GPU extension of the benchmark: [notebooks/gpu_batch_runbook.md](notebo
   models agree with the assistant labeler more than with the human one. The two labelers
   agree 57% with each other, so ~57% is the ceiling this sample can show. Table and
   method: [docs/memo.md](docs/memo.md#classifier).
+- **Close reason collected.** Only 15% of the 2,068 closed kept issues were closed by a
+  linked PR/commit vs 77% marked `completed`; the proxy the memo first used was nearly
+  uninformative. Reported as a lower/upper-bound interval (memo Q2, metrics §3).
 - **Checklist validated and pruned.** Quant-artifact lag collected (4,728 repos; GGUF at
   median day 0 for 22/22 models, community-published). Launch score predicts
   days-to-support (ρ −0.72; −0.49 non-circular, n=16) and not issue load (ρ ≈ 0, n=22).

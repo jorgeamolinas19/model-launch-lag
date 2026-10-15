@@ -1,9 +1,10 @@
 # Memo: what open-model launches look like across serving frameworks
 
-**Status: draft. Question 1 findings are final for this snapshot (2026-10-10); Questions
-2–3 sections are filled from the regex baseline until hand labels land and will be
-re-cut from LLM labels.** Every figure below is reproducible from the repo at the commit
-named in the footer.
+**Status: v1 complete for snapshot 2026-10-10.** Question 1 is final; Questions 2–3 are
+cut from the published hand labels, with the assistant reference as a second labeler;
+the classifier benchmark ran on CPU. Open items are human-only (a self-agreement pass
+and a spot-check of adjudicated dates) and are listed in the README. Every figure below
+is reproducible from the repo at the commit named in the footer.
 
 ## Summary
 
@@ -208,6 +209,19 @@ Three things are robust here even at n = 311 and across both labelers:
   install/build (5 of 8, n too small) follow. Template and performance issues are
   frequent and were never marked blockers by the hand labeler (convention, see †).
 
+**"Closed" is not "fixed".** The close-reason proxy this memo first used — GitHub's
+`completed` vs `not_planned` — turned out to be nearly uninformative once the actual
+closer was collected for all 2,068 closed kept issues (`collect_close_reason.py`): only
+**15%** were closed by a linked PR or commit, against **77%** marked `completed`. Per
+framework the proxy said 55–99% "completed"; the linked-fix rate is 3–21% (llama.cpp
+20%, transformers 21%, vLLM 16%, SGLang 11%, Ollama 10%, TensorRT-LLM 3%). The truth
+sits between: a closer is recorded only when the PR used a closing keyword, so 15% is a
+floor and 77% a ceiling. The honest reading is that **close speed measures triage
+culture, not fix speed**, which is why the time-to-resolve column above is reported
+beside open rate and never alone. In the hand sample the categories closed by a linked
+fix least often are `correctness` (1 of 29 closed) and `quantization` (1 of 21):
+precisely the ones whose issues are hardest to reproduce from a report.
+
 ## Question 3 — what should a platform team fix?
 
 ### Top problems, severity-weighted — and why the ranking is not stable
@@ -406,6 +420,8 @@ pass (≥5 days later) would show whether the single labeler is at least self-co
 - Category metrics are computed over the published hand labels (`labels/labels_v2.csv`,
   311 rows, CC BY 4.0); the assistant reference (`ref_claude`) is reported alongside as a
   second labeler. Model labels are pinned to a prompt version and model tag per run.
+- `closed_by_fix` comes from each issue's ClosedEvent closer (GraphQL), which GitHub
+  records only for keyword-linked PRs/commits: a lower bound on fixes.
 - Negative support offsets were manually adjudicated using historical implementation
   evidence. Pre-existing architectures were distinguished from model-specific
   integrations, and architecture presence alone was not treated as proof of executable

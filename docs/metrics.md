@@ -230,6 +230,14 @@ pct_closed_by_fix = closed with a linked commit or PR / all closed
 This is the more honest reliability signal, and it avoids penalizing projects that keep
 a transparent backlog instead of auto-closing — which keeps the finding constructive.
 
+**Collected** (`scripts/collect_close_reason.py`, `reports/close_reason.txt`): the
+ClosedEvent `closer` for every closed kept issue, batched 40 per GraphQL query. Result:
+15% of closed issues have a PR/commit closer vs 77% marked `completed` — the
+`state_reason` proxy is nearly uninformative. GitHub sets a closer only when the
+PR/commit used a closing keyword (`fixes #N`), so `pct_closed_by_fix` is a **lower
+bound** on fixes and `completed` an **upper bound**; the metric is reported as that
+interval, never as one number.
+
 ## 4. Top problems
 
 ```
@@ -349,7 +357,7 @@ fit consumer hardware is the strongest available evidence for checklist item 2.1
 | **Architecture inheritance** | `new_arch` / `variant` split (§1) | Boundary cases where an arch is "mostly" reused |
 | **Framework interdependence** — Ollama←llama.cpp, SGLang←vLLM, all←transformers | Report deltas against the upstream gate | Columns are not independent; no ranking should be read as a standalone race |
 | **Popularity** | Normalize per 1k downloads | Downloads ≠ framework users |
-| **Triage culture** | `pct_closed_by_fix` instead of raw close speed | Labeling discipline still varies by project |
+| **Triage culture** | `pct_closed_by_fix` (collected) beside raw close speed | Closer is recorded only for keyword-linked PRs, so the fix rate is an interval (15–77% pooled), and close speed is read as triage culture, not fix speed |
 | **Who files issues** | Per-framework category mixes | Self-selection of reporters is not correctable |
 | **Evidence fidelity** | Grade every support event (`exact` / `good` / `coarse`) | TensorRT-LLM dates are coarse by nature of its publishing model |
 | **Severity subjectivity** | Structural signals stored alongside; self-agreement κ published | Severity remains the softest field in the dataset |

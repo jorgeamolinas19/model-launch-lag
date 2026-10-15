@@ -36,20 +36,22 @@ ALL                                              153         855         418    
 
 §3 TIME TO RESOLVE - by category (open issues censored at snapshot)
 
-category                  n  KM med d  % open closed:done not_planned
----------------------------------------------------------------------
-missing_feature          44        56     23%          31           3
-install_build            16        61     19%          11           2
-template_tokenizer       41        37     12%          28           8
-quantization             22        89     14%          12           7
-speculative_decoding     19       110     63%           5           2
-oom_hardware             18        46     22%          10           4
-correctness              39        53     33%          20           6
-performance              39        61     26%          23           6
-other                    73        19     16%          45          16
+category                  n  KM med d  % open closed:done not_planned by PR/commit
+----------------------------------------------------------------------------------
+missing_feature          44        56     23%          31           3            7
+install_build            16        61     19%          11           2            1
+template_tokenizer       41        37     12%          28           8            7
+quantization             22        89     14%          12           7            1
+speculative_decoding     19       110     63%           5           2            3
+oom_hardware             18        46     22%          10           4            0
+correctness              39        53     33%          20           6            4
+performance              39        61     26%          23           6            3
+other                    73        19     16%          45          16           13
 
-  'completed' vs 'not_planned' is GitHub's close reason - the closest available
-  proxy for fixed-vs-dismissed. closed_by_fix (linked commit) is not collected yet.
+  'completed' vs 'not_planned' is GitHub's close reason. 'by PR/commit' is the ClosedEvent
+  closer (collect_close_reason.py): set only when a PR/commit closed the issue via a closing
+  keyword, so it is a LOWER bound on fixes; 'completed' is an upper bound. Across all kept
+  closed issues the two differ by 5x (15% vs 77%), so neither alone is a fix rate.
 
 
 §4 TOP PROBLEMS - count x severity weight, with the reweighting check

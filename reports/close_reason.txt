@@ -1,0 +1,16 @@
+0 closed issues without closer info
+
+pct_closed_by_fix (metrics §3) - closed kept issues with a PR/commit closer:
+  llamacpp       109/537     20%
+  ollama          40/398     10%
+  sglang          36/323     11%
+  transformers    31/145     21%
+  trtllm           1/30       3%
+  vllm           103/635     16%
+  state_reason='completed' as a proxy would have said:
+  llamacpp       384/537     72%
+  ollama         377/398     95%
+  sglang         321/323     99%
+  transformers   142/145     98%
+  trtllm          24/30      80%
+  vllm           352/635     55%

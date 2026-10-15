@@ -61,6 +61,7 @@ materially both are shown.
 - Quantization: KM median **122 days** to close; speculative decoding **92 days, 47% still open** (everything else 31–68 days)
 - Direction holds under both labelers (89 / 110 days under the reference)
 - Spec-decode defects sit between the target model's code path and the speculative subsystem; Kimi-K3-DSpark out-downloads most full models in the cohort
+- "Closed" ≠ "fixed": only **15%** of closed issues have a linked PR/commit closer vs **77%** marked completed → close speed measures triage culture, so it is always shown beside open rate
 *Source: reports/metrics_hand.txt §3*
 
 ## 9. Hardware: two ecosystems filing into the same trackers
