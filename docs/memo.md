@@ -15,7 +15,7 @@ architectural reuse. Roughly a third of recent launches had framework support me
 *before* the weights were public, up from about a quarter two years earlier. The
 frameworks that at first looked slowest were the ones whose repository structure made
 support hardest to *measure*, not the ones that were slow; closing that measurement gap
-moved TensorRT-LLM from an apparent +52 days to a verified +17, and llama.cpp from +30 to
+moved TensorRT-LLM from an apparent +52 days to a verified +24, and llama.cpp from +30 to
 +2.
 
 Three recurring problems account for most first-month friction, and three
@@ -43,26 +43,28 @@ conversion half). Class C adds release-note and PR-search dates (fidelity `good`
 
 | framework | A median | A n | B median | B n | C median | C n | AC | undetermined |
 |---|---|---|---|---|---|---|---|---|
-| transformers | +0 | 14 | +0 | 14 | +0 | 14 | 0 | 2 |
-| vLLM | +0 | 8 | +0 | 8 | +0 | 8 | 5 | 3 |
-| SGLang | +1 | 11 | +1 | 11 | +1 | 11 | 2 | 3 |
+| transformers | +0 | 14 | +0 | 14 | +0 | 14 | 0 | 0 |
+| vLLM | +1 | 11 | +1 | 11 | +1 | 11 | 5 | 0 |
+| SGLang | +1 | 12 | +1 | 12 | +1 | 13 | 3 | 0 |
 | llama.cpp | n/a | 1 | +2 | 12 | +2 | 12 | 0 | 0 |
-| Ollama | n/a | 0 | n/a | 0 | +9 | 12 | 0 | 2 |
-| TensorRT-LLM | +17 | 12 | +17 | 12 | +17 | 12 | 1 | 3 |
+| Ollama | n/a | 0 | n/a | 0 | +8 | 13 | 0 | 0 |
+| TensorRT-LLM | +24 | 12 | +24 | 12 | +24 | 12 | 2 | 1 |
 
-*New-architecture models only; Kaplan–Meier medians including censored pairs.*
+*16 new-architecture models; Kaplan–Meier medians including censored pairs; n = pairs
+with a dated event in that class (`reports/support_new_arch.txt`). The second
+undetermined pair, TensorRT-LLM × granite-4.1, is a variant and sits outside this table.*
 
 **The ranking is not stable across evidence classes**, so no single ranking is
-published. Within class A, every measurable framework sits within ~17 days of day 0.
+published. Within class A, every measurable framework sits within ~3.5 weeks of day 0.
 
 ### Findings
 
 **1. Day-0 support is integration work, not inheritance.** Moving from class A to the
-architecture-compatible count adds 5 pairs to vLLM and 2 to SGLang and does not move
+architecture-compatible count adds 5 pairs to vLLM and 3 to SGLang and does not move
 either median. The speed is real.
 
-**2. Pre-release coordination is the norm and rising.** 28% of historical-band support
-events (8 of 29) were merged before public release; 39% in the recent band (17 of 44).
+**2. Pre-release coordination is the norm and rising.** 25% of historical-band support
+events (8 of 32) were merged before public release; 33% in the recent band (18 of 54).
 Median latency was already ~0 two years ago, so the improvement shows up as
 *coordination*, not speed. Examples: vLLM merged Qwen3.5 support 15 days before release;
 `transformers` merged Qwen3 27 days before. (Descriptive contrast — the two bands differ
@@ -81,11 +83,13 @@ methods were tried; three produced plausible, wrong numbers:
 
 TensorRT-LLM was the main casualty of the artifacts and the main beneficiary of the
 fix: it has 75 per-architecture `modeling_*.py` files, and once dated from those it
-sits at +17 days with `gpt-oss +3d`, `Qwen3 +4d`.
+sits at +24 days (Kaplan–Meier, 12 dated pairs) with `gpt-oss +3d`, `Qwen3 +4d`, and
+three pre-release merges (Llama-4 −53d, GLM-5 −85d, DeepSeek-V4.1 −74d).
 
 **4. Release dates are harder than they look.** The Hub's `createdAt` is repo creation,
-often private. Of 22 models, 6 needed hand resolution against vendor announcements; the
-API-derived date was off by a median of 11 days on those, in *both* directions
+often private. Of 22 models, 7 needed hand resolution (`release_dates_hand.csv`): six
+against vendor announcements, plus Nemotron-3-Nano (see limitations). On the six, the
+API-derived date was off by a median of 11 days, in *both* directions
 (imported history predating creation; content landing after announcement). Two dates
 differ by kind: Kimi-K3 was *announced* 11 days before its weights were downloadable.
 `release_date` is the weights date; a framework cannot support weights that do not
@@ -140,7 +144,7 @@ issues**, of which **2,666 survive the codebook exclusions** (1,750 passing ment
 the same issue attributed to a sibling model via a family alias, plus issues whose title
 names a *different* model than the one attributed; 127 duplicates; 116 maintainer
 artifacts: RFCs, CI failures, test suites and benchmark posts). Match confidence of the
-kept set: 58% repo short name, 33% family name only, 10% architecture class.
+kept set: 57% repo short name, 34% family name only, 9% architecture class.
 
 The cross-model title guard was added after an external audit found an issue titled
 "Kimi K2 produces gibberish" attributed to DeepSeek-V3.2. It removed 28 of the 339
@@ -152,12 +156,12 @@ accepted; a mis-attributed gold label is worse than a missing one.
 
 | framework | first-30-day issues | share |
 |---|---|---|
-| vLLM | 944 | 33% |
-| llama.cpp | 688 | 24% |
-| Ollama | 557 | 20% |
-| SGLang | 462 | 16% |
-| transformers | 159 | 6% |
-| TensorRT-LLM | 46 | 2% |
+| vLLM | 855 | 32% |
+| llama.cpp | 656 | 25% |
+| Ollama | 545 | 20% |
+| SGLang | 418 | 16% |
+| transformers | 153 | 6% |
+| TensorRT-LLM | 39 | 1% |
 
 Issue volume tracks user-base size and reporting culture far more than launch quality:
 the model with the most first-month issues (Qwen3.8-27B, 436) had day-0 support
@@ -165,7 +169,7 @@ everywhere. Per-download normalisation does not rescue this — downloads are in
 millions and the Hub figure is a rolling 30-day count at *snapshot*, not at release+30.
 Raw counts are published; cross-framework comparison of them is not.
 
-TensorRT-LLM's 46 issues are not evidence of fewer problems; its users file through
+TensorRT-LLM's 39 issues are not evidence of fewer problems; its users file through
 NVIDIA channels the GitHub API cannot see. The same visibility caveat that applied to its
 support dates applies here.
 

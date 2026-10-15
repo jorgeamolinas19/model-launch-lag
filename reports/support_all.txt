@@ -1,0 +1,104 @@
+DAYS TO SUPPORT - all models, snapshot 2026-10-10
+Negative = merged before public release (early access). Latency is only
+interpretable beside coverage: see the censored column.
+
+framework        cover  KM med  obs med  early  day0  cens  part  fidelity
+--------------------------------------------------------------------------
+transformers     14/22      +0       +0      5     4     3     0  exact
+vllm             11/22      +1       +1      3     2     0     0  exact
+sglang           14/22      +1       +1      5     0     0     0  exact,good
+llamacpp         15/22      +1       +0      6     2     5    14  exact
+ollama           17/22      +8       +8      3     2     2     0  coarse,exact,good
+trtllm           15/22     +17      +17      4     0     1     0  exact,none
+
+  KM med = Kaplan-Meier median including censored pairs (the defensible figure)
+  obs med = median over supported pairs only (biased low; shown for contrast)
+  n/a     = over half the pairs are still unsupported, so no median exists
+  2 pair(s) undetermined and excluded from every figure above; see hand-resolution list
+
+  CAUTION: 6 new_arch pair(s) are recorded at day 0 because the
+  architecture was ALREADY declared at the commit before release. For a new
+  architecture that means pre-release support, so the true value is <= 0 and
+  0 is a conservative FLOOR, not a measurement. Dating how far ahead would
+  need the arch-addition commit, which is still unresolved. This UNDERSTATES
+  early access rather than overstating it.
+
+
+REMOTE CODE: where native-only latency overstates the real wait
+
+These models ship their own modeling code, so they are runnable in
+transformers at RELEASE. The native date is a second milestone, not the
+first one - quoting it alone would misrepresent the developer experience.
+
+  moonshotai/Kimi-Linear-48B-A3B-Instruct        remote_code day 0 | native +310d     (config.auto_map)
+  deepseek-ai/DeepSeek-V3                        remote_code day 0 | native +93d      (config.auto_map)
+  nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16     remote_code day 0 | native +78d      (config.auto_map)
+  RadixArk/Kimi-K3-DSpark                        remote_code day 0 | native not yet   (config.auto_map)
+  moonshotai/Kimi-K3                             remote_code day 0 | native not yet   (config.auto_map)
+
+
+PER-MODEL (all)
+
+released   model                                         transf    vllm  sglang  llamac  ollama  trtllm
+-------------------------------------------------------------------------------------------------------
+2024-12-25 deepseek-ai/DeepSeek-V3                          +93      +2      +1    +10p     +14     +50
+2025-03-12 google/gemma-3-27b-it                             +0      +0    +106     +0p      -1     +63
+2025-04-05 meta-llama/Llama-4-Scout-17B-16E-Instruct         +0      +2      +2     +2p     +21     -53
+2025-04-27 Qwen/Qwen3-32B                                     ?       ?       ?    -18p       ?      +4
+2025-04-27 Qwen/Qwen3-8B                                    -27     -20      -9    -18p      -1      +4
+2025-08-04 openai/gpt-oss-20b                                +1      +2      +1     +1p      +1      +3
+2025-10-11 Qwen/Qwen3-VL-4B-Instruct                        -26     -24     -18    +19p     +18     +66
+2025-10-30 moonshotai/Kimi-Linear-48B-A3B-Instruct         +310       ?      +1    +99p    none    +280
+2025-11-20 allenai/Olmo-3-7B-Think                          -65       ?     -31    -64p     +23       ?
+2025-12-01 deepseek-ai/DeepSeek-V3.2                       +191       ?       ?    none     +11       ?
+2025-12-15 nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16       +78       ?       ?      +1      -2       ?
+2026-01-30 Qwen/Qwen3-Coder-Next                              ?       ?       ?    -63p       ?       ?
+2026-02-11 zai-org/GLM-5                                     -2       ?       ?     +2p      +1     -85
+2026-02-16 Qwen/Qwen3.5-397B-A17B                             ?       ?       ?     -6p     +11     +32
+2026-02-24 Qwen/Qwen3.5-27B                                 -15     -15     -15    -14p      +3     +24
+2026-04-02 google/gemma-4-31B-it                             +0      +0    +174     +0p      +0     +37
+2026-04-06 ibm-granite/granite-4.1-3b                         ?       ?       ?       ?     +23       ?
+2026-06-10 google/diffusiongemma-26B-A4B-it                  +0      +2    +105    none       ?    none
+2026-07-27 RadixArk/Kimi-K3-DSpark                         none       ?     -15    none      +8      -9
+2026-07-27 moonshotai/Kimi-K3                              none      +2      +8    none      +8     +17
+2026-08-14 Qwen/Qwen3.8-27B                                   ?       ?       ?       ?      +0       ?
+2026-09-10 deepseek-ai/DeepSeek-V4.1-Flash                 none      +1      +7    none    none     -74
+
+  p = partial support (some required parts landed, model not yet runnable)
+  none = no qualifying artifact as of snapshot (right-censored, not missing)
+
+
+SENSITIVITY BY EVIDENCE CLASS
+
+  A  model-specific support, exact fidelity   (strictest: proof this
+     checkpoint loaded, dated by implementation-path history)
+  B  + exactly-dated partial support         (llama.cpp conversion half)
+  C  + lower-fidelity dates                  (PR search / release notes)
+  AC architecture-compatible, NO latency value: arch declared pre-release but
+     checkpoint compatibility unproven. Counts for coverage only.
+
+framework        A med  A n   B med  B n   C med  C n   AC  undet
+-----------------------------------------------------------------
+transformers        +0   14      +0   14      +0   14    5      0
+vllm                +1   11      +1   11      +1   11   11      0
+sglang              +1   13      +1   13      +1   14    8      0
+llamacpp           n/a    1      +1   15      +1   15    2      0
+ollama             n/a    0     n/a    0      +8   17    2      0
+trtllm             +17   15     +17   15     +17   15    4      2
+
+  rank A: transformers < vllm < sglang < trtllm
+  rank B: transformers < vllm < sglang < llamacpp < trtllm
+  rank C: transformers < vllm < sglang < llamacpp < ollama < trtllm
+
+  RANKING IS NOT STABLE across evidence classes. The ordering depends on
+  which evidence you accept, so no single ranking should be published as
+  the result - report the classes separately.
+
+
+TIME TREND (the confound the historical band exists to measure)
+
+  historical  n= 32 supported,   0 censored | median +1d | early 8 | day0 4
+  primary     n= 54 supported,  11 censored | median +1d | early 18 | day0 6
+
+  Any band-to-band difference is confounded with cohort composition; it is a
+  descriptive contrast, not a causal claim about frameworks improving.

@@ -173,7 +173,7 @@ Optional GPU extension of the benchmark: [notebooks/gpu_batch_runbook.md](notebo
 
 ## Status
 
-- **Q1 collected.** 22 models x 6 frameworks; 6 release dates hand-resolved with
+- **Q1 collected.** 22 models x 6 frameworks; 7 release dates hand-resolved with
   first-party URLs; evidence classes separated; negative offsets adjudicated by historical
   implementation evidence. Findings are in `report_support.py` output and the memo.
 - **Q2/Q3 collected; hand-labelled sample published.** 3,559 distinct first-30-day

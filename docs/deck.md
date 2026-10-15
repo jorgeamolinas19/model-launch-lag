@@ -17,7 +17,7 @@ materially both are shown.
 ## 2. Day 0 is the norm for the Python serving stack — and it's integration work, not reuse
 - Median days-to-support for new architectures: transformers **0**, vLLM **+1**, SGLang **+1** (class A, exact evidence)
 - Removing architecture-compatible pairs does not move the medians
-- 39% of recent launches had support merged *before* the weights were public (28% two years earlier)
+- 33% of recent support events were merged *before* the weights were public (25% two years earlier)
 *Source: reports/support_new_arch.txt*
 
 ## 3. The biggest apparent gaps were measurement artifacts
@@ -26,12 +26,12 @@ materially both are shown.
 | PR search | Qwen3 in transformers **+530d** | **−27d** |
 | one page of release notes | DeepSeek-V3 in Ollama **+329d** | cache floor |
 | allowlist file bisection | all 17 TRT-LLM archs **2026-09-08** | file's birthday |
-- TensorRT-LLM moved from an apparent +52d to a verified **+17d** once dated from its 75 per-architecture files
+- TensorRT-LLM moved from an apparent +52d to a verified **+24d** once dated from its 75 per-architecture files
 - Rule adopted: first commit to the architecture's own implementation path
 *Source: docs/evidence-rules.md*
 
 ## 4. Release dates are harder than they look
-- Hub `createdAt` is repo creation, often private: 6 of 22 models needed hand resolution
+- Hub `createdAt` is repo creation, often private: 7 of 22 models needed hand resolution
 - API-derived date was off by a **median of 11 days** on those — in both directions
 - Kimi-K3 was *announced* 11 days before its weights were downloadable → two fields, `release_date` and `announced_at`
 *Source: docs/metrics.md §0, release_dates_hand.csv*
